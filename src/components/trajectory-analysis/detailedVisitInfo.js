@@ -22,7 +22,7 @@ const DetailedVisitInfoPresentationalComponent = (
     </div>);
 }
 const mapStateToProps = (state, ownProps) => {
-    let contentDict = state.dashboardReducer.trajectoryAnalysisReducer.singleVisitFullInfoReducer.detailedVisitInfoReducer.content
+    let contentDict = state.dashboardContent.trajectoryAnalysis.singleVisitFullInfo.detailedVisitInfo.content
     return ({
         patientName: contentDict[NormalizedName.PATIENT_NAME], 
         sex: contentDict[NormalizedName.SEX], 

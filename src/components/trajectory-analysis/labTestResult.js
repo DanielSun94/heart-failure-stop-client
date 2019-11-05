@@ -45,9 +45,9 @@ const LabTestResultPresentationalComponent = (content) => {
     }
 }
 const mapStateToProps = (state, ownProps) => {
-    let contentDict = state.dashboardReducer.trajectoryAnalysisReducer.singleVisitFullInfoReducer.labTestResultReducer.content
-    return ({content:contentDict})
-    }
+    let contentDict = state.dashboardContent.trajectoryAnalysis.singleVisitFullInfo.labTestResult.content
+    return contentDict;
+}
 
 const mapDispatchToProps = (dispatch, ownProps) => ({})
   

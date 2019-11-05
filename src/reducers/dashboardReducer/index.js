@@ -1,30 +1,28 @@
 import trajectoryAnalysisReducer from './trajectoryAnalysisReducer';
 import blankPageReducer from './blankPageReducer'
 import { combineReducers } from 'redux';
-
-
-const DASHBOARD_TRAJECTORY_ANALYSIS_PAGE = 'DASHBOARD_TRAJECTORY_ANALYSIS_PAGE';
-const DASHBOARD_BLANK_PAGE = 'DASHBOARD_BLANK_PAGE';
+import {TOGGLE_FRONT_STAGE_STATE, DASHBOARD_CONTENT,TOGGLE_DASHBOARD_MOBILE_VIEW, TRAJECTORY_ANALYSIS_MODULE} 
+  from '../../actions/dashboardAction/dashboardAction';
 
 const initStateInfo = {
   isFrontStage: false,
   mobileView: false,
-  frontStagePage: DASHBOARD_BLANK_PAGE
+  frontStagePage: TRAJECTORY_ANALYSIS_MODULE
 }
 
 const dashboardGeneralInfoReducer = (state=initStateInfo, action) => {
-
+  switch(action.type){
+    case DASHBOARD_CONTENT: {return {...state, frontStagePage: action.content}}
+    case TOGGLE_DASHBOARD_MOBILE_VIEW: {return {...state, mobileView: action.viewState}}
+    case TOGGLE_FRONT_STAGE_STATE: {return {...state, isFrontStage: !state.frontStagePage}}
+    default: return state
+  }
 }
 
-const dashboardContentReducer = combineReducers(dashboardGeneralInfoReducer, trajectoryAnalysisReducer, blankPageReducer) 
-
-//const handleNavBarMobileOpen = () => {
-//  setOpenNavBarMobile(true);
-//};
-
-//const handleNavBarMobileClose = () => {
-//  setOpenNavBarMobile(false);
-//};
+const dashboardContentReducer = combineReducers({
+  dashboardGeneralInfo: dashboardGeneralInfoReducer, 
+  trajectoryAnalysis: trajectoryAnalysisReducer, 
+  blankPage: blankPageReducer}) 
 
 export default dashboardContentReducer;
 

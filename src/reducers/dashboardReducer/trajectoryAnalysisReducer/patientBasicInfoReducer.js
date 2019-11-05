@@ -7,8 +7,8 @@ import {
 const initStateInfo = {
     isDataFetching: false,
     isDataValid: false,
-    conent: {
-    name: "",
+    content: {
+    patientName: "",
     sex: "",
     birthday: "",
     ethnicGroup: ""}
@@ -17,17 +17,18 @@ const initStateInfo = {
 const patientBasicInfoReducer = (state=initStateInfo, action) => {
     switch (action.type){
         case PATIENT_BASIC_INFO_REQUEST_POSTS: return (
-            {isDataFetching: true,
+            {...state, isDataFetching: true,
             isDataValid: false});
         case PATIENT_BASIC_INFO_RECEIVE_SUCCESS_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: true,
             content: action.content}
             );
         case PATIENT_BASIC_INFO_RECEIVE_FAILED_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: false}
             );
+        default: return state;
     }
 }
 

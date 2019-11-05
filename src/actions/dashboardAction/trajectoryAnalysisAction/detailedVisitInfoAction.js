@@ -6,12 +6,12 @@ export const DETAILED_VISIT_INFO_REQUEST_POSTS = 'DETAILED_VISIT_INFO_REQUEST_PO
 export const DETAILED_VISIT_INFO_RECEIVE_SUCCESS_POSTS = 'DETAILED_VISIT_INFO_RECEIVE_SUCCESS_POSTS';
 export const DETAILED_VISIT_INFO_RECEIVE_FAILED_POSTS = 'DETAILED_VISIT_INFO_RECEIVE_FAILED_POSTS';
 
-function requestPosts() {
+export function requestPosts() {
     return ({type: DETAILED_VISIT_INFO_REQUEST_POSTS})
 }
 
 
-function receiveSuccessResult(res) {
+export function receiveSuccessResult(res) {
   return ({
       type: DETAILED_VISIT_INFO_RECEIVE_SUCCESS_POSTS,
       content: {admissionTime: res[NormalizedName.ADMISSION_TIME], patientName: res[NormalizedName.PATIENT_NAME],
@@ -27,8 +27,7 @@ export function receiveFailedResult() {
   return {type: DETAILED_VISIT_INFO_RECEIVE_FAILED_POSTS,}
 }
 
-export function fetchPosts(unifiedPatientID, hospitalCode, visitType, visitID) {
-    let params = {unifiedPatientID: unifiedPatientID, hospitalCode: hospitalCode, visitType: visitType, visitID: visitID};
+export function fetchPosts(params) {
 
     function stateContentReorganize(res){
         let mainDiagnosisStr = "";
@@ -53,9 +52,9 @@ export function fetchPosts(unifiedPatientID, hospitalCode, visitType, visitID) {
 
     dispatch(requestPosts())
 
-    let url =   NormalizedName.TRAJECTORY_ANALYSIS_DATA_ROOT + NormalizedName.TRAJECTORY_ANALYSIS_VISIT_DETAILED_INFO + queryParamsTrans(params);
+    let url =  NormalizedName.TRAJECTORY_ANALYSIS_DATA_ROOT + NormalizedName.TRAJECTORY_ANALYSIS_VISIT_DETAILED_INFO + queryParamsTrans(params);
     return fetch(url, {method: NormalizedName.GET})
-            .then(res => {res.json()},
+            .then(res => res.json(),
                   error => {console.log(error); dispatch(receiveFailedResult())})
             .then(res => stateContentReorganize(res))
             .then(res => dispatch(receiveSuccessResult(res)));

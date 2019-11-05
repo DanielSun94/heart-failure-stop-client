@@ -6,9 +6,9 @@ import oralMedicalInterventionReducer from './oralMedicalInterventionReducer';
 import vitalSignReducer from './vitalSignReducer';
 
 export default combineReducers({
-    detailedVisitInfoReducer,
-    examReducer,
-    labTestResultReducer,
-    oralMedicalInterventionReducer,
-    vitalSignReducer
+    detailedVisitInfo: detailedVisitInfoReducer,
+    exam: examReducer,
+    labTestResult: labTestResultReducer,
+    oralMedicalIntervention: oralMedicalInterventionReducer,
+    vitalSign: vitalSignReducer
 })

@@ -13,17 +13,18 @@ const initStateInfo = {
 const briefVisitInfoReducer = (state=initStateInfo, action) => {
     switch (action.type){
         case BRIEF_VISIT_INFO_REQUEST_POSTS: return (
-            {isDataFetching: true,
+            {...state, isDataFetching: true,
             isDataValid: false});
         case BRIEF_VISIT_INFO_RECEIVE_SUCCESS_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: true,
             content: action.content}
             );
         case BRIEF_VISIT_INFO_RECEIVE_FAILED_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: false}
             );
+        default: return state;
     }
 }
 

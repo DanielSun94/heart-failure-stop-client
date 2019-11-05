@@ -11,55 +11,69 @@ import {UNIFIED_PATIENT_ID_REQUEST_POSTS,
     CHANGE_TARGET_VISIT,
     SHOW_DETAIL} 
     from '../../../actions/dashboardAction/trajectoryAnalysisAction/trajectoryAnalysisModuleAction';
-
-
-const FETCH_DATA_IN_PROGRESS = 'FETCH_DATA_IN_PROGRESS';
-const FETCH_DATA_SUCCEED = 'FETCH_DATA_SUCCEED';
-const FETCH_DATA_FAILED = 'FETCH_DATA_FAILED';
+import {VISIT_INFO_REQUEST_POSTS, VISIT_INFO_SUCCESS_POSTS, VISIT_INFO_FAILED_POSTS, SET_CURRENT_VISIT_INFO} 
+    from '../../../actions/dashboardAction/trajectoryAnalysisAction/trajectoryAnalysisModuleSelectAction';
 
 const initStateInfo = {
     isFrontStage: false,
-    isDataOutOfDate: false,
-    fetchingDataStatus: FETCH_DATA_SUCCEED,
-    localPatientID: '',
+    isDataFetching: false,
+    isDataValid: false,
+    localPatientID: '-1',
     unifiedPatientID: '',
     hospitalCode: '1',
     visitType: '住院',
     visitID: '1',
     showDetail: false,
+    validVisitList: []
 }
 const trajectoryAnalysisGeneralInfoReducer = (state=initStateInfo, action) => {
     switch (action.type){
         case UNIFIED_PATIENT_ID_REQUEST_POSTS: return (
-            {isDataFetching: true,
+            {...state, isDataFetching: true,
             isDataValid: false});
         case UNIFIED_PATIENT_ID_RECEIVE_SUCCESS_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: true,
             unifiedPatientID: action.unifiedPatientID}
             );
         case UNIFIED_PATIENT_ID_RECEIVE_FAILED_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: false}
             );
         case CHANGE_LOCAL_PATIENT_ID: return (
-            {localPatientID: action.localPatientID});
+            {...state, localPatientID: action.localPatientID});
         case CHANGE_TARGET_VISIT: return (
-            {hospitalCode: action.hospitalCode,
+            {...state, hospitalCode: action.hospitalCode,
             visitType: action.visitType,
             visitID: action.visitID}
             );
         case SHOW_DETAIL: return (
-            {showDetail: action.showDetail}
+            {...state, showDetail: action.showDetail}
             );
+
+        case SET_CURRENT_VISIT_INFO: return(
+                {...state, visitType: action.visitType, hospitalCode: action.hospitalCode, 
+                    hospitalName: action.hospitalName, visitID: action.visitID}
+            );
+        case VISIT_INFO_REQUEST_POSTS: return(
+            {...state,  isDataFetching: true,
+                isDataValid: false})
+                case VISIT_INFO_SUCCESS_POSTS: return(
+                    {...state, validVisitList: action.content}
+                    );
+        case VISIT_INFO_FAILED_POSTS: return (
+            {...state, isDataFetching: false,
+            isDataValid: false}
+            );
+        default: return state;
     }
 }
 
 export default combineReducers({
-    trajectoryAnalysisGeneralInfoReducer,
-    singleVisitFullInfoReducer,
-    briefVisitInfoReducer,
-    patientBasicInfoReducer,
-    riskReducer,
-    trajectoryReducer
+    trajectoryAnalysisGeneralInfo: trajectoryAnalysisGeneralInfoReducer,
+    singleVisitFullInfo: singleVisitFullInfoReducer,
+    briefVisitInfo: briefVisitInfoReducer,
+    patientBasicInfo: patientBasicInfoReducer,
+    risk: riskReducer,
+    trajectory: trajectoryReducer
 })

@@ -12,17 +12,18 @@ const initStateInfo = {
 const examReducer = (state=initStateInfo, action) => {
     switch (action.type){
         case EXAM_REQUEST_POSTS: return (
-            {isDataFetching: true,
+            {...state, isDataFetching: true,
             isDataValid: false});
         case EXAM_RECEIVE_SUCCESS_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: true,
             content: action.content}
             );
         case EXAM_RECEIVE_FAILED_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: false}
             );
+        default: return state;
     }
 }
 

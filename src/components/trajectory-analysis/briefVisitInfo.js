@@ -16,7 +16,7 @@ const BriefVisitInfoPresentationalComponent = ({hospitalName, admissionTime, dis
 }
 
 const mapStateToProps = (state, ownProps) => {
-    let contentDict = state.dashboardReducer.trajectoryAnalysisReducer.briefVisitInfoReducer.content
+    let contentDict = state.dashboardContent.trajectoryAnalysis.briefVisitInfo.content
     return ({
         hospitalName: contentDict[NormalizedName.HOSPITAL_NAME], 
         deathFlag: contentDict[NormalizedName.DEATH_FLAG], 

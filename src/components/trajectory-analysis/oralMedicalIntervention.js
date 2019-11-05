@@ -46,8 +46,8 @@ const oralMedicalInterventionPresentationalComponent = (content) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    let contentDict = state.dashboardReducer.trajectoryAnalysisReducer.singleVisitFullInfoReducer.oralInterventionReducer.content
-    return ({content:contentDict})
+    let contentDict = state.dashboardContent.trajectoryAnalysis.singleVisitFullInfo.oralMedicalIntervention.content
+    return contentDict;
     }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({})

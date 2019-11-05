@@ -1,12 +1,12 @@
 import React from 'react';
 import RouteName from '../../RouteName';
-import TrajectoryAnalysisModule from '../../components/trajectory-analysis/trajectoryAnalysisModule';
 import BlankPage from '../../components/blank-page/blank-page';
+import TrajectoryAnalysisModule from '../../components/trajectory-analysis/TrajectoryAnalysisModule';
 import { makeStyles } from '@material-ui/styles';
 import { NavBar, TopBar } from './components';
 import { connect } from 'react-redux';
 import {Switch, Route, Redirect} from 'react-router-dom';
-import {TRAJECTORY_ANALYSIS_MODULE, BLANK_PAGE} from '../../actions/dashboardAction/dashboardAction'
+import {TRAJECTORY_ANALYSIS_MODULE, toggleMobileView} from '../../actions/dashboardAction/dashboardAction';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -44,8 +44,9 @@ const DashboardPresentationalComponent = ({dashboardContent, openNavBarMobile, h
   let contentUrl = null;
   switch(dashboardContent){
     case TRAJECTORY_ANALYSIS_MODULE: contentUrl=RouteName.DASHBOARD_TRAJECTORY_ANALYSIS; break;
-    default: contentUrl=RouteName.BLANK_PAGE;
+    default: contentUrl=RouteName.DASHBOARD_BLANK_PAGE;
   }
+
 
   return (
     <div className={classes.root}>
@@ -59,16 +60,16 @@ const DashboardPresentationalComponent = ({dashboardContent, openNavBarMobile, h
           onMobileClose={handleNavBarMobileClose}
           openMobile={openNavBarMobile}
         />
-        <div className={classes.content}>
-          <Redirect to={contentUrl} />
-        </div>
+        <main className={classes.content}>
+          <Redirect to={RouteName.MAIN_PAGE+contentUrl} />
+        </main>
       </div>
 
       <Switch>
-        <Route path={RouteName.DASHBOARD_TRAJECTORY_ANALYSIS}>
+        <Route path={RouteName.MAIN_PAGE+RouteName.DASHBOARD_TRAJECTORY_ANALYSIS}>
           <TrajectoryAnalysisModule />
         </Route>
-        <Route path={RouteName.BLANK_PAGE}>
+        <Route path={RouteName.MAIN_PAGE+RouteName.DASHBOARD_BLANK_PAGE}>
           <BlankPage />
         </Route>
       </Switch>
@@ -76,12 +77,16 @@ const DashboardPresentationalComponent = ({dashboardContent, openNavBarMobile, h
   );
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  
-})
+
+const mapStateToProps = (state, ownProps) => {
+  let content = state.dashboardContent.dashboardGeneralInfo.frontStagePage;
+  let mobileView = state.dashboardContent.dashboardGeneralInfo.mobileView;
+  return ({dashboardContent: content, openNavBarMobile: mobileView})
+  }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  
+  handleNavBarMobileOpen: () => dispatch(toggleMobileView(true)),
+  handleNavBarMobileClose: () => dispatch(toggleMobileView(false))
 })
 
 export default connect(

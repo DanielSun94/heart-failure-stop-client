@@ -14,17 +14,18 @@ const initStateInfo = {
 const oralMedicalInterventionReducer = (state=initStateInfo, action) => {
     switch (action.type){
         case ORAL_MEDICAL_INTERVENTION_REQUEST: return (
-            {isDataFetching: true,
+            {...state, isDataFetching: true,
             isDataValid: false});
         case ORAL_MEDICAL_INTERVENTION_RECEIVE_SUCCESS_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: true,
             content: action.content}
             );
         case ORAL_MEDICAL_INTERVENTION_RECEIVE_FAILED_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: false}
             );
+        default: return state;
     }
 }
 

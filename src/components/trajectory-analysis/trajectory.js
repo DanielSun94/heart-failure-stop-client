@@ -3,7 +3,7 @@ import NormalizedName from '../../utils/normalizedName';
 import { connect } from 'react-redux';
 
 const trajectoryPresentationalComponent = (content) => {
-    if (this.state.trajectoryInfo.length>0) {
+    if (content.length>0) {
         let divList = [];
 
         for (let singleVisitInfo of this.state.trajectoryInfo) {
@@ -26,7 +26,7 @@ const trajectoryPresentationalComponent = (content) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    let contentDict = state.dashboardReducer.trajectoryAnalysisReducer.singleVisitFullInfoReducer.oralInterventionReducer.content
+    let contentDict = state.dashboardContent.trajectoryAnalysis.singleVisitFullInfo.oralMedicalIntervention.content
     return ({content:contentDict})
     }
 

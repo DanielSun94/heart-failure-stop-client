@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import dashboardContentReducer from './dashboardReducer/index';
 
 const rootReducer = combineReducers({
-  dashboardContentReducer
+  dashboardContent: dashboardContentReducer
 });
 
 export default rootReducer;

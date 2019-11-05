@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BlankPage=(props) => {
+function BlankPage (){
     return <h1> this is a blank page </h1>
 }
 

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -42,34 +42,9 @@ const NavBar = props => {
   const { openMobile, onMobileClose, className, ...rest } = props;
 
   const classes = useStyles();
-  const session = useSelector(state => state.session);
-
-  useEffect(() => {
-    if (openMobile) {
-      onMobileClose && onMobileClose();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, ['']);
 
   const navbarContent = (
     <div className={classes.content}>
-      <div className={classes.profile}>
-        <Avatar
-          alt="Person"
-          className={classes.avatar}
-          component={RouterLink}
-          src={session.user.avatar}
-          to="/profile/1/timeline"
-        />
-        <Typography
-          className={classes.name}
-          variant="h4"
-        >
-          {session.user.first_name} {session.user.last_name}
-        </Typography>
-        <Typography variant="body2">{session.user.bio}</Typography>
-      </div>
       <Divider className={classes.divider} />
       <nav className={classes.navigation}>
         {navigationConfig.map(list => (

@@ -13,17 +13,18 @@ const initStateInfo = {
 const trajectoryReducer = (state=initStateInfo, action) => {
     switch (action.type){
         case TRAJECTORY_REQUEST: return (
-            {isDataFetching: true,
+            {...state, isDataFetching: true,
             isDataValid: false});
         case TRAJECTORY_RECEIVE_SUCCESS_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: true,
             content: action.content}
             );
         case TRAJECTORY_RECEIVE_FAILED_POSTS: return (
-            {isDataFetching: false,
+            {...state, isDataFetching: false,
             isDataValid: false}
             );
+        default: return state;
     }
 }
 

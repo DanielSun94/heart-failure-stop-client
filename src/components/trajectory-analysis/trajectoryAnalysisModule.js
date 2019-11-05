@@ -1,16 +1,16 @@
 import React from 'react';
 import NormalizedName from '../../utils/normalizedName';
-import BasicInfo from './patientBasicInfo';
-import Trajectory from './trajectory';
-import DetailedVisitInfo from './detailedVisitInfo';
-import BriefVisitInfo from './briefVisitInfo';
-import SingleVisitFullInfo from './singleVisitFullInfo';
-import * from './trajectoryAnalysisModuleSelect'
+import BasicInfo from './PatientBasicInfo';
+import Trajectory from './Trajectory';
+import DetailedVisitInfo from './DetailedVisitInfo';
+import BriefVisitInfo from './BriefVisitInfo';
+import SingleVisitFullInfo from './SingleVisitFullInfo';
+import TrajectoryAnalysisModuleSelect from './TrajectoryAnalysisModuleSelect';
 import { connect } from 'react-redux';
 import {showDetailToggle, fetchPosts} 
 from '../../actions/dashboardAction/trajectoryAnalysisAction/trajectoryAnalysisModuleAction';
 
-const trajectoryAnalysisModulePresentationalComponent = ({showDetail, handlePatientQuery, showDetailedInfo}) => {
+const TrajectoryAnalysisModulePresentationalComponent = ({showDetail, handlePatientQuery, showDetailToggle}) => {
     return (
         <div>
             <div>
@@ -18,12 +18,12 @@ const trajectoryAnalysisModulePresentationalComponent = ({showDetail, handlePati
                 <h2>S111203266</h2>
             </div>
             <div id={NormalizedName.PATIENT_VISIT_SET_PANEL}>
-                <form action={handlePatientQuery}>
-                    <input id={NormalizedName.INPUT_LOCAL_PATIENT_ID} type='text' value={'S113412483'}/>
-                    <input id={NormalizedName.PATIENT_QUERY_BUTTON} type='submit'>{"查询"}</input>
+                <form onSubmit={handlePatientQuery}>
+                <input id={NormalizedName.INPUT_LOCAL_PATIENT_ID} type='text' defaultValue={'S113412483'}/>
+                <input id={NormalizedName.PATIENT_QUERY_BUTTON} value={"查询"} type='submit'></input>
                 </form>
-                <button id={NormalizedName.SHOW_DETAIL_BUTTON} onClick={showDetailedInfo}>{"细节"}</button>
-                <SelectVisitDiv />
+                <button id={NormalizedName.SHOW_DETAIL_BUTTON} onClick={showDetailToggle}>{"细节"}</button>
+                <TrajectoryAnalysisModuleSelect />
             </div>
             <div id={NormalizedName.DATA_PANEL}>
                 <BasicInfo />
@@ -42,13 +42,16 @@ const trajectoryAnalysisModulePresentationalComponent = ({showDetail, handlePati
     )
 }
 
-const mapStateToProps = (state, ownProps) => {}
+const mapStateToProps = (state, ownProps) => {
+    let detail = state.dashboardContent.trajectoryAnalysis.trajectoryAnalysisGeneralInfo.showDetail;
+    return {showDetail: detail}
+};
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    handlePatientQuery: (value) => dispatch(fetchPosts(value, this.context)),
-    showDetailedInfo: (event) => dispatch(showDetailToggle(event)),
+    handlePatientQuery: (value) => dispatch(fetchPosts(value)),
+    showDetailToggle: (event) => dispatch(showDetailToggle(event)),
 })
   
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(trajectoryAnalysisModulePresentationalComponent)
+)(TrajectoryAnalysisModulePresentationalComponent)
