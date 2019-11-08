@@ -1,7 +1,3 @@
-import fetch from 'cross-fetch';
-import {queryParamsTrans} from '../../../utils/queryUtilFunction';
-import NormalizedName from '../../../utils/normalizedName';
-
 export const TRAJECTORY_REQUEST = 'TRAJECTORY_REQUEST';
 export const TRAJECTORY_RECEIVE_SUCCESS_POSTS = 'TRAJECTORY_RECEIVE_SUCCESS_POSTS';
 export const TRAJECTORY_RECEIVE_FAILED_POSTS = 'TRAJECTORY_RECEIVE_FAILED_POSTS';

@@ -1,5 +1,5 @@
-import React from 'react';
-import NormalizedName from '../../utils/normalizedName';
+import React, {Suspense} from 'react';
+import NormalizedName from '../../utils/ParaName';
 import BasicInfo from './PatientBasicInfo';
 import Trajectory from './Trajectory';
 import DetailedVisitInfo from './DetailedVisitInfo';
@@ -9,6 +9,7 @@ import TrajectoryAnalysisModuleSelect from './TrajectoryAnalysisModuleSelect';
 import { connect } from 'react-redux';
 import {showDetailToggle, fetchPosts} 
 from '../../actions/dashboardAction/trajectoryAnalysisAction/trajectoryAnalysisModuleAction';
+import { LinearProgress } from '@material-ui/core';
 
 const TrajectoryAnalysisModulePresentationalComponent = ({showDetail, handlePatientQuery, showDetailToggle}) => {
     return (
@@ -26,17 +27,19 @@ const TrajectoryAnalysisModulePresentationalComponent = ({showDetail, handlePati
                 <TrajectoryAnalysisModuleSelect />
             </div>
             <div id={NormalizedName.DATA_PANEL}>
-                <BasicInfo />
-                <Trajectory />
-                <BriefVisitInfo />
-                <DetailedVisitInfo />
-                <div>
-                    {
-                    //根据showDetail的值判断是否展示细节
-                    showDetail &&
-                    <SingleVisitFullInfo/>
-                    }
-                </div>
+                <Suspense fallback={LinearProgress}>
+                    <BasicInfo />
+                    <Trajectory />
+                    <BriefVisitInfo />
+                    <DetailedVisitInfo />
+                    <div>
+                        {
+                        //根据showDetail的值判断是否展示细节
+                        showDetail &&
+                        <SingleVisitFullInfo/>
+                        }
+                    </div>
+                </Suspense>
             </div>
         </div>
     )

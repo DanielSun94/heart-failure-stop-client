@@ -1,7 +1,6 @@
-
 import fetch from 'cross-fetch';
 import {queryParamsTrans} from '../../../utils/queryUtilFunction';
-import NormalizedName from '../../../utils/normalizedName';
+import NormalizedName from '../../../utils/ParaName';
 import * as validVisitSelect from './trajectoryAnalysisModuleSelectAction'
 import * as basicInfo from './patientBasicInfoAction'
 import * as exam from './examAction';
@@ -10,6 +9,7 @@ import * as labTestResult from './labTestResultAction';
 import * as oralMedicalIntervention from './oralMedicalInterventionAction';
 import * as vitalSign from './vitalSignAction';
 import * as briefVisitInfo from './briefVisitInfoAction';
+import RouteName from '../../../utils/RouteName';
 
 // 异步操作
 export const UNIFIED_PATIENT_ID_REQUEST_POSTS = 'UNIFIED_PATIENT_ID_REQUEST_POSTS';
@@ -70,10 +70,13 @@ export function fetchPosts(event) {
       let state = getState();
       let hospitalCode = state.dashboardContent.trajectoryAnalysis.trajectoryAnalysisGeneralInfo.hospitalCode;
       let params = {patientID: localPatientID, hospitalCode: hospitalCode};
-      let urlIdMapping = NormalizedName.TRAJECTORY_ANALYSIS_DATA_ROOT + NormalizedName.TRAJECTORY_ANALYSIS_UNIFIED_PATIENT_ID + queryParamsTrans(params);
+      let urlIdMapping = RouteName.TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.TRAJECTORY_ANALYSIS_UNIFIED_PATIENT_ID + queryParamsTrans(params);
       console.log('id map url： '+ urlIdMapping);
       // get unified patient id
-      fetch(urlIdMapping, {method: NormalizedName.GET})
+      let token = getState().session.authenticToken
+      let authorization = NormalizedName.AUTHORIZATION
+      let header = {authorization: token};
+      fetch(urlIdMapping, {method: NormalizedName.GET, headers: header})
       .then(res => res.json(), error => console.log(error))
       .then(res => {console.log(res); return res;})
       .then(res => dispatch(receiveSuccessResult(res)))
@@ -109,10 +112,13 @@ export function fetchPosts(event) {
 }
 
 function getValidVisit(params){
-  return function(dispatch) {
-    let validVisitSearching = NormalizedName.TRAJECTORY_ANALYSIS_DATA_ROOT + NormalizedName.TRAJECTORY_ANALYSIS_TRAJECTORY + queryParamsTrans(params);
+  return function(dispatch, getState) {
+    let validVisitSearching = RouteName.TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.TRAJECTORY_ANALYSIS_TRAJECTORY + queryParamsTrans(params);
+    let token = getState().session.authenticToken
+    let authorization = NormalizedName.AUTHORIZATION
+    let header = {authorization: token};
     console.log('valid visit search url： '+ validVisitSearching);
-    fetch(validVisitSearching, {method: NormalizedName.GET})
+    fetch(validVisitSearching, {method: NormalizedName.GET, headers: header})
     .then(res => res.json(), error => {console.log(error); dispatch(validVisitSelect.receiveFailedResult())})
     .then(res => {console.log(res); return res;})
     .then(res => dispatch(validVisitSelect.receiveSuccessResult(res)))

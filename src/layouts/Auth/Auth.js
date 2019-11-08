@@ -1,10 +1,13 @@
-import React, { Fragment, Suspense } from 'react';
-import { renderRoutes } from 'react-router-config';
+import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { LinearProgress } from '@material-ui/core';
-
+import {Switch, Route, Redirect} from 'react-router-dom';
+import Login from '../../views/Login';
+import Register from '../../views/Register';
+import { useRouteMatch } from 'react-router-dom';
 import { Topbar } from './components';
+import {useSelector} from 'react-redux';
+import RouteName from '../../utils/RouteName';
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -17,16 +20,17 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Auth = props => {
-  const { route } = props;
-
+  const match = useRouteMatch()
   const classes = useStyles();
+  let contentURL = RouteName.AUTH_LOGIN;
 
   return (
     <Fragment>
       <Topbar />
       <main className={classes.content}>
-      <h1> It's Authentic Page </h1>
+        <Login />
       </main>
+      <Redirect to={match.url+contentURL} />
     </Fragment>
   );
 };

@@ -4,7 +4,7 @@ import OralMedicalIntervention from './OralMedicalIntervention';
 import Exam from './Exam';
 import VitalSign from './VitalSign';
 import Risk from './Risk';
-import NormalizedName from '../../utils/normalizedName';
+import NormalizedName from '../../utils/ParaName';
 
 const SingleVisitFullInfo = () => {
     return (

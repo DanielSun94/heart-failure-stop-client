@@ -1,5 +1,5 @@
 import React from 'react';
-import NormalizedName from '../../utils/normalizedName';
+import NormalizedName from '../../utils/ParaName';
 import { connect } from 'react-redux';
 
 const LabTestResultPresentationalComponent = (content) => {

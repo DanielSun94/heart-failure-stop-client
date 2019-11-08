@@ -1,6 +1,7 @@
 import fetch from 'cross-fetch';
-import NormalizedName from '../../../utils/normalizedName';
+import NormalizedName from '../../../utils/ParaName';
 import {queryParamsTrans} from '../../../utils/queryUtilFunction';
+import RouteName from '../../../utils/RouteName';
 
 export const BRIEF_VISIT_INFO_REQUEST_POSTS = 'BRIEF_VISIT_INFO_REQUEST_POSTS';
 export const BRIEF_VISIT_INFO_RECEIVE_SUCCESS_POSTS = 'BRIEF_VISIT_INFO_RECEIVE_SUCCESS_POSTS';
@@ -30,12 +31,14 @@ export function receiveFailedResult() {
 }
 
 export function fetchPosts(params) {
-    return function(dispatch) {
+    return function(dispatch, getState) {
       dispatch(requestPosts());
-      let url = NormalizedName.TRAJECTORY_ANALYSIS_DATA_ROOT + NormalizedName.TRAJECTORY_ANALYSIS_VISIT_BRIEF_INFO + 
+      let url = RouteName.TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.TRAJECTORY_ANALYSIS_VISIT_BRIEF_INFO + 
       queryParamsTrans(params);
-      
-      return fetch(url, {method: NormalizedName.GET})
+      let token = getState().session.authenticToken
+      let authorization = NormalizedName.AUTHORIZATION
+      let header = {authorization: token};
+      return fetch(url, {method: NormalizedName.GET, headers: header})
         .then(  res => res.json(),
                 error => {console.log(error); dispatch(receiveFailedResult())})
                 .then(res => dispatch(receiveSuccessResult(res)));

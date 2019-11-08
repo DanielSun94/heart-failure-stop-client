@@ -5,7 +5,6 @@ import {TOGGLE_FRONT_STAGE_STATE, DASHBOARD_CONTENT,TOGGLE_DASHBOARD_MOBILE_VIEW
   from '../../actions/dashboardAction/dashboardAction';
 
 const initStateInfo = {
-  isFrontStage: false,
   mobileView: false,
   frontStagePage: TRAJECTORY_ANALYSIS_MODULE
 }

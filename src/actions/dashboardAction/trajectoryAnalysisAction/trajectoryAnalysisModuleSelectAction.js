@@ -9,6 +9,7 @@ export const VISIT_INFO_SUCCESS_POSTS = 'VISIT_INFO_SUCCESS_POSTS';
 export const VISIT_INFO_FAILED_POSTS = 'VISIT_INFO_FAILED_POSTS';
 export const SET_CURRENT_VISIT_INFO = 'SET_CURRENT_VISIT_INFO'
 
+
 export function visitInfoFetch(event) {
   // 由于此event默认由form的submit触发（默认会刷新页面，但是在本处我们不希望这样），因此要避免缺省动作
   
