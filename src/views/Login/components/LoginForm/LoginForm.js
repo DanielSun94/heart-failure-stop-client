@@ -6,7 +6,16 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Button, TextField } from '@material-ui/core';
 import {login} from '../../../../actions/sessionActions'
+import validate from 'validate.js';
 
+const schema = {
+  "userName": {
+    presence: {allowEmpty: false, message: "不能为空"}
+  },
+  "password": {
+    presence: {allowEmpty: false, message: "不能为空"}
+  }
+}
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -37,11 +46,12 @@ const LoginForm = props => {
   });
 
   useEffect(() => {
-    let valid = false;
-    if (formState.values.userName.length > 0 && formState.values.password.length > 0)
-      valid = true
+    const errors = validate(formState.values, schema);
+
     setFormState(formState => ({
-      ...formState, validToSubmit: valid
+      ...formState,
+      isValid: errors ? false : true,
+      errors: errors || {}
     }));
   }, [formState.values]);
 
@@ -51,10 +61,7 @@ const LoginForm = props => {
       ...formState,
       values: {
         ...formState.values,
-        [event.target.name]:
-          event.target.type === 'checkbox'
-            ? event.target.checked
-            : event.target.value
+        [event.target.name]: event.target.value
       },
       touched: {
         ...formState.touched,
@@ -82,9 +89,9 @@ const LoginForm = props => {
         <TextField
           fullWidth
           label="用户名"
-          name="userName"
+          name= "userName"
           onChange={handleChange}
-          value={formState.values.userName || 'sunzhoujia'}
+          value={formState.values.userName || ''}
           variant="outlined"
         />
         <TextField
@@ -93,14 +100,14 @@ const LoginForm = props => {
           name="password"
           onChange={handleChange}
           type="password"
-          value={formState.values.password || '12345'}
+          value={formState.values.password || ''}
           variant="outlined"
         />
       </div>
       <Button
         className={classes.submitButton}
         color="secondary"
-        disabled={!formState.validToSubmit}
+        disabled={!formState.isValid}
         size="large"
         type="submit"
         variant="contained"

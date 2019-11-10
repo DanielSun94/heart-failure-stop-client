@@ -1,12 +1,10 @@
 import React, {Fragment} from 'react';
-import PropTypes from 'prop-types';
+import {useLocation,useHistory, Redirect} from 'react-router-dom'
 import { makeStyles } from '@material-ui/styles';
-import {Switch, Route, Redirect} from 'react-router-dom';
+import {Switch, Route} from 'react-router-dom';
 import Login from '../../views/Login';
 import Register from '../../views/Register';
-import { useRouteMatch } from 'react-router-dom';
 import { Topbar } from './components';
-import {useSelector} from 'react-redux';
 import RouteName from '../../utils/RouteName';
 
 const useStyles = makeStyles(theme => ({
@@ -19,24 +17,39 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Auth = props => {
-  const match = useRouteMatch()
+const Auth = () => {
   const classes = useStyles();
-  let contentURL = RouteName.AUTH_LOGIN;
-
+  const history = useHistory();
+  const currentUrl = useLocation().pathname;
+  let redirect = null;
+  // 如果url不做任何指定，则跳转到登录界面，如果url被指定为Register，则跳转到注册界面
+  // 如果URL是其它值，则跳转到登录界面，但是在控制台报错
+  if (currentUrl === RouteName.AUTHENTIC_PAGE){
+    history.push(RouteName.AUTHENTIC_PAGE+RouteName.AUTH_LOGIN)
+    console.log('no page delegated, auto redirect to login page')
+  }
+  else if (currentUrl===RouteName.AUTHENTIC_PAGE+RouteName.AUTH_LOGIN)
+    console.log('to login page')
+  else if (currentUrl===RouteName.AUTHENTIC_PAGE+RouteName.AUTH_REGISTER){
+    console.log('to register page')
+  }
+  else{
+    history.push(RouteName.AUTHENTIC_PAGE+RouteName.AUTH_LOGIN)
+    console.log('illegal authentic url, auto redirect to login page')
+  }
   return (
     <Fragment>
       <Topbar />
-      <main className={classes.content}>
-        <Login />
-      </main>
-      <Redirect to={match.url+contentURL} />
+      <div className={classes.content}>
+        <Switch>
+          <Route path={RouteName.AUTHENTIC_PAGE+RouteName.AUTH_LOGIN}><Login/></Route>
+          <Route path={RouteName.AUTHENTIC_PAGE+RouteName.AUTH_REGISTER}><Register/></Route>
+        </Switch>
+      </div>
+      {redirect}
     </Fragment>
   );
 };
 
-Auth.propTypes = {
-  route: PropTypes.object
-};
 
 export default Auth;

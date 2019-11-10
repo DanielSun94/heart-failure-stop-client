@@ -7,14 +7,12 @@ import {
   CardMedia,
   Typography,
   Divider,
-  Link,
-  Avatar
+  Link
 } from '@material-ui/core';
 import PersonAddIcon from '@material-ui/icons/PersonAddOutlined';
-
 import gradients from '../../utils/gradients';
-import { Page } from '../../components/public-available-component';
 import { RegisterForm } from './components';
+import RouteName from '../../utils/RouteName'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -82,10 +80,7 @@ const Register = () => {
   const classes = useStyles();
 
   return (
-    <Page
-      className={classes.root}
-      title="Register"
-    >
+    <div className={classes.root}>
       <Card className={classes.card}>
         <CardContent className={classes.content}>
           <PersonAddIcon className={classes.icon} />
@@ -93,10 +88,10 @@ const Register = () => {
             gutterBottom
             variant="h3"
           >
-            Sign up
+            创建新账户
           </Typography>
           <Typography variant="subtitle2">
-            Sign up on the internal platform
+            创建新账户以访问数据
           </Typography>
           <RegisterForm className={classes.registerForm} />
           <Divider className={classes.divider} />
@@ -104,49 +99,43 @@ const Register = () => {
             align="center"
             color="secondary"
             component={RouterLink}
-            to="/auth/login"
+            to={RouteName.AUTHENTIC_PAGE+RouteName.AUTH_LOGIN}
             underline="always"
             variant="subtitle2"
           >
-            Have an account?
+            使用已有账户登录
           </Link>
         </CardContent>
         <CardMedia
           className={classes.media}
-          image="/images/auth.png"
+          image="/images/auth.jpg"
           title="Cover"
         >
           <Typography
             color="inherit"
             variant="subtitle1"
           >
-            Hella narvwhal Cosby sweater McSweeney's, salvia kitsch before they
-            sold out High Life.
+            本应用为Heart Failure Stop的Demo
           </Typography>
           <div className={classes.person}>
-            <Avatar
-              alt="Person"
-              className={classes.avatar}
-              src="/images/avatars/avatar_2.png"
-            />
             <div>
               <Typography
                 color="inherit"
                 variant="body1"
               >
-                Ekaterina Tankova
+                浙江大学
               </Typography>
               <Typography
                 color="inherit"
                 variant="body2"
               >
-                Manager at inVision
+                生物医学工程与仪器科学学院
               </Typography>
             </div>
           </div>
         </CardMedia>
       </Card>
-    </Page>
+    </div>
   );
 };
 

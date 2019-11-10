@@ -12,39 +12,35 @@ import {
   Typography,
   Link
 } from '@material-ui/core';
-
-// import useRouter from 'utils/useRouter';
+import {useHistory} from 'react-router-dom'
+import {signUp} from '../../../../actions/sessionActions'
+import {useDispatch} from 'react-redux';
 
 const schema = {
-  firstName: {
-    presence: { allowEmpty: false, message: 'is required' },
+  '用户名': {
+    presence: { allowEmpty: false, message: '不能为空' },
     length: {
       maximum: 32
     }
   },
-  lastName: {
-    presence: { allowEmpty: false, message: 'is required' },
+  '真实姓名': {
+    presence: { allowEmpty: false, message: '不能为空' },
     length: {
       maximum: 32
     }
   },
-  email: {
-    presence: { allowEmpty: false, message: 'is required' },
-    email: true,
+  '密码': {
+    presence: { allowEmpty: false, message: '不能为空' },
     length: {
       maximum: 64
     }
   },
-  password: {
-    presence: { allowEmpty: false, message: 'is required' },
+  '重复输入密码': {
+    presence: { allowEmpty: false, message: '不能为空' },
     length: {
       maximum: 128
     }
   },
-  policy: {
-    presence: { allowEmpty: false, message: 'is required' },
-    checked: true
-  }
 };
 
 const useStyles = makeStyles(theme => ({
@@ -73,9 +69,9 @@ const useStyles = makeStyles(theme => ({
 
 const RegisterForm = props => {
   const { className, ...rest } = props;
-
+  const history = useHistory()
   const classes = useStyles();
-  // const { history } = useRouter();
+  const dispatch = useDispatch();
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -85,13 +81,28 @@ const RegisterForm = props => {
   });
 
   useEffect(() => {
-    const errors = validate(formState.values, schema);
+    // 当输入没有错误，且按下了注册条件的选框时，开启注册按钮
+    let isValidFlag = false; 
+    let errors = validate(formState.values, schema);
 
-    setFormState(formState => ({
-      ...formState,
-      isValid: errors ? false : true,
-      errors: errors || {}
-    }));
+    if(!(formState.values['重复输入密码']===formState.values['密码'])){
+      if(errors)
+        errors['重复输入密码'] = ['密码输入不一致']
+      else
+        errors = {'重复输入密码': ['密码输入不一致']}
+    }
+    if (!errors){
+      if (formState.values['policy']){
+        if(formState.values['重复输入密码']===formState.values['密码'])
+          isValidFlag = true
+      }
+    }
+
+     setFormState(formState => ({
+       ...formState,
+       isValid: isValidFlag,
+       errors: errors || {}
+     }));
   }, [formState.values]);
 
   const handleChange = event => {
@@ -115,11 +126,17 @@ const RegisterForm = props => {
 
   const handleSubmit = async event => {
     event.preventDefault();
-    // history.push('/');
+    // 若能成功注册，返回主页，然后重定向到login界面
+    const userName = formState.values['用户名']
+    const realName = formState.values['真实姓名']
+    const password = formState.values['密码']
+    let params = {'userName': userName, 'realName': realName, 'password': password}
+    dispatch(signUp(params)).then(history.push('/authentic'));
   };
 
-  const hasError = field =>
-    formState.touched[field] && formState.errors[field] ? true : false;
+  const hasError = field =>{
+    return formState.errors[field] ? true : false
+  }
 
   return (
     <form
@@ -129,48 +146,49 @@ const RegisterForm = props => {
     >
       <div className={classes.fields}>
         <TextField
-          error={hasError('firstName')}
+          error={hasError('用户名')}
           helperText={
-            hasError('firstName') ? formState.errors.firstName[0] : null
+            hasError('用户名') ? formState.errors['用户名'][0] : null
           }
-          label="First name"
-          name="firstName"
+          label="用户名"
+          name="用户名"
           onChange={handleChange}
-          value={formState.values.firstName || ''}
+          value={formState.values['用户名'] || ''}
           variant="outlined"
         />
         <TextField
-          error={hasError('lastName')}
+          error={hasError('真实姓名')}
           helperText={
-            hasError('lastName') ? formState.errors.lastName[0] : null
+            hasError('真实姓名') ? formState.errors['真实姓名'][0] : null
           }
-          label="Last name"
-          name="lastName"
+          label="真实姓名"
+          name="真实姓名"
           onChange={handleChange}
-          value={formState.values.lastName || ''}
+          value={formState.values['真实姓名'] || ''}
           variant="outlined"
         />
         <TextField
-          error={hasError('email')}
+          error={hasError('密码')}
           fullWidth
-          helperText={hasError('email') ? formState.errors.email[0] : null}
-          label="Email address"
-          name="email"
+          helperText={hasError('密码') ? formState.errors['密码'][0] : null}
+          label="密码"
+          name="密码"
+          type="password"
           onChange={handleChange}
-          value={formState.values.email || ''}
+          value={formState.values['密码'] || ''}
           variant="outlined"
         />
         <TextField
-          error={hasError('password')}
+          error={hasError('重复输入密码')}
           fullWidth
           helperText={
-            hasError('password') ? formState.errors.password[0] : null
+            hasError('重复输入密码') ? formState.errors['重复输入密码'][0] : null
           }
-          label="Password"
-          name="password"
+          label="重复输入密码"
+          name="重复输入密码"
           onChange={handleChange}
           type="password"
-          value={formState.values.password || ''}
+          value={formState.values['重复输入密码'] || ''}
           variant="outlined"
         />
         <div>
@@ -186,7 +204,7 @@ const RegisterForm = props => {
               color="textSecondary"
               variant="body1"
             >
-              I have read the{' '}
+              我已阅读
               <Link
                 color="secondary"
                 component={RouterLink}
@@ -194,7 +212,7 @@ const RegisterForm = props => {
                 underline="always"
                 variant="h6"
               >
-                Terms and Conditions
+                注册条件
               </Link>
             </Typography>
           </div>
@@ -211,7 +229,7 @@ const RegisterForm = props => {
         type="submit"
         variant="contained"
       >
-        Create account
+        创建账户
       </Button>
     </form>
   );

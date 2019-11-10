@@ -9,19 +9,6 @@ class RouteName{
     // user info Route
     static USER_INFO = "data/userInfo"
 
-    // Trajectory Analysis Data Route
-    static TRAJECTORY_ANALYSIS_DATA_ROOT = "/data/trajectoryAnalysis";
-    static TRAJECTORY_ANALYSIS_ROOT = "/trajectoryAnalysis";
-    static TRAJECTORY_ANALYSIS_UNIFIED_PATIENT_ID = "/unifiedPatientID";
-    static TRAJECTORY_ANALYSIS_BASIC_INFO ="/basicInfo";
-    static TRAJECTORY_ANALYSIS_TRAJECTORY ="/trajectory";
-    static TRAJECTORY_ANALYSIS_VISIT_DETAILED_INFO ="/visitDetailedInfo";
-    static TRAJECTORY_ANALYSIS_VISIT_BRIEF_INFO ="/visitBriefInfo";
-    static TRAJECTORY_ANALYSIS_LAB_TEST ="/labTest";
-    static TRAJECTORY_ANALYSIS_MEDICAL_ORAL_INTERVENTION ="/medicalOralIntervention";
-    static TRAJECTORY_ANALYSIS_VITAL_SIGN ="/vitalSign";
-    static TRAJECTORY_ANALYSIS_EXAM ="/exam";
-
     // Dashboard content route
     static DASHBOARD_TRAJECTORY_ANALYSIS = '/trajectory-analysis';
     static DASHBOARD_BLANK_PAGE = '/blank-page';
@@ -34,6 +21,25 @@ class RouteName{
     //HTTP Verb
     static GET = "GET";
     static POST = "POST";
+
+    // Trajectory Analysis Data Route
+    // b means backend
+    static B_TRAJECTORY_ANALYSIS_DATA_ROOT = "/backend/data/trajectoryAnalysis";
+    static B_TRAJECTORY_ANALYSIS_ROOT = "/trajectoryAnalysis";
+    static B_TRAJECTORY_ANALYSIS_UNIFIED_PATIENT_ID = "/unifiedPatientID";
+    static B_TRAJECTORY_ANALYSIS_BASIC_INFO ="/basicInfo";
+    static B_TRAJECTORY_ANALYSIS_TRAJECTORY ="/trajectory";
+    static B_TRAJECTORY_ANALYSIS_VISIT_DETAILED_INFO ="/visitDetailedInfo";
+    static B_TRAJECTORY_ANALYSIS_VISIT_BRIEF_INFO ="/visitBriefInfo";
+    static B_TRAJECTORY_ANALYSIS_LAB_TEST ="/labTest";
+    static B_TRAJECTORY_ANALYSIS_MEDICAL_ORAL_INTERVENTION ="/medicalOralIntervention";
+    static B_TRAJECTORY_ANALYSIS_VITAL_SIGN ="/vitalSign";
+    static B_TRAJECTORY_ANALYSIS_EXAM ="/exam";
+
+    // Authentic Route
+    static B_AUTHENTIC = "/backend/authentic";
+    static B_AUTH_SIGNUP = '/signup';
+    static B_AUTH_LOGIN = '/login';
 }
 
 export default RouteName;

@@ -1,5 +1,7 @@
 import {SESSION_LOGIN_FAILED, SESSION_LOGIN_REQUEST ,SESSION_LOGIN_SUCCESS, SESSION_LOGOUT,
-  SESSION_USER_INFO_REQUEST, SESSION_USER_INFO_REQUEST_SUCCESS, SESSION_USER_INFO_REQUEST_FAILED} from '../actions/sessionActions';
+  SESSION_USER_INFO_REQUEST, SESSION_USER_INFO_REQUEST_SUCCESS, SESSION_USER_INFO_REQUEST_FAILED,
+  SESSION_SIGNUP_FAILED, SESSION_SIGNUP_REQUEST, SESSION_SIGNUP_SUCCESS
+} from '../actions/sessionActions';
 
 const initialState = {
   loggedIn: false,
@@ -25,6 +27,18 @@ const sessionReducer = (state = initialState, action) => {
     }
 
     case SESSION_LOGIN_FAILED: {
+      return state;
+    }
+
+    case SESSION_SIGNUP_REQUEST: {
+      return state;
+    }
+
+    case SESSION_SIGNUP_SUCCESS: {
+      return state;
+    }
+
+    case SESSION_SIGNUP_FAILED: {
       return state;
     }
 

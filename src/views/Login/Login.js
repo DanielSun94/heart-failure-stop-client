@@ -7,13 +7,12 @@ import {
   CardMedia,
   Typography,
   Divider,
-  Link,
-  Avatar
+  Link
 } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
-import { Page } from '../../components/public-available-component';
 import gradients from '../../utils/gradients';
 import { LoginForm } from './components';
+import RouteName from '../../utils/RouteName'
 
 
 const useStyles = makeStyles(theme => ({
@@ -84,10 +83,7 @@ const Login = () => {
   const classes = useStyles();
 
   return (
-    <Page
-      className={classes.root}
-      title="Login"
-    >
+    <div className = {classes.root}>
       <Card className={classes.card}>
         <CardContent className={classes.content}>
           <LockIcon className={classes.icon} />
@@ -106,7 +102,7 @@ const Login = () => {
             align="center"
             color="secondary"
             component={RouterLink}
-            to="/auth/register"
+            to={RouteName.AUTHENTIC_PAGE+RouteName.AUTH_REGISTER}
             underline="always"
             variant="subtitle2"
           >
@@ -142,7 +138,7 @@ const Login = () => {
           </div>
         </CardMedia>
       </Card>
-    </Page>
+    </div>
   );
 };
 
