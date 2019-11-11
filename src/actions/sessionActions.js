@@ -1,4 +1,5 @@
 import RouteName from '../utils/RouteName';
+import ParaName from '../utils/ParaName'
 import {queryParamsTrans} from '../utils/queryUtilFunction'
 export const SESSION_LOGIN_REQUEST = 'SESSION_LOGIN_REQUEST';
 export const SESSION_LOGIN_SUCCESS = 'SESSION_LOGIN_SUCCESS';
@@ -33,10 +34,25 @@ export function login(params){
     let url = RouteName.B_AUTHENTIC + RouteName.B_AUTH_LOGIN
     // Body中使用JSON要保证JSON字符化过，确保Header中定义content Type，不然会出错
     return fetch(url, {method: RouteName.POST, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(params)})
-    .then(res => res.json(),
-        error => {console.log(error); dispatch(loginFailed())})
-    .then(res => dispatch(loginSuccess(res)))
-
+    .then(res => res.json())
+    .then(res => {
+      // 如果正确获取了token，则判定登录成功，反之失败
+      if (res.tokenType === "Bearer" && res.accessToken.length > 0){
+        res['isError'] = false;
+        res['message'] = '登录成功'
+        return res
+      }
+      else if (res.status === '401' || res.status === 401){
+        res['isError'] = true;
+        res['message'] = '用户名或密码输入错误'
+      }
+      else{
+        res['isError'] = true;
+        res['message'] = '由于未知原因导致的登陆失败'
+      }
+      return res
+    })
+    
   }
 }
 
@@ -58,9 +74,12 @@ export function signUp(params){
     let url = RouteName.B_AUTHENTIC + RouteName.B_AUTH_SIGNUP
     // Body中使用JSON要保证JSON字符化过，确保Header中定义content Type，不然会出错
     return fetch(url, {method: RouteName.POST, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(params)})
-    .then(res => res.json(),
-        error => {console.log(error); dispatch(signUpFailed())})
-    .then(res => dispatch(signUpSuccess(res)))
+    .then(res => res.json())
+    .then(res => {
+      if(res.success) dispatch(signUpSuccess(res))
+      else dispatch(signUpFailed())
+      return res
+    })
   }
 }
 
@@ -80,12 +99,27 @@ export function getUserInfoFailed(){
 
 
 export function getAccountInfo(params){
-  return function(dispatch) {
+  return function(dispatch, getState) {
     dispatch(getUserInfoRequest())
-    let url = RouteName.USER_INFO+queryParamsTrans(params)
-    return fetch(url, {method: RouteName.GET})
-    .then(res => res.json(),
-        error => {console.log(error); dispatch(getUserInfoFailed())})
+    let url = RouteName.B_USER_INFO_DATA_ROOT+RouteName.B_USER_INFO+queryParamsTrans(params)
+    let token = getState().session.authenticToken
+    let header = {'Authorization': token};
+
+    return fetch(url, {method: ParaName.GET, headers: header})
+    .then(res => res.json())
     .then(res => dispatch(getUserInfoSuccess(res)));
+  }
+}
+
+export function signupUserExistExam(params){
+  return function(dispatch) {
+    dispatch(loginPostRequest())
+    let url = RouteName.B_AUTHENTIC + RouteName.B_AUTH_SIGNUP_USER_EXIST_TEST + queryParamsTrans(params)
+    // Body中使用JSON要保证JSON字符化过，确保Header中定义content Type，不然会出错
+    return fetch(url, {method: RouteName.GET})
+    .then(res => res.json())
+    .then(res => {
+      return res
+    })
   }
 }

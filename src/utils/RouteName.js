@@ -6,12 +6,14 @@ class RouteName{
     // Main page
     static MAIN_PAGE = "/heart-failure-stop";
 
-    // user info Route
-    static USER_INFO = "data/userInfo"
-
     // Dashboard content route
     static DASHBOARD_TRAJECTORY_ANALYSIS = '/trajectory-analysis';
     static DASHBOARD_BLANK_PAGE = '/blank-page';
+    static USER_INFO = "/userInfo"
+    static OVERVIEW = "/overview"
+    static GROUP_ANALYSIS = "/group-analysis"
+    static KNOWLEDGE_GRAPH = "/knowledge-graph"
+    static ACCOUNT_MANAGEMENT = "/account-management"
 
     // Authentic Route
     static AUTHENTIC_PAGE = "/authentic";
@@ -25,7 +27,6 @@ class RouteName{
     // Trajectory Analysis Data Route
     // b means backend
     static B_TRAJECTORY_ANALYSIS_DATA_ROOT = "/backend/data/trajectoryAnalysis";
-    static B_TRAJECTORY_ANALYSIS_ROOT = "/trajectoryAnalysis";
     static B_TRAJECTORY_ANALYSIS_UNIFIED_PATIENT_ID = "/unifiedPatientID";
     static B_TRAJECTORY_ANALYSIS_BASIC_INFO ="/basicInfo";
     static B_TRAJECTORY_ANALYSIS_TRAJECTORY ="/trajectory";
@@ -39,7 +40,12 @@ class RouteName{
     // Authentic Route
     static B_AUTHENTIC = "/backend/authentic";
     static B_AUTH_SIGNUP = '/signup';
+    static B_AUTH_SIGNUP_USER_EXIST_TEST = '/signupUserExistTest';
     static B_AUTH_LOGIN = '/login';
+
+    // Get User Info Route
+    static B_USER_INFO_DATA_ROOT = "/backend/data/userInfo";
+    static B_USER_INFO = "/userInfo"
 }
 
 export default RouteName;

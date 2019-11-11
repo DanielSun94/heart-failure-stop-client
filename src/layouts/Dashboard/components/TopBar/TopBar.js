@@ -3,22 +3,20 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
 import {
   AppBar,
   Badge,
-  Button,
+  Typography,
   IconButton,
   Toolbar,
   Hidden,
   colors,
 } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
-import InputIcon from '@material-ui/icons/Input';
 import MenuIcon from '@material-ui/icons/Menu';
 import axios from '../../../../utils/axios';
-import {logout} from '../../../../actions/sessionActions';
 import { PricingModal, NotificationsPopover } from '../../../../components/public-available-component';
 
 const useStyles = makeStyles(theme => ({
@@ -46,10 +44,9 @@ const useStyles = makeStyles(theme => ({
 // 重写了有关路由的部分
 const TopBar = props => {
   const { onOpenNavBarMobile, className, ...rest } = props;
-
+  const frontPage = useSelector(state => state.frontPage.frontPage)
   const classes = useStyles();
   const notificationsRef = useRef(null);
-  const dispatch = useDispatch();
   const [pricingModalOpen, setPricingModalOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [openNotifications, setOpenNotifications] = useState(false);
@@ -107,6 +104,12 @@ const TopBar = props => {
             src="/images/logos/logo--white.svg"
           />
         </RouterLink>
+        <Typography
+            color="inherit"
+            variant="h3"
+          >
+            Heart Failure Stop 分析平台-{frontPage}
+          </Typography>
         <div className={classes.flexGrow} />
         
         <Hidden mdDown>

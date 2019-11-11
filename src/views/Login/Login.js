@@ -12,8 +12,10 @@ import {
 import LockIcon from '@material-ui/icons/Lock';
 import gradients from '../../utils/gradients';
 import { LoginForm } from './components';
+import { useDispatch } from 'react-redux';
 import RouteName from '../../utils/RouteName'
-
+import {LOGIN, changeFrontPage} from '../../actions/frontPageAction'
+import ParaName from '../../utils/ParaName'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -81,6 +83,9 @@ const useStyles = makeStyles(theme => ({
 
 const Login = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  dispatch(changeFrontPage(LOGIN))
+  document.title = ParaName.HF_STOP+LOGIN
 
   return (
     <div className = {classes.root}>

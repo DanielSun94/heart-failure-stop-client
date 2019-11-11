@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import RouteName from '../../utils/RouteName';
 import BlankPage from '../../components/blank-page/blank-page';
-import TrajectoryAnalysisModule from '../../components/trajectory-analysis/TrajectoryAnalysisModule';
 import { makeStyles } from '@material-ui/styles';
 import { NavBar, TopBar } from './components';
-import { connect } from 'react-redux';
-import {Switch, Route, Redirect} from 'react-router-dom';
-import {TRAJECTORY_ANALYSIS_MODULE, toggleMobileView} from '../../actions/dashboardAction/dashboardAction';
+import { useHistory, useLocation } from 'react-router-dom';
+import {Switch, Route} from 'react-router-dom';
+import TrajectoryAnalysisModule from '../../views/trajectory-analysis/TrajectoryAnalysisModule'
+import AccountManagement from '../../views/account-management/AccountManagement'
+import GroupComparison from '../../views/group-comparison/GroupComparison'
+import Overview from '../../views/overview/Overview'
+import KnowledgeGraph from '../../views/knowledge-graph/KnowledgeGraph'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -57,26 +60,26 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const DashboardPresentationalComponent = ({dashboardContent, openNavBarMobile, handleNavBarMobileOpen, handleNavBarMobileClose}) => {
-
+const Dashboard= () => {
+  const history = useHistory();
+  const location = useLocation();
   const classes = useStyles();
+  const [navBarOpen, setNavBarOpen] = useState(false)
+  const handleNavBarMobileClose = () => setNavBarOpen(false)
+  const handleNavBarMobileOpen = () => setNavBarOpen(true)
+  let currentLocation = location.pathname
 
-  // 确定跳转路径
-  let contentUrl = null;
-  switch(dashboardContent){
-    case TRAJECTORY_ANALYSIS_MODULE: contentUrl=RouteName.DASHBOARD_TRAJECTORY_ANALYSIS; break;
-    default: contentUrl=RouteName.DASHBOARD_BLANK_PAGE;
-  }
+  // 确定跳转路径，默认状态下跳转到trajectory analysis界面
+  if(currentLocation === RouteName.MAIN_PAGE)
+    history.push(RouteName.MAIN_PAGE+RouteName.DASHBOARD_TRAJECTORY_ANALYSIS)
 
-  // 注意redirect只是命令强制跳转，具体跳转后的元素是渲染在switch里的
-  // 另外，虽然React-Dom目前已经支持了动态路由，但是动态路由中正确跳转依然需要绝对路径
-  // 因此需要获取当前路径，官方文档中是自定义了一个useRouteMatch的hook完成这一任务的
 
   // 有关抽屉式导航栏，采取如下响应式设计：
   // 当界面较小时，在TopBar上建立一个按钮，要按一下这个按钮才显示Drawer
   // 当界面较大时，直接显示抽屉导航栏，TopBar上的按钮不渲染
   // 这就是为什么TopBar里要加入显示NavBar的回调。NavBar里加入关闭的回调则是要给予小屏幕下抽屉打开后，还能关闭的能力
   // 当然，此处实现同样的功能也存在不同的写法，我们这里是下载的模板，因此不对原有代码做过多修改
+  // 待后期做了更多的界面，此处可以添加更多的可跳转选项
   return (
     <div className={classes.root}>
       <TopBar
@@ -87,7 +90,7 @@ const DashboardPresentationalComponent = ({dashboardContent, openNavBarMobile, h
         <NavBar
           className={classes.navBar}
           onMobileClose={handleNavBarMobileClose}
-          openMobile={openNavBarMobile}
+          openMobile={navBarOpen}
         />
         <main className={classes.content}>
           <Switch>
@@ -97,27 +100,23 @@ const DashboardPresentationalComponent = ({dashboardContent, openNavBarMobile, h
             <Route path={RouteName.MAIN_PAGE+RouteName.DASHBOARD_TRAJECTORY_ANALYSIS}>
                 <TrajectoryAnalysisModule />
             </Route>
+            <Route path={RouteName.MAIN_PAGE+RouteName.GROUP_ANALYSIS}>
+                <GroupComparison />
+            </Route>
+            <Route path={RouteName.MAIN_PAGE+RouteName.KNOWLEDGE_GRAPH}>
+                <KnowledgeGraph />
+            </Route>
+            <Route path={RouteName.MAIN_PAGE+RouteName.ACCOUNT_MANAGEMENT}>
+                <AccountManagement />
+            </Route>
+            <Route path={RouteName.MAIN_PAGE+RouteName.OVERVIEW}>
+                <Overview />
+            </Route>
           </Switch>
         </main>
       </div>
-      <Redirect to={RouteName.MAIN_PAGE+contentUrl} />
     </div>
   );
 };
 
-
-const mapStateToProps = (state, ownProps) => {
-  let content = state.dashboardContent.dashboardGeneralInfo.frontStagePage;
-  let mobileView = state.dashboardContent.dashboardGeneralInfo.mobileView;
-  return ({dashboardContent: content, openNavBarMobile: mobileView})
-  }
-
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  handleNavBarMobileOpen: () => dispatch(toggleMobileView(true)),
-  handleNavBarMobileClose: () => dispatch(toggleMobileView(false))
-})
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DashboardPresentationalComponent)
+export default Dashboard

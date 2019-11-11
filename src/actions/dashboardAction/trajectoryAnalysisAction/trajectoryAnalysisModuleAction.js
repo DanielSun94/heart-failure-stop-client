@@ -70,12 +70,11 @@ export function fetchPosts(event) {
       let state = getState();
       let hospitalCode = state.dashboardContent.trajectoryAnalysis.trajectoryAnalysisGeneralInfo.hospitalCode;
       let params = {patientID: localPatientID, hospitalCode: hospitalCode};
-      let urlIdMapping = RouteName.TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.TRAJECTORY_ANALYSIS_UNIFIED_PATIENT_ID + queryParamsTrans(params);
+      let urlIdMapping = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_UNIFIED_PATIENT_ID + queryParamsTrans(params);
       console.log('id map url： '+ urlIdMapping);
       // get unified patient id
       let token = getState().session.authenticToken
-      let authorization = NormalizedName.AUTHORIZATION
-      let header = {authorization: token};
+      let header = {'Authorization': token};
       fetch(urlIdMapping, {method: NormalizedName.GET, headers: header})
       .then(res => res.json(), error => console.log(error))
       .then(res => {console.log(res); return res;})
@@ -113,10 +112,9 @@ export function fetchPosts(event) {
 
 function getValidVisit(params){
   return function(dispatch, getState) {
-    let validVisitSearching = RouteName.TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.TRAJECTORY_ANALYSIS_TRAJECTORY + queryParamsTrans(params);
+    let validVisitSearching = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_TRAJECTORY + queryParamsTrans(params);
     let token = getState().session.authenticToken
-    let authorization = NormalizedName.AUTHORIZATION
-    let header = {authorization: token};
+    let header = {'Authorization': token};
     console.log('valid visit search url： '+ validVisitSearching);
     fetch(validVisitSearching, {method: NormalizedName.GET, headers: header})
     .then(res => res.json(), error => {console.log(error); dispatch(validVisitSelect.receiveFailedResult())})

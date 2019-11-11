@@ -1,4 +1,4 @@
-import React, {Suspense} from 'react';
+import React from 'react';
 import RouteName from './utils/RouteName';
 import {Switch, Route, Redirect} from "react-router-dom";
 import Dashboard from './layouts/Dashboard/Dashboard';
@@ -6,6 +6,7 @@ import Auth from './layouts/Auth/Auth';
 import {useSelector} from 'react-redux'
 
 const Main = props => {
+  // 在此处进行如下定义，可以保证只要没有登录，就无法看到Dashboard界面
   let isLogin = useSelector(state => state.session.loggedIn)
   let redictPage = <Redirect to={RouteName.AUTHENTIC_PAGE} />
   if(isLogin)

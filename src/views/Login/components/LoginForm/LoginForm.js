@@ -4,8 +4,8 @@ import {useDispatch} from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Button, TextField } from '@material-ui/core';
-import {login} from '../../../../actions/sessionActions'
+import { Button, TextField, Typography} from '@material-ui/core';
+import {login, loginFailed, loginSuccess, logout, getAccountInfo} from '../../../../actions/sessionActions'
 import validate from 'validate.js';
 
 const schema = {
@@ -36,7 +36,6 @@ const useStyles = makeStyles(theme => ({
 
 const LoginForm = props => {
   const { className, ...rest } = props;
-
   const classes = useStyles();
   const dispatch = useDispatch();
   const [formState, setFormState] = useState({
@@ -44,8 +43,17 @@ const LoginForm = props => {
     values: {userName: '', password: ''},
     touched: {},
   });
+  const [loginResponse, setLoginResponse] = useState({'status': false, 'message': ""})
+
+  // 退回Login Form相当于自动执行了Logout方法，该方法仅在组件装载时使用
+  // 这一设计是为了防止有人从主界面退回登录界面，再登录时由于loggedin状态不变化导致的不跳转问题
+  let initPhase = true
 
   useEffect(() => {
+    if (initPhase){
+      dispatch(logout());
+      initPhase=false
+    }
     const errors = validate(formState.values, schema);
 
     setFormState(formState => ({
@@ -53,6 +61,8 @@ const LoginForm = props => {
       isValid: errors ? false : true,
       errors: errors || {}
     }));
+
+    setLoginResponse(() => ({'status': false, 'message': ""}));
   }, [formState.values]);
 
   const handleChange = event => {
@@ -76,7 +86,23 @@ const LoginForm = props => {
     let userName = formState.values.userName
     let password = formState.values.password
     let params = {"userName": userName, "password": password}
-    dispatch(login(params));
+    dispatch(login(params))
+    // 此处如果登录成功，等待1秒后再进行页面跳转
+    // 由于是否转入验证页面由store中的状态控制，此处可以直接通过条件判断自动跳转，而无需手动跳转
+    .then(res => {
+      let message = res['message']
+      setLoginResponse(()=>({'status': true, 'message': message}))
+      if(!res['isError'])
+        // 在确认登录成功后立即开始查询登录用户的相关信息，并随之完成界面跳转
+        setTimeout(() => {
+          dispatch(loginSuccess(res))
+          dispatch(getAccountInfo({'userName': userName}))
+        }, 1000)
+      else
+        dispatch(loginFailed())
+    })
+    
+    ;
   };
 
   return (
@@ -114,6 +140,14 @@ const LoginForm = props => {
       >
         登录
       </Button>
+      {loginResponse.status&&
+      <Typography
+        color="error"
+        variant="body2"
+        >
+        {loginResponse.message}
+      </Typography>
+      }
     </form>
   );
 };

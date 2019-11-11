@@ -13,7 +13,7 @@ import {
   Link
 } from '@material-ui/core';
 import {useHistory} from 'react-router-dom'
-import {signUp} from '../../../../actions/sessionActions'
+import {signUp, signupUserExistExam} from '../../../../actions/sessionActions'
 import {useDispatch} from 'react-redux';
 
 const schema = {
@@ -73,6 +73,7 @@ const RegisterForm = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
+  const [signupResponse, setSignupResponse] = useState({'status': false, 'message': ""})
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
@@ -81,28 +82,45 @@ const RegisterForm = props => {
   });
 
   useEffect(() => {
-    // 当输入没有错误，且按下了注册条件的选框时，开启注册按钮
-    let isValidFlag = false; 
+    // 在validate做完TextInput的非空校验的基础上
+    // 当用户名没有重复，输入没有错误，按下了注册条件的选框时，开启注册按钮
+    let roleValid = false;
+
     let errors = validate(formState.values, schema);
 
-    if(!(formState.values['重复输入密码']===formState.values['密码'])){
-      if(errors)
-        errors['重复输入密码'] = ['密码输入不一致']
-      else
-        errors = {'重复输入密码': ['密码输入不一致']}
-    }
-    if (!errors){
-      if (formState.values['policy']){
-        if(formState.values['重复输入密码']===formState.values['密码'])
-          isValidFlag = true
+    if (formState.values['重复输入密码'] && formState.values['密码']){
+      if(!(formState.values['重复输入密码']===formState.values['密码'])){
+        errors ? errors['重复输入密码'] = ['密码输入不一致'] : errors = {'重复输入密码': ['密码输入不一致']};
       }
     }
-
-     setFormState(formState => ({
-       ...formState,
-       isValid: isValidFlag,
-       errors: errors || {}
-     }));
+    
+    if (formState.values['policy'])
+      roleValid = true
+    
+    if(formState.values['用户名'] && formState.values['用户名'].length > 0){
+      dispatch(signupUserExistExam({'userName': formState.values['用户名']}))
+      .then(res => {
+        if(res){
+          errors ? errors['用户名'] = ['当前用户名已被占用'] : errors = {'用户名': ['当前用户名已被占用']}
+        }
+      })
+      .then(() => {
+        setFormState(formState => ({
+          ...formState,
+          isValid: (!errors) && roleValid,
+          errors: errors || {}
+        }));
+      })
+      setSignupResponse(() => ({'status': false, 'message': ""}));
+    }
+    else{
+      setFormState(formState => ({
+        ...formState,
+        isValid: (!errors),
+        errors: errors || {}
+      }));
+      setSignupResponse(() => ({'status': false, 'message': ""}));
+    }
   }, [formState.values]);
 
   const handleChange = event => {
@@ -131,7 +149,16 @@ const RegisterForm = props => {
     const realName = formState.values['真实姓名']
     const password = formState.values['密码']
     let params = {'userName': userName, 'realName': realName, 'password': password}
-    dispatch(signUp(params)).then(history.push('/authentic'));
+    dispatch(signUp(params))
+    .then(res => {
+      if(res.success){
+        setSignupResponse(() => ({'status': true, 'message': "注册成功，即将跳转到登录页面"}))
+        setTimeout(() => history.push('/authentic'), 1500)
+      }
+      else{
+        setSignupResponse(() => ({'status': true, 'message': "注册失败，请检查网络或更改用户名"}))
+      }
+    })
   };
 
   const hasError = field =>{
@@ -148,7 +175,7 @@ const RegisterForm = props => {
         <TextField
           error={hasError('用户名')}
           helperText={
-            hasError('用户名') ? formState.errors['用户名'][0] : null
+            hasError('用户名') ? formState.errors['用户名'][0] : "当前用户名可用"
           }
           label="用户名"
           name="用户名"
@@ -231,6 +258,14 @@ const RegisterForm = props => {
       >
         创建账户
       </Button>
+      {signupResponse.status&&
+      <Typography
+        color="error"
+        variant="body2"
+        >
+        {signupResponse.message}
+      </Typography>
+      }
     </form>
   );
 };

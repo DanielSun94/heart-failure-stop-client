@@ -7,7 +7,7 @@ const initialState = {
   loggedIn: false,
   authenticToken: "",
   user: {
-    accountName: '',
+    realName: '',
     userName: "",
     role: '' // ['USER']
   },
@@ -17,6 +17,10 @@ const initialState = {
 
 const sessionReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SESSION_LOGOUT: {
+      return {loggedIn: false, authenticToken: '', user: {accountName: '', userName: "", role: ''}};
+    }
+
     case SESSION_LOGIN_REQUEST: {
       return state;
     }
@@ -42,16 +46,12 @@ const sessionReducer = (state = initialState, action) => {
       return state;
     }
 
-    case SESSION_LOGOUT: {
-      return {loggedIn: false, authenticToken: '', user: {accountName: '', userName: "", role: ''}};
-    }
-
     case SESSION_USER_INFO_REQUEST: {
       return state;
     }
 
     case SESSION_USER_INFO_REQUEST_SUCCESS: {
-      return {...state, user: {accountName: '', userName: "", role: ''}};
+      return {...state, user: {userName: action.content.userName, realName: action.content.realName, role: action.content.role}};
     }
 
     case SESSION_USER_INFO_REQUEST_FAILED: {

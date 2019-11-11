@@ -1,13 +1,19 @@
 import React, { Fragment, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
+import {useHistory} from 'react-router-dom'
 import { Drawer, Divider, Avatar, Typography } from '@material-ui/core';
 import Navigation from '../../../../components/public-available-component/Navigation';
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {logout} from "../../../../actions/sessionActions"
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import HomeIcon from '@material-ui/icons/HomeOutlined';
+import BarChartIcon from '@material-ui/icons/BarChart';
+import PeopleIcon from '@material-ui/icons/PeopleOutlined';
+import DashboardIcon from '@material-ui/icons/DashboardOutlined';
+import SettingsIcon from '@material-ui/icons/SettingsOutlined';
+import RouteName from '../../../../utils/RouteName'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,8 +47,10 @@ const useStyles = makeStyles(theme => ({
 const NavBar = props => {
   const { openMobile, onMobileClose, className, ...rest } = props;
   const dispatch = useDispatch();
+  const history = useHistory();
   const classes = useStyles();
-  const session = useSelector(state => state.session);
+  const userName = useSelector(state => state.session.user.userName);
+  const realName = useSelector(state => state.session.user.realName);
 
   const navigationConfig = [
     {
@@ -50,26 +58,32 @@ const NavBar = props => {
       pages: [
         {
           title: '概览',
-          handleClick: ()=>{console.log('概览')}
+          icon: HomeIcon,
+          handleClick: ()=>{history.push(RouteName.MAIN_PAGE+RouteName.OVERVIEW)}
         },
         {
           title: '全流程分析',
-          handleClick: ()=>{console.log('全流程分析')}
+          icon: BarChartIcon,
+          handleClick: ()=>{history.push(RouteName.MAIN_PAGE+RouteName.DASHBOARD_TRAJECTORY_ANALYSIS)}
         },
         {
           title: '人群比较',
-          handleClick: ()=>{console.log('人群比较')}
+          icon: PeopleIcon,
+          handleClick: ()=>{history.push(RouteName.MAIN_PAGE+RouteName.GROUP_ANALYSIS)}
         },
         {
           title: '知识图谱',
-          handleClick: ()=>{console.log('知识图谱')}
+          icon: DashboardIcon,
+          handleClick: ()=>{history.push(RouteName.MAIN_PAGE+RouteName.KNOWLEDGE_GRAPH)}
         },
         {
           title: '账户管理',
-          handleClick: ()=>{console.log('账户管理')}
+          icon: SettingsIcon,
+          handleClick: ()=>{history.push(RouteName.MAIN_PAGE+RouteName.ACCOUNT_MANAGEMENT)}
         },
         {
           title: '退出登录',
+          icon: ExitToAppIcon,
           handleClick: ()=>{dispatch(logout())}
         },
       ]
@@ -82,30 +96,27 @@ const NavBar = props => {
     if (openMobile) {
       onMobileClose && onMobileClose();
     }
-  }, [useSelector(state=>state.dashboardContent.dashboardGeneralInfo.frontStagePage)]);
+  }, [useSelector(state=>state.frontPage.frontPage)]);
 
   const navbarContent = (
     <div className={classes.content}>
       {
         // 用户个人信息
-        // 目前先不显示Avatar中的头像
-        // src={session.user.avatar}
+        // 目前未做病人头像收集功能，统一用浙大校徽替代
       }
       <div className={classes.profile}>
         <Avatar
           alt="Person"
           className={classes.avatar}
-          component={RouterLink}
-          src= {null}
-          to="/profile/1/timeline"
+          src= "/images/avatars/avatar_zhejiang_university.png"
         />
         <Typography
           className={classes.name}
           variant="h4"
         >
-          {session.user.userName}
+          {realName}
         </Typography>
-        <Typography variant="body2">{session.user.bio}</Typography>
+        <Typography variant="body2">{userName}</Typography>
       </div>
       <Divider className={classes.divider} />
 

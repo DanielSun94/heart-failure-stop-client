@@ -27,10 +27,9 @@ export function receiveFailedResult() {
 export function fetchPosts(params) {
     return function(dispatch, getState) {
         dispatch(requestPosts())
-        let url = RouteName.TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.TRAJECTORY_ANALYSIS_LAB_TEST + queryParamsTrans(params);
+        let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_LAB_TEST + queryParamsTrans(params);
         let token = getState().session.authenticToken
-        let authorization = NormalizedName.AUTHORIZATION
-        let header = {authorization: token, 'Content-Type': 'application/json'};
+        let header = {'Authorization': token};
         return fetch(url, {method: NormalizedName.GET, headers: header})
         .then(res => res.json(),
             error => {console.log(error); dispatch(receiveFailedResult())})

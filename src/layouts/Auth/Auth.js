@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {useLocation,useHistory, Redirect} from 'react-router-dom'
+import {useLocation,useHistory} from 'react-router-dom'
 import { makeStyles } from '@material-ui/styles';
 import {Switch, Route} from 'react-router-dom';
 import Login from '../../views/Login';

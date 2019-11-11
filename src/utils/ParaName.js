@@ -67,8 +67,8 @@ static INPUT_LOCAL_PATIENT_ID = "input_local_patient_id";
 static PATIENT_QUERY_BUTTON = "patient_query_button";
 static SHOW_DETAIL_BUTTON = "show_detail_button";
 
-// auth
-static AUTHORIZATION = 'Authorization';
+// Title prefix
+static HF_STOP = 'HF Stop '
 }
 
 export default ParaName;

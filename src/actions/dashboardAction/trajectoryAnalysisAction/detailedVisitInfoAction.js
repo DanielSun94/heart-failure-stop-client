@@ -53,11 +53,10 @@ export function fetchPosts(params) {
 
     dispatch(requestPosts())
 
-    let url =  RouteName.TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.TRAJECTORY_ANALYSIS_VISIT_DETAILED_INFO + queryParamsTrans(params);
+    let url =  RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_VISIT_DETAILED_INFO + queryParamsTrans(params);
     
     let token = getState().session.authenticToken
-    let authorization = NormalizedName.AUTHORIZATION
-    let header = {authorization: token};
+    let header = {'Authorization': token};
     return fetch(url, {method: NormalizedName.GET, headers: header})
             .then(res => res.json(),
                   error => {console.log(error); dispatch(receiveFailedResult())})

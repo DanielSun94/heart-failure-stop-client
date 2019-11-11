@@ -13,6 +13,9 @@ import PersonAddIcon from '@material-ui/icons/PersonAddOutlined';
 import gradients from '../../utils/gradients';
 import { RegisterForm } from './components';
 import RouteName from '../../utils/RouteName'
+import {useDispatch} from 'react-redux';
+import {SIGNUP, changeFrontPage} from '../../actions/frontPageAction'
+import ParaName from '../../utils/ParaName'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -78,6 +81,9 @@ const useStyles = makeStyles(theme => ({
 
 const Register = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  dispatch(changeFrontPage(SIGNUP))
+  document.title = ParaName.HF_STOP+SIGNUP
 
   return (
     <div className={classes.root}>
