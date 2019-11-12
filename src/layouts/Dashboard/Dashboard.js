@@ -10,6 +10,7 @@ import AccountManagement from '../../views/account-management/AccountManagement'
 import GroupComparison from '../../views/group-comparison/GroupComparison'
 import Overview from '../../views/overview/Overview'
 import KnowledgeGraph from '../../views/knowledge-graph/KnowledgeGraph'
+import { colors } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,7 +22,7 @@ const useStyles = makeStyles(() => ({
     // flex是一种可以根据屏幕大小进行元素自适应调整的排序方式
     flexDirection: 'column',
     // 当内容溢出本元素时候的做法，hidden指直接隐藏，另外可以用scroll的属性，加滚动条使得能够完整显示
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   topBar: {
     // react中的宽度以dp为单位，默认不写，这是一种能自动适配不同屏幕的计量方式

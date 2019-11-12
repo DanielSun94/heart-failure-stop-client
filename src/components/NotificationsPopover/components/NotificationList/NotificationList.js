@@ -17,7 +17,7 @@ import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import CodeIcon from '@material-ui/icons/Code';
 import StoreIcon from '@material-ui/icons/Store';
 
-import gradients from '../../../../../utils/gradients';
+import gradients from '../../../../utils/gradients';
 
 const useStyles = makeStyles(theme => ({
   root: {},

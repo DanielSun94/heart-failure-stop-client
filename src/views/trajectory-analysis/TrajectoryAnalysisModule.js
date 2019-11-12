@@ -1,54 +1,67 @@
-import React, {Suspense} from 'react';
-import NormalizedName from '../../utils/ParaName';
-import BasicInfo from './PatientBasicInfo';
+import React from 'react';
+import UnifiedPatientIDAndPatientBasicInfoPanel from './UnifiedPatientIDAndPatientBasicInfoPanel'
 import Trajectory from './Trajectory';
 import DetailedVisitInfo from './DetailedVisitInfo';
 import BriefVisitInfo from './BriefVisitInfo';
 import SingleVisitFullInfo from './SingleVisitFullInfo';
-import TrajectoryAnalysisModuleSelect from './TrajectoryAnalysisModuleSelect';
-import {fetchPosts, showDetailToggle} 
-from '../../actions/dashboardAction/trajectoryAnalysisAction/trajectoryAnalysisModuleAction';
-import { LinearProgress } from '@material-ui/core';
+import Risk from './Risk'
 import {TRAJECTORY_ANALYSIS, changeFrontPage} from '../../actions/frontPageAction'
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import ParaName from '../../utils/ParaName'
+import { makeStyles } from '@material-ui/styles';
+import { colors, Grid } from '@material-ui/core';
+
+const useStyles = makeStyles(theme => ({
+    root: {
+      padding: theme.spacing(3)
+    },
+    divider: {
+      backgroundColor: colors.grey[300]
+    },
+  }));
 
 const TrajectoryAnalysisModule = () => {
     const dispatch = useDispatch()
-    const handlePatientQuery= (value) => dispatch(fetchPosts(value));
-    const toggle= (event) => dispatch(showDetailToggle(event));
-    const showDetail = useSelector(state => state.dashboardContent.trajectoryAnalysis.trajectoryAnalysisGeneralInfo.showDetail)
+    const classes = useStyles();
+
     document.title = ParaName.HF_STOP+TRAJECTORY_ANALYSIS
     dispatch(changeFrontPage(TRAJECTORY_ANALYSIS))
+
     return (
-        <div>
-            <div>
-                <h2>S113412483</h2> 
-                <h2>S111203266</h2>
-            </div>
-            <div id={NormalizedName.PATIENT_VISIT_SET_PANEL}>
-                <form onSubmit={handlePatientQuery}>
-                <input id={NormalizedName.INPUT_LOCAL_PATIENT_ID} type='text' defaultValue={'S113412483'}/>
-                <input id={NormalizedName.PATIENT_QUERY_BUTTON} value={"查询"} type='submit'></input>
-                </form>
-                <button id={NormalizedName.SHOW_DETAIL_BUTTON} onClick={toggle}>{"细节"}</button>
-                <TrajectoryAnalysisModuleSelect />
-            </div>
-            <div id={NormalizedName.DATA_PANEL}>
-                <Suspense fallback={LinearProgress}>
-                    <BasicInfo />
+        <div className={classes.root}>
+            <Grid
+            container
+            spacing={3}
+            >
+                <Grid
+                item
+                lg={2}
+                md={12}
+                xs={12}
+                >
+                    <UnifiedPatientIDAndPatientBasicInfoPanel />
+                </Grid>
+                <Grid
+                item
+                lg={7}
+                md={8}
+                xs={12}
+                >
                     <Trajectory />
                     <BriefVisitInfo />
-                    <DetailedVisitInfo />
-                    <div>
-                        {
-                        //根据showDetail的值判断是否展示细节
-                        showDetail &&
-                        <SingleVisitFullInfo/>
-                        }
-                    </div>
-                </Suspense>
-            </div>
+                </Grid>
+                <Grid
+                item
+                lg={3}
+                md={4}
+                xs={12}
+                >
+                    <Risk />
+                </Grid>
+                
+                <DetailedVisitInfo />
+                <SingleVisitFullInfo/>
+            </Grid>
         </div>
     )
 }

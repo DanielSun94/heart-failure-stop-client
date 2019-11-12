@@ -17,7 +17,7 @@ import {
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import MenuIcon from '@material-ui/icons/Menu';
 import axios from '../../../../utils/axios';
-import { PricingModal, NotificationsPopover } from '../../../../components/public-available-component';
+import { PricingModal, NotificationsPopover } from '../../../../components/';
 
 const useStyles = makeStyles(theme => ({
   root: {

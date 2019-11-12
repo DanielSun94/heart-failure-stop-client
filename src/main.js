@@ -11,9 +11,8 @@ const Main = props => {
   let redictPage = <Redirect to={RouteName.AUTHENTIC_PAGE} />
   if(isLogin)
     redictPage = <Redirect to={RouteName.MAIN_PAGE} />
-  
   return (
-      <div className="App">
+      <div>
         <Switch>
           <Route path={RouteName.AUTHENTIC_PAGE}><Auth/></Route>
           <Route path={RouteName.MAIN_PAGE}><Dashboard/></Route>

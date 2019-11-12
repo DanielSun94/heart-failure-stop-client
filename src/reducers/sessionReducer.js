@@ -9,6 +9,7 @@ const initialState = {
   user: {
     realName: '',
     userName: "",
+    institutionCode: '1',
     role: '' // ['USER']
   },
   // To be Done
@@ -18,7 +19,7 @@ const initialState = {
 const sessionReducer = (state = initialState, action) => {
   switch (action.type) {
     case SESSION_LOGOUT: {
-      return {loggedIn: false, authenticToken: '', user: {accountName: '', userName: "", role: ''}};
+      return initialState;
     }
 
     case SESSION_LOGIN_REQUEST: {
@@ -51,11 +52,11 @@ const sessionReducer = (state = initialState, action) => {
     }
 
     case SESSION_USER_INFO_REQUEST_SUCCESS: {
-      return {...state, user: {userName: action.content.userName, realName: action.content.realName, role: action.content.role}};
+      return {...state, user: {...state.user, userName: action.content.userName, realName: action.content.realName, role: action.content.role}};
     }
 
     case SESSION_USER_INFO_REQUEST_FAILED: {
-      return {loggedIn: false, authenticToken: '', user: {accountName: '', userName: "", role: ''}};
+      return {loggedIn: false, authenticToken: '', user: {...state.user, realName: '', userName: "", role: ''}};
     }
 
     default: {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {useHistory} from 'react-router-dom'
 import { Drawer, Divider, Avatar, Typography } from '@material-ui/core';
-import Navigation from '../../../../components/public-available-component/Navigation';
+import Navigation from '../../../../components/Navigation';
 import {useDispatch, useSelector} from 'react-redux'
 import {logout} from "../../../../actions/sessionActions"
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
