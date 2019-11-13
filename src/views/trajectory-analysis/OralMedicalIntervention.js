@@ -46,7 +46,7 @@ const oralMedicalInterventionPresentationalComponent = (content) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    let contentDict = state.dashboardContent.trajectoryAnalysis.singleVisitFullInfo.oralMedicalIntervention.content
+    let contentDict = state.dashboard.trajectoryAnalysis.singleVisitFullInfo.oralMedicalIntervention.content
     return contentDict;
     }
 

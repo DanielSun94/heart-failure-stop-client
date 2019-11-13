@@ -43,7 +43,7 @@ const vitalSignPresentationalComponent = (content) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    let contentDict = state.dashboardContent.trajectoryAnalysis.singleVisitFullInfo.vitalSign.content
+    let contentDict = state.dashboard.trajectoryAnalysis.singleVisitFullInfo.vitalSign.content
     return contentDict;
     }
 

@@ -20,7 +20,7 @@ export function requestUnifiedPatientID(event) {
       let state = getState();
       dispatch(requestUnifiedPatientIDPost());
 
-      let localPatientID = state.dashboardContent.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.localPatientID
+      let localPatientID = state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.localPatientID
       let hospitalCode = state.session.user.institutionCode;
       let params = {patientID: localPatientID, hospitalCode: hospitalCode};
       let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_UNIFIED_PATIENT_ID + queryParamsTrans(params);
@@ -40,11 +40,8 @@ export function requestUnifiedPatientID(event) {
               console.log('no valid unified patient id found')
             }
             else{
-              dispatch(requestUnifiedPatientIDSuccess(res[ParaName.unifiedPatientID]))
+              dispatch(requestUnifiedPatientIDSuccess(res[ParaName.UNIFIED_PATIENT_ID]))
               console.log('patient unified id mapping successed')
-
-              // 在拿到病人的全局ID后，查询其基本信息
-              dispatch(fetchPatientBasicInfo(res))
             }
         }
       )
@@ -98,7 +95,7 @@ export function requestPatientBasicInfoFailed() {
   return {type: PATIENT_BASIC_INFO_RECEIVE_FAILED_POSTS}
 }
 
-export function fetchPatientBasicInfo(params) {
+export function requestPatientBasicInfo(params) {
 
     return function(dispatch, getState) {
       dispatch(requestPatientBasicInfoPost());

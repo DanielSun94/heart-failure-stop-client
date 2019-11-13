@@ -15,7 +15,7 @@ const frontPageReducer = (state=initStateInfo, action) => {
 }
 
 const rootReducer = combineReducers({
-  dashboardContent: dashboardContentReducer,
+  dashboard: dashboardContentReducer,
   session: sessionReducer,
   frontPage: frontPageReducer
 });

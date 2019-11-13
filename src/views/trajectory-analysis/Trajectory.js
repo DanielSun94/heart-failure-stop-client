@@ -1,38 +1,43 @@
-import React from 'react';
-import NormalizedName from '../../utils/ParaName';
-import { connect } from 'react-redux';
+import React, {useEffect, Fragment} from 'react';
+import ParaName from '../../utils/ParaName';
+import {useSelector, useDispatch} from 'react-redux';
+import {getValidVisit} from '../../actions/dashboardAction/trajectoryAnalysisAction/trajectoryAction';
+import HorizontalTimeline  from '../../components/HorizontalTimeLine/HorizontalTimeline'
 
-const trajectoryPresentationalComponent = (content) => {
-    if (content.length>0) {
-        let divList = [];
+const handleClick = (event) => {console.log('clicked')}
 
-        for (let singleVisitInfo of this.state.trajectoryInfo) {
-            let hospitalCode = singleVisitInfo[NormalizedName.HOSPITAL_CODE];
-            let admissionTime = singleVisitInfo[NormalizedName.HOSPITAL_CODE];
-            let visitType = singleVisitInfo[NormalizedName.VISIT_TYPE];
-            let visitID = singleVisitInfo[NormalizedName.VISIT_ID];
-            divList.push(
-                {id: visitType+"_"+visitID,
-                content: <h4> 医院编码： {hospitalCode}, 入院时间： {admissionTime}, 入院类型：{visitType}, 入院编号：{visitID}</h4>})
-        }
-        return (
-            <div id={NormalizedName.TRAJECTORY}>
-                <h1> Trajectory </h1>
-                {divList.map((item) => <li key={item.id}>{item.content}</li>)}
+const Trajectory = () => {
+    // 我们希望Trajectory能够监听unifiedPatientID的变化，从而完成合适的响应
+    const dispatch = useDispatch();
+    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID)
+    useEffect(()=>{
+        if(unifiedPatientID!=="")
+            dispatch(getValidVisit({unifiedPatientID: unifiedPatientID}))
+    }, [unifiedPatientID]);
+
+    // 以下是渲染部分
+    const visitList = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.visitList)
+    const currentVisit = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisit)
+
+    let timeline = <h1> 目前没有相关数据 </h1>
+    if(visitList.length>0){
+        timeline = 
+        <Fragment>
+            <div style={{ width: '60%', height: '100px', margin: '0 auto' }}>
+                <HorizontalTimeline
+                index={0}
+                indexClick={handleClick}
+                values={['2018-10-01', '2019-10-01']}/>
             </div>
-        )}
-    else
-        return <div id={NormalizedName.TRAJECTORY} ><h1>No Trajectory Data</h1></div>;
-}
-
-const mapStateToProps = (state, ownProps) => {
-    let contentDict = state.dashboardContent.trajectoryAnalysis.singleVisitFullInfo.oralMedicalIntervention.content
-    return ({content:contentDict})
+            <div className='text-center'>
+            </div>
+        </Fragment>
     }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({})
-  
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(trajectoryPresentationalComponent)
+    return (
+    <div id={ParaName.TRAJECTORY}>
+        {timeline} 
+    </div>)
+}
+
+export default Trajectory;

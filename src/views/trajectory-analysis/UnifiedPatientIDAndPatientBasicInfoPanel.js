@@ -1,9 +1,10 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import ParaName from '../../utils/ParaName';
 import {
     requestUnifiedPatientID,
     changeLocalPatientID,
+    requestPatientBasicInfo
 } from '../../actions/dashboardAction/trajectoryAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction';
 import {
     ERROR_NO_ERROR,
@@ -24,8 +25,10 @@ import {
     Divider
 } from "@material-ui/core"
 
-const useStyles = makeStyles(theme => ({
-    root: {},
+const useStyles = makeStyles(() => ({
+    root: {
+        marginTop: 10
+    },
     content: {
       padding: 0
     },
@@ -39,14 +42,14 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = () => {
     const handlePatientQuery = (value) => dispatch(requestUnifiedPatientID(value));
     const handleLocalPatientIDChange = (event) => dispatch(changeLocalPatientID(event.target.value))
     const defaultLLocalPatientID = useSelector(
-        state=>state.dashboardContent.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.localPatientID);
+        state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.localPatientID);
     const errorType = useSelector(
-        state=>state.dashboardContent.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.errorType);
+        state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.errorType);
     let errorTag = null;
     switch(errorType){
         case ERROR_NOT_FOUND: errorTag= <h5> 该ID无法匹配到患者 </h5>; break;
         case ERROR_UNKNOWN: errorTag= <h5> 由于未知原因的匹配失败 </h5>; break;
-        default: errorTag= <h5> </h5>; break;
+    default: errorTag=<h5 dangerouslySetInnerHTML={{__html: '&nbsp;' }} />; break;
     }
 
     const query = (
@@ -60,10 +63,16 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = () => {
     )
 
     // patient basic info part
-    // 当unifiedPatientID变化时自动触发更新
-    const patientBasicInfoDict = useSelector(state=>state.dashboardContent.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.patientBasicInfo);
+    // 监听unifiedPatientID，当unifiedPatientID变化时自动触发更新
+    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID)
+    useEffect(()=>{
+        if (unifiedPatientID!=="")
+            dispatch(requestPatientBasicInfo({unifiedPatientID: unifiedPatientID}))
+    }, [unifiedPatientID])
+
+    const patientBasicInfoDict = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.patientBasicInfo);
     const errorFlag = useSelector(
-        state=>state.dashboardContent.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.patientBasicInfo.errorType);
+        state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.patientBasicInfo.errorType);
     const basicInfo = (
         <Table>
             <TableBody>

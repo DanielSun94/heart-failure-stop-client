@@ -3,6 +3,7 @@ class ParaName{
 static HF_STOP = 'HF Stop '
 
 //ParaName
+static UNIFIED_PATIENT_ID = 'unifiedPatientID';
 static BIRTHDAY = "birthday";
 static ETHNIC_GROUP ="ethnicGroup";
 static HOSPITAL_CODE = "hospitalCode";

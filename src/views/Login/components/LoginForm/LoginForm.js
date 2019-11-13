@@ -47,12 +47,12 @@ const LoginForm = props => {
 
   // 退回Login Form相当于自动执行了Logout方法，该方法仅在组件装载时使用
   // 这一设计是为了防止有人从主界面退回登录界面，再登录时由于loggedin状态不变化导致的不跳转问题
-  let initPhase = true
+  let mountFlag = true
 
   useEffect(() => {
-    if (initPhase){
+    if (mountFlag){
       dispatch(logout());
-      initPhase=false
+      mountFlag=false
     }
     const errors = validate(formState.values, schema);
 

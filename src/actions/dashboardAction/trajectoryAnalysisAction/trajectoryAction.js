@@ -5,9 +5,6 @@ import {queryParamsTrans} from '../../../utils/queryUtilFunction';
 export const TRAJECTORY_REQUEST = 'TRAJECTORY_REQUEST';
 export const TRAJECTORY_RECEIVE_SUCCESS_POSTS = 'TRAJECTORY_RECEIVE_SUCCESS_POSTS';
 export const TRAJECTORY_RECEIVE_FAILED_POSTS = 'TRAJECTORY_RECEIVE_FAILED_POSTS';
-
-// 同步操作
-export const CHANGE_LOCAL_PATIENT_ID = 'CHANGE_LOCAL_PATIENT_ID';
 export const CHANGE_TARGET_VISIT = 'CHANGE_TARGET_VISIT';
 
 export function requestPosts() {
@@ -28,17 +25,26 @@ export function receiveFailedResult() {
 }
 
 
-function getValidVisit(params){
+export function getValidVisit(params){
   return function(dispatch, getState) {
     let validVisitSearching = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_TRAJECTORY + queryParamsTrans(params);
     let token = getState().session.authenticToken
     let header = {'Authorization': token};
     console.log('valid visit search url： '+ validVisitSearching);
     fetch(validVisitSearching, {method: ParaName.GET, headers: header})
-    .then(res => res.json(), error => {console.log(error); dispatch(receiveFailedResult())})
-    .then(res => {console.log(res); return res;})
-    .then(res => dispatch(receiveSuccessResult(res)))
-    .then(() => console.log('valid visit search successed'))
+    .then(res => res.json())
+    .then(
+      res => {
+        if(res.status && !(res.status == '200' || res.status == 200)){
+          dispatch(receiveFailedResult())
+          console.log('Unkown: Error, get trajectory info failed')
+        }
+        else{
+          dispatch(receiveSuccessResult(res))
+          console.log('get trajectory info successed')
+        }
+      }
+    )
   }
 }
 
