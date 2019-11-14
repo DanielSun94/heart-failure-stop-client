@@ -22,7 +22,7 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 const buttonStyles = {
   link: ({ outline }) => ({
     position: 'absolute',
-    top: '49px',
+    top: '82px',
     bottom: 'auto',
     transform: 'translateY(-50%)',
     height: 34,

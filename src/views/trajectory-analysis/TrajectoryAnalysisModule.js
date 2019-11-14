@@ -1,8 +1,6 @@
 import React from 'react';
 import UnifiedPatientIDAndPatientBasicInfoPanel from './UnifiedPatientIDAndPatientBasicInfoPanel'
 import Trajectory from './Trajectory';
-import DetailedVisitInfo from './DetailedVisitInfo';
-import BriefVisitInfo from './BriefVisitInfo';
 import SingleVisitFullInfo from './SingleVisitFullInfo';
 import Risk from './Risk'
 import {TRAJECTORY_ANALYSIS, changeFrontPage} from '../../actions/frontPageAction'
@@ -48,7 +46,6 @@ const TrajectoryAnalysisModule = () => {
                 xs={12}
                 >
                     <Trajectory />
-                    <BriefVisitInfo />
                 </Grid>
                 <Grid
                 item
@@ -58,8 +55,6 @@ const TrajectoryAnalysisModule = () => {
                 >
                     <Risk />
                 </Grid>
-                
-                <DetailedVisitInfo />
                 <SingleVisitFullInfo/>
             </Grid>
         </div>

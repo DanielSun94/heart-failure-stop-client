@@ -31,7 +31,7 @@ export function requestUnifiedPatientID(event) {
       fetch(url, {method: ParaName.GET, headers: header})
       .then(res=> res.json())
       .then(res => {
-            if(res.status && !(res.status == '200' || res.status == 200)){
+            if(res.status && !(res.status === '200' || res.status === 200)){
               dispatch(requestUnifiedPatientIDFailedUnknownError())
               console.log('Unkown: Error, patient unified id mapping failed')
             }
@@ -107,7 +107,7 @@ export function requestPatientBasicInfo(params) {
             .then(res => res.json())
             .then(
               res => {
-                if(res.status && !(res.status == '200' || res.status == 200)){
+                if(res.status && !(res.status === '200' || res.status === 200)){
                   dispatch(requestPatientBasicInfoFailed())
                   console.log('Unkown: Error, patient basic info fetch failed')
                 }

@@ -1,9 +1,21 @@
-import React from 'react';
-import NormalizedName from '../../utils/ParaName';
-import { connect } from 'react-redux';
+import React, {useEffect} from 'react';
+import ParaName from '../../utils/ParaName';
+import { useSelector, useDispatch } from 'react-redux';
+import {fetchPosts} from '../../actions/dashboardAction/trajectoryAnalysisAction/oralMedicalInterventionAction'
 
+const OralMedicalIntervention = () => {
+    // 获取数据
+    const dispatch = useDispatch()
+    const currentVisit = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisit)
+    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID)
+    const visitIndentifier = {...currentVisit, unifiedPatientID: unifiedPatientID}
+    useEffect(()=>{
+        if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
+            dispatch(fetchPosts(visitIndentifier))          
+        }
+    }, [currentVisit]);
 
-const oralMedicalInterventionPresentationalComponent = (content) => {
+    const content = useSelector(state => state.dashboard.trajectoryAnalysis.singleVisitFullInfo.oralMedicalIntervention.content)
 
     if (Object.keys(content).length > 0) {
         let divDict = {};
@@ -14,11 +26,11 @@ const oralMedicalInterventionPresentationalComponent = (content) => {
             let interventionNo = 1;
             let interventionItems = [];
             for (let singleIntervention of content[medicationName]) {
-                let dosageWithUnit = singleIntervention[NormalizedName.DOSAGE_WITH_UNIT];
-                let endTime = singleIntervention[NormalizedName.END_TIME];
-                let interventionName = singleIntervention[NormalizedName.INTERVENTION_NAME];
-                let startTime = singleIntervention[NormalizedName.START_TIME];
-                let frequency = singleIntervention[NormalizedName.FREQUENCY];
+                let dosageWithUnit = singleIntervention[ParaName.DOSAGE_WITH_UNIT];
+                let endTime = singleIntervention[ParaName.END_TIME];
+                let interventionName = singleIntervention[ParaName.INTERVENTION_NAME];
+                let startTime = singleIntervention[ParaName.START_TIME];
+                let frequency = singleIntervention[ParaName.FREQUENCY];
                 interventionItems.push({id: medicationName + "_" + interventionNo,
                     content: "干预编号: " + interventionNo + ", 干预名称: " + interventionName +
                         ", 干预剂量: " + dosageWithUnit + ", 频率: " + frequency + ", 开始时间: " + startTime +
@@ -35,24 +47,14 @@ const oralMedicalInterventionPresentationalComponent = (content) => {
             outputDivList.push({id: key, content: divDict[key]});
         }
         return(
-            <div id={NormalizedName.ORAL_INTERVENTION}>
+            <div id={ParaName.ORAL_INTERVENTION}>
                 <h1> Oral Intervention </h1>
                 {outputDivList.map((item) => <li key={item.id}>{item.content}</li>)}
             </div>);
     }
     else{
-        return (<div id={NormalizedName.ORAL_INTERVENTION}><h1>No Oral Intervention Data</h1></div>)
+        return (<div id={ParaName.ORAL_INTERVENTION}><h1>No Oral Intervention Data</h1></div>)
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
-    let contentDict = state.dashboard.trajectoryAnalysis.singleVisitFullInfo.oralMedicalIntervention.content
-    return contentDict;
-    }
-
-const mapDispatchToProps = (dispatch, ownProps) => ({})
-  
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(oralMedicalInterventionPresentationalComponent)
+export default OralMedicalIntervention;

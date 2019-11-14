@@ -48,6 +48,7 @@ static VISIT_NO ='visitNo';
 
 // trajectory analysis panel name
 static QUERY_AND_BASIC_INFO_PANEL = 'quearyAndBasicInfoPanel';
+static TRAJECTORY_PANEL = 'trajectoryPanel';
 
 // trajectory analysis div name
 static DIV_PATIENT_QUERY = 'divPatientQuery';

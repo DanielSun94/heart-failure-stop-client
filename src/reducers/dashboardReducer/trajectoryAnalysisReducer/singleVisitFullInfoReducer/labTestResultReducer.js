@@ -7,7 +7,7 @@ import {
 const initStateInfo = {
     isDataFetching: false,
     isDataValid: false,
-    content: null
+    content: ""
 }
 const labTestResultReducer = (state=initStateInfo, action) => {
     switch (action.type){

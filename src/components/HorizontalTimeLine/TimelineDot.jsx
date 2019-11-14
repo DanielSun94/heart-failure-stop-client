@@ -10,10 +10,12 @@ const dots = {
    * The style information for the clickable dates that apper floating over the timeline
    */
   links: {
+    height: 20,
     position: 'absolute',
-    bottom: 0,
+    bottom: 3,
     textAlign: 'center',
-    paddingBottom: 15,
+    paddingBottom: 75,
+    whiteSpace: 'pre-wrap'
   },
   /**
    * The base style information for the event dot that appers exactly on the timeline
@@ -103,7 +105,7 @@ class TimelineDot extends React.Component {
           }
         ]}
       >
-        { this.props.label }
+        {this.props.label}
         <span
           key='dot-dot'
           style={this.__getDotStyles__(dotType, this.props.date)}

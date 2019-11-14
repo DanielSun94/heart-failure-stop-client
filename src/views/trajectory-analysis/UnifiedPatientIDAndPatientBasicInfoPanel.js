@@ -27,7 +27,8 @@ import {
 
 const useStyles = makeStyles(() => ({
     root: {
-        marginTop: 10
+        marginTop: 10,
+        height: 410
     },
     content: {
       padding: 0
@@ -97,9 +98,9 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = () => {
     )
 
     return (
-        <Fragment>
+        <div className={classes.root}>
         {query}
-        <Card id={ParaName.QUERY_AND_BASIC_INFO_PANEL} className={classes.root}>
+        <Card id={ParaName.QUERY_AND_BASIC_INFO_PANEL} >
             <CardHeader title="病人基本信息"/>
             <CardContent className={classes.content}>
                 <Divider />
@@ -107,7 +108,7 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = () => {
                 <Divider />
             </CardContent>
         </Card>
-        </Fragment>
+        </div>
     );
 }
 

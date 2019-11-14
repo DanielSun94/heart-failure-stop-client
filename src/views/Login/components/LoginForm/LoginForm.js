@@ -97,7 +97,7 @@ const LoginForm = props => {
         setTimeout(() => {
           dispatch(loginSuccess(res))
           dispatch(getAccountInfo({'userName': userName}))
-        }, 1000)
+        }, 1)
       else
         dispatch(loginFailed())
     })

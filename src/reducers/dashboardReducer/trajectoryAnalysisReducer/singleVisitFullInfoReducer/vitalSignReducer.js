@@ -10,7 +10,7 @@ const initStateInfo = {
     content: []
 }
 
-const examReducer = (state=initStateInfo, action) => {
+const vitalSignReducer = (state=initStateInfo, action) => {
     switch (action.type){
         case VITAL_SIGN_REQUEST_POSTS: return (
             {...state, isDataFetching: true,
@@ -28,4 +28,4 @@ const examReducer = (state=initStateInfo, action) => {
     }
 }
 
-export default examReducer;
+export default vitalSignReducer;

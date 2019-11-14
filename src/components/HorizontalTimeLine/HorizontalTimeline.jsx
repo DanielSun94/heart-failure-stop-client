@@ -9,7 +9,7 @@ import dimensions from 'react-dimensions';
 import EventsBar from './EventsBar';
 
 // Helpers and constansts
-import {zip, daydiff, cummulativeSeperation} from './helpers';
+import {cummulativeSeperation} from './helpers';
 import Constants from './Constants';
 
 /**
@@ -138,10 +138,11 @@ HorizontalTimeline.defaultProps = {
   linePadding: Constants.TIMELINE_PADDING,
   labelWidth: Constants.DATE_WIDTH,
   // --- STYLING ---
+  // 此处是为了和Material UI的Theme对齐
   styles: {
     outline: '#dfdfdf',
     background: '#f8f8f8',
-    foreground: '#7b9d6f'
+    foreground: '#3f51b5'
   },
   fillingMotion: {
     stiffness: 150,
