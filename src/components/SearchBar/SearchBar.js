@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import { Grid, Button } from '@material-ui/core';
-import { Search, Filter } from './components';
+import { Search } from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,20 +29,12 @@ const SearchBar = props => {
   const classes = useStyles();
 
   return (
-    <Grid
-      {...rest}
-      className={clsx(classes.root, className)}
-      container
-    >
-      <Grid item>
-        <Search
-          className={classes.search}
-          onSearch={onSearch}
-          onChange={onChange}
-          defaultValue={defaultValue}
-        />
-      </Grid>
-    </Grid>
+    <Search
+    className={classes.search}
+    onSearch={onSearch}
+    onChange={onChange}
+    defaultValue={defaultValue}
+    />
   );
 };
 

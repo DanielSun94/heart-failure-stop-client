@@ -103,14 +103,17 @@ export function fetchDetailedVisitInfoPosts(params) {
         let operationStr = "";
         let otherDiagnosisStr = "";
         for (let singleMainDiag of res[ParaName.MAIN_DIAGNOSIS]){
-            mainDiagnosisStr += singleMainDiag + ',';
+            mainDiagnosisStr += singleMainDiag + '，';
         }
         for (let singleOperation of res[ParaName.OPERATION]){
-            operationStr += singleOperation + ',';
+            operationStr += singleOperation + '，';
         }
         for (let singleOtherDiag of res[ParaName.OTHER_DIAGNOSIS]){
-            otherDiagnosisStr += singleOtherDiag + ',';
+            otherDiagnosisStr += singleOtherDiag + '，';
         }
+        mainDiagnosisStr = mainDiagnosisStr.substr(0, mainDiagnosisStr.length-1)
+        operationStr = operationStr.substr(0, operationStr.length-1)
+        otherDiagnosisStr = otherDiagnosisStr.substr(0, otherDiagnosisStr.length-1)
         return {
           admissionTime: res[ParaName.ADMISSION_TIME], patientName: res[ParaName.PATIENT_NAME], deathFlag: res[ParaName.DEATH_FLAG], 
           symptom: res[ParaName.SYMPTOM], dischargeTime: res[ParaName.DISCHARGE_TIME], hospitalName: res[ParaName.HOSPITAL_NAME], 

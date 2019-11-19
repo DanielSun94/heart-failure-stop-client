@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
-import ParaName from '../../utils/ParaName';
+import ParaName from '../../../utils/ParaName';
 import { useSelector, useDispatch } from 'react-redux';
-import {fetchPosts} from '../../actions/dashboardAction/trajectoryAnalysisAction/examAction'
+import {fetchPosts} from '../../../actions/dashboardAction/trajectoryAnalysisAction/examAction'
 
 const Exam = () => {
     // 获取数据

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
-import ParaName from '../../utils/ParaName';
+import ParaName from '../../../utils/ParaName';
 import { useSelector, useDispatch } from 'react-redux';
-import {fetchPosts} from '../../actions/dashboardAction/trajectoryAnalysisAction/vitalSignAction'
+import {fetchPosts} from '../../../actions/dashboardAction/trajectoryAnalysisAction/vitalSignAction'
 
 const VitalSign = () => {
     // 获取数据

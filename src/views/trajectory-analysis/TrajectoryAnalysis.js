@@ -1,8 +1,11 @@
 import React from 'react';
-import UnifiedPatientIDAndPatientBasicInfoPanel from './UnifiedPatientIDAndPatientBasicInfoPanel'
-import Trajectory from './Trajectory';
-import SingleVisitFullInfo from './SingleVisitFullInfo';
-import Risk from './Risk'
+import UnifiedPatientIDAndPatientBasicInfoPanel from './subview/UnifiedPatientIDAndPatientBasicInfoPanel'
+import Trajectory from './subview/Trajectory';
+import LabTestResult from './subview/LabTestResult';
+import OralMedicalIntervention from './subview/OralMedicalIntervention';
+import Exam from './subview/Exam';
+import VitalSign from './subview/VitalSign';
+import Risk from './subview/Risk'
 import {TRAJECTORY_ANALYSIS, changeFrontPage} from '../../actions/frontPageAction'
 import {useDispatch} from 'react-redux';
 import ParaName from '../../utils/ParaName'
@@ -18,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-const TrajectoryAnalysisModule = () => {
+const TrajectoryAnalysis = () => {
     const dispatch = useDispatch()
     const classes = useStyles();
 
@@ -29,7 +32,7 @@ const TrajectoryAnalysisModule = () => {
         <div className={classes.root}>
             <Grid
             container
-            spacing={3}
+            spacing={2}
             >
                 <Grid
                 item
@@ -55,10 +58,41 @@ const TrajectoryAnalysisModule = () => {
                 >
                     <Risk />
                 </Grid>
-                <SingleVisitFullInfo/>
+                <Grid
+                item
+                lg={6}
+                md={12}
+                xs={12}
+                >
+                    <LabTestResult />
+                </Grid>
+                <Grid
+                item
+                lg={6}
+                md={12}
+                xs={12}
+                >
+                    <OralMedicalIntervention />
+                </Grid>
+                <Grid
+                item
+                lg={6}
+                md={12}
+                xs={12}
+                >
+                    <Exam />
+                </Grid>
+                <Grid
+                item
+                lg={6}
+                md={12}
+                xs={12}
+                >
+                    <VitalSign />
+                </Grid>
             </Grid>
         </div>
     )
 }
 
-export default TrajectoryAnalysisModule
+export default TrajectoryAnalysis

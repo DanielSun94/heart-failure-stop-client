@@ -5,12 +5,11 @@ import { makeStyles } from '@material-ui/styles';
 import { NavBar, TopBar } from './components';
 import { useHistory, useLocation } from 'react-router-dom';
 import {Switch, Route} from 'react-router-dom';
-import TrajectoryAnalysisModule from '../../views/trajectory-analysis/TrajectoryAnalysisModule'
+import TrajectoryAnalysis from '../../views/trajectory-analysis/TrajectoryAnalysis'
 import AccountManagement from '../../views/account-management/AccountManagement'
 import GroupComparison from '../../views/group-comparison/GroupComparison'
 import Overview from '../../views/overview/Overview'
 import KnowledgeGraph from '../../views/knowledge-graph/KnowledgeGraph'
-import { colors } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -99,7 +98,7 @@ const Dashboard= () => {
                 <BlankPage />
             </Route>
             <Route path={RouteName.MAIN_PAGE+RouteName.DASHBOARD_TRAJECTORY_ANALYSIS}>
-                <TrajectoryAnalysisModule />
+                <TrajectoryAnalysis />
             </Route>
             <Route path={RouteName.MAIN_PAGE+RouteName.GROUP_ANALYSIS}>
                 <GroupComparison />

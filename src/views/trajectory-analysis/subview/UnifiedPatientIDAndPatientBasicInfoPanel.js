@@ -1,18 +1,18 @@
 import React, { Fragment, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import ParaName from '../../utils/ParaName';
+import ParaName from '../../../utils/ParaName';
 import {
     requestUnifiedPatientID,
     changeLocalPatientID,
     requestPatientBasicInfo
-} from '../../actions/dashboardAction/trajectoryAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction';
+} from '../../../actions/dashboardAction/trajectoryAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction';
 import {
     ERROR_NO_ERROR,
     ERROR_NOT_FOUND,
     ERROR_UNKNOWN
 }
-from '../../reducers/dashboardReducer/trajectoryAnalysisReducer/unifiedPatientIDAndPatientBasicInfoReducer';
-import SearchBar from '../../components/SearchBar';
+from '../../../reducers/dashboardReducer/trajectoryAnalysisReducer/unifiedPatientIDAndPatientBasicInfoReducer';
+import SearchBar from '../../../components/SearchBar';
 import { makeStyles } from '@material-ui/styles';
 import {
     Card,
@@ -27,8 +27,8 @@ import {
 
 const useStyles = makeStyles(() => ({
     root: {
-        marginTop: 10,
-        height: 410
+        marginTop: 0,
+        height: 350
     },
     content: {
       padding: 0
@@ -99,15 +99,14 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = () => {
 
     return (
         <div className={classes.root}>
-        {query}
-        <Card id={ParaName.QUERY_AND_BASIC_INFO_PANEL} >
-            <CardHeader title="病人基本信息"/>
-            <CardContent className={classes.content}>
+            {query}
+            <Card id={ParaName.QUERY_AND_BASIC_INFO_PANEL} >
+                <CardHeader title="病人基本信息"/>
                 <Divider />
-                {basicInfo}
-                <Divider />
-            </CardContent>
-        </Card>
+                <CardContent className={classes.content}>
+                    {basicInfo}
+                </CardContent>
+            </Card>
         </div>
     );
 }
