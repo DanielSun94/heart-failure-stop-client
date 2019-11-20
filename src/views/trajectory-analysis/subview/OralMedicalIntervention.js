@@ -15,7 +15,7 @@ const OralMedicalIntervention = () => {
         }
     }, [currentVisit]);
 
-    const content = useSelector(state => state.dashboard.trajectoryAnalysis.singleVisitFullInfo.oralMedicalIntervention.content)
+    const content = useSelector(state => state.dashboard.trajectoryAnalysis.oralMedicalIntervention.content)
 
     if (Object.keys(content).length > 0) {
         let divDict = {};

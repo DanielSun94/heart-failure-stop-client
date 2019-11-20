@@ -2,7 +2,7 @@ import {
     VITAL_SIGN_REQUEST_POSTS,
     VITAL_SIGN_RECEIVE_SUCCESS_POSTS,
     VITAL_SIGN_RECEIVE_FAILED_POSTS} 
-    from '../../../../actions/dashboardAction/trajectoryAnalysisAction/vitalSignAction';
+    from '../../../actions/dashboardAction/trajectoryAnalysisAction/vitalSignAction';
 
 const initStateInfo = {
     isDataFetching: false,

@@ -45,6 +45,17 @@ export function getValidVisitAndSetDefaultVisit(params){
           console.log('Unkown: Error, get trajectory info failed')
         }
         else{
+          res.sort(
+            function(a, b)
+            {
+              const timeA = new Date(a.admissionTime.replace(/\//g, '-'))
+              const timeB = new Date(b.admissionTime.replace(/\//g, '-'))
+              return timeA.getTime() - timeB.getTime()
+            }
+          )
+          for(let index in res){
+            res[index]['visitNo'] = index
+          }
           dispatch(receiveTrajectorySuccessResult(res))
           console.log('get trajectory info successed')
         }

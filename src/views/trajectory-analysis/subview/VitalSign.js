@@ -15,7 +15,7 @@ const VitalSign = () => {
         }
     }, [currentVisit]);
 
-    const content = useSelector(state => state.dashboard.trajectoryAnalysis.singleVisitFullInfo.vitalSign.content)
+    const content = useSelector(state => state.dashboard.trajectoryAnalysis.vitalSign.content)
 
     if (Object.keys(content).length > 0) {
         let divDict = {};

@@ -15,7 +15,7 @@ const Exam = () => {
         }
     }, [currentVisit]);
 
-    const content = useSelector(state => state.dashboard.trajectoryAnalysis.singleVisitFullInfo.exam.content)
+    const content = useSelector(state => state.dashboard.trajectoryAnalysis.exam.content)
     if (Object.keys(content).length > 0) {
         let outputDivList = [];
 

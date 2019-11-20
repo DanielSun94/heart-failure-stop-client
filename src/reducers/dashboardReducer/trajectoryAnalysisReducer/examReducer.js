@@ -2,7 +2,7 @@ import {
     EXAM_REQUEST_POSTS,
     EXAM_RECEIVE_FAILED_POSTS,
     EXAM_RECEIVE_SUCCESS_POSTS} 
-    from '../../../../actions/dashboardAction/trajectoryAnalysisAction/examAction';
+    from '../../../actions/dashboardAction/trajectoryAnalysisAction/examAction';
 
 const initStateInfo = {
     isDataFetching: false,

@@ -2,7 +2,7 @@ import {
     LAB_TEST_RESULT_RECEIVE_SUCCESS_POSTS,
     LAB_TEST_RESULT_REQUEST_POSTS,
     LAB_TEST_RESULT_RECEIVE_FAILED_POSTS} 
-    from '../../../../actions/dashboardAction/trajectoryAnalysisAction/labTestResultAction';
+    from '../../../actions/dashboardAction/trajectoryAnalysisAction/labTestResultAction';
 
 const initStateInfo = {
     isDataFetching: false,

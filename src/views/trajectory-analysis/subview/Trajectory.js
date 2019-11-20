@@ -86,13 +86,6 @@ function formatTransform(visitList){
         admissionTimeList: admissionTimeList}
 }
 
-function longStrTrans(str){
-    if(str.length > 20)
-        return str.subStr(0, 20)
-    else
-        return str
-}
-
 const Trajectory = () => {
     // 我们希望Trajectory能够监听unifiedPatientID的变化，从而完成合适的响应
     const dispatch = useDispatch();
@@ -150,6 +143,11 @@ const Trajectory = () => {
     }, [currentVisit]);
 
     const detailedVisitInfo = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisitInfo)
+    const admissionTime = new Date(detailedVisitInfo[ParaName.ADMISSION_TIME].replace(/\//g, '-'))
+    const dischargeTime = new Date(detailedVisitInfo[ParaName.DISCHARGE_TIME].replace(/\//g, '-'))
+    let los = Math.ceil((dischargeTime.getTime()-admissionTime.getTime())/3600/24/1000)
+    if(isNaN(los))
+        los=''
     const table = (
         <Fragment>
         <Table>
@@ -204,7 +202,7 @@ const Trajectory = () => {
                     <TableCell className={classes.shortCell}>
                         <Typography>住院日:</Typography>
                     </TableCell>
-                    <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.ADMISSION_TIME]}</TableCell>
+                    <TableCell className={classes.shortCell}>{los}</TableCell>
                     <TableCell className={classes.shortCell}>
                         <Typography>症状:</Typography>
                     </TableCell>

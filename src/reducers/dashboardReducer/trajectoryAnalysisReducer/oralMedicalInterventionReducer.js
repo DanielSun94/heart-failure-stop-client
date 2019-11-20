@@ -2,7 +2,7 @@ import {
     ORAL_MEDICAL_INTERVENTION_REQUEST,
     ORAL_MEDICAL_INTERVENTION_RECEIVE_SUCCESS_POSTS,
     ORAL_MEDICAL_INTERVENTION_RECEIVE_FAILED_POSTS} 
-    from '../../../../actions/dashboardAction/trajectoryAnalysisAction/oralMedicalInterventionAction';
+    from '../../../actions/dashboardAction/trajectoryAnalysisAction/oralMedicalInterventionAction';
 
 
 const initStateInfo = {

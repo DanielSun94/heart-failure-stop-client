@@ -1,12 +1,18 @@
 import { combineReducers } from 'redux';
-import singleVisitFullInfoReducer from './singleVisitFullInfoReducer';
 import riskReducer from './riskReducer';
 import trajectoryReducer from './trajectoryReducer';
 import unifiedPatientIDAndPatientBasicInfoReducer from './unifiedPatientIDAndPatientBasicInfoReducer';
+import examReducer from './examReducer';
+import labTestResultReducer from './labTestResultReducer';
+import oralMedicalInterventionReducer from './oralMedicalInterventionReducer';
+import vitalSignReducer from './vitalSignReducer';
 
 export default combineReducers({
-    singleVisitFullInfo: singleVisitFullInfoReducer,
     risk: riskReducer,
     trajectory: trajectoryReducer,
-    unifiedPatientIDAndPatientBasicInfo: unifiedPatientIDAndPatientBasicInfoReducer
+    unifiedPatientIDAndPatientBasicInfo: unifiedPatientIDAndPatientBasicInfoReducer,
+    exam: examReducer,
+    labTestResult: labTestResultReducer,
+    oralMedicalIntervention: oralMedicalInterventionReducer,
+    vitalSign: vitalSignReducer
 })
