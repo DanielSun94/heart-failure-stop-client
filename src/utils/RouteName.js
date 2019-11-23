@@ -33,7 +33,7 @@ class RouteName{
     static B_TRAJECTORY_ANALYSIS_VISIT_DETAILED_INFO ="/visitDetailedInfo";
     static B_TRAJECTORY_ANALYSIS_VISIT_BRIEF_INFO ="/visitBriefInfo";
     static B_TRAJECTORY_ANALYSIS_LAB_TEST ="/labTest";
-    static B_TRAJECTORY_ANALYSIS_MEDICAL_ORAL_INTERVENTION ="/medicalOralIntervention";
+    static B_TRAJECTORY_ANALYSIS_ORDER ="/order";
     static B_TRAJECTORY_ANALYSIS_VITAL_SIGN ="/vitalSign";
     static B_TRAJECTORY_ANALYSIS_EXAM ="/exam";
 

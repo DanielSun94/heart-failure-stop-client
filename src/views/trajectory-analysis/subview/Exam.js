@@ -1,7 +1,49 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import ParaName from '../../../utils/ParaName';
 import { useSelector, useDispatch } from 'react-redux';
 import {fetchPosts} from '../../../actions/dashboardAction/trajectoryAnalysisAction/examAction'
+import {
+    Card, 
+    CardHeader, 
+    CardContent, 
+    Divider
+} from '@material-ui/core';
+import ExamTable from './Exam/Table'
+import ExamContent from './Exam/Content'
+import { makeStyles } from '@material-ui/styles';
+
+const dataReconstruct = (data) => {
+    let nameList = []
+    let dataMap = {}
+    
+    for(let labTestName in data){
+        nameList.push(labTestName);
+        dataMap[labTestName] = {'resultList': [], 'unit': data[labTestName][0].unit, 'isNumber': true}
+        for(let labTest of data[labTestName]){
+            let result = parseFloat(labTest['result'])
+            if(isNaN(result)){
+                result = labTest['result']
+                dataMap[labTestName]['isNumber'] = false
+            }
+            const testTime = Date.parse(labTest['testTime'])
+            dataMap[labTestName]['resultList'].push([result, testTime])
+        }
+    }
+    return [dataMap, nameList]
+}
+
+const useStyles = makeStyles(() => ({
+    root: {
+        marginTop: 0,
+        height: 470,
+    },
+    content: {
+      padding: 0,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+    },
+  }));
 
 const Exam = () => {
     // 获取数据
@@ -9,38 +51,36 @@ const Exam = () => {
     const currentVisit = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisit)
     const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID)
     const visitIndentifier = {...currentVisit, unifiedPatientID: unifiedPatientID}
+    const [selectedExam, setSelectedExam] = useState('')
     useEffect(()=>{
         if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
             dispatch(fetchPosts(visitIndentifier))          
+            setSelectedExam("")  
         }
     }, [currentVisit]);
 
-    const content = useSelector(state => state.dashboard.trajectoryAnalysis.exam.content)
-    if (Object.keys(content).length > 0) {
-        let outputDivList = [];
+    const classes = useStyles()
 
-        let examNo = 1;
-        for (let singleExamNo in content) {
-            let examPara = content[singleExamNo][ParaName.EXAM_PARA];
-            let examTime = content[singleExamNo][ParaName.EXAM_TIME];
-            let examName = content[singleExamNo][ParaName.EXAM_NAME];
-            let description = content[singleExamNo][ParaName.DESCRIPTION];
-            let impression = content[singleExamNo][ParaName.IMPRESSION];
-            outputDivList.push({
-                id: examName + "_" + examNo, content: "检查编号: " + examNo + ", 检查名称: " + examName + 
-                ", 检查时间: " + examTime + ", 检查参数: " + examPara
-                + ", 描述: " + description + ", 印象:" + impression});
-            examNo += 1;
-        }
-        return(
-            <div id={ParaName.EXAM}>
-                <h1> Exam </h1>
-                {outputDivList.map((item) => <li key={item.id}>{item.content}</li>)}
-            </div>);
-    }
-    else{
-        return (<div id={ParaName.EXAM}><h1>No Exam Data</h1></div>)
-    }
+
+    // 重新整理数据
+    const data = useSelector(state => state.dashboard.trajectoryAnalysis.exam.content)
+    const [dataMap, nameList] = dataReconstruct(data)
+    if(nameList && nameList.length > 0 && selectedExam === '')
+        setSelectedExam(nameList[0])
+
+    const table = ExamTable(nameList, selectedExam, setSelectedExam)
+    const content = ExamContent(dataMap, selectedExam)
+    
+    return  (
+        <Card id={ParaName.EXAM_PANEL} className={classes.root}>
+        <CardHeader title="病人检查结果"/>
+        <Divider />
+        <CardContent className={classes.content}>
+            {table}
+            {content}
+        </CardContent>
+        </Card>
+    );
 }
 
 export default Exam;

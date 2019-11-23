@@ -9,7 +9,7 @@ import {
     Divider
 } from '@material-ui/core';
 import LabtestResultTable from './LabResult/Table'
-import LabtestResultGraph from './LabResult/Graph'
+import LabtestResultContent from './LabResult/Content'
 import { makeStyles } from '@material-ui/styles';
 
 const dataReconstruct = (data) => {
@@ -41,15 +41,8 @@ const useStyles = makeStyles(() => ({
       padding: 0,
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'center',
+      alignItems: 'flex-start',
     },
-    header: {
-        padding: 0,
-        height: 300,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      },
   }));
 
 const LabtestResult = () => {
@@ -77,7 +70,7 @@ const LabtestResult = () => {
         setSelectedLabtest(nameList[0])
 
     const table = LabtestResultTable(nameList, selectedLabtest,setSelectedLabtest)
-    const graph = LabtestResultGraph(dataMap, selectedLabtest)
+    const content = LabtestResultContent(dataMap, selectedLabtest)
     
     return  (
         <Card id={ParaName.LABTEST_RESULT_PANEL} className={classes.root}>
@@ -85,7 +78,7 @@ const LabtestResult = () => {
         <Divider />
         <CardContent className={classes.content}>
             {table}
-            {graph}
+            {content}
         </CardContent>
         </Card>
     );

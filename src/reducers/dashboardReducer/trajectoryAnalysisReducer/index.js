@@ -4,7 +4,7 @@ import trajectoryReducer from './trajectoryReducer';
 import unifiedPatientIDAndPatientBasicInfoReducer from './unifiedPatientIDAndPatientBasicInfoReducer';
 import examReducer from './examReducer';
 import labTestResultReducer from './labTestResultReducer';
-import oralMedicalInterventionReducer from './oralMedicalInterventionReducer';
+import orderReducer from './orderReducer';
 import vitalSignReducer from './vitalSignReducer';
 
 export default combineReducers({
@@ -13,6 +13,6 @@ export default combineReducers({
     unifiedPatientIDAndPatientBasicInfo: unifiedPatientIDAndPatientBasicInfoReducer,
     exam: examReducer,
     labTestResult: labTestResultReducer,
-    oralMedicalIntervention: oralMedicalInterventionReducer,
+    order: orderReducer,
     vitalSign: vitalSignReducer
 })

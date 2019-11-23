@@ -51,6 +51,9 @@ static QUERY_AND_BASIC_INFO_PANEL = 'quearyAndBasicInfoPanel';
 static TRAJECTORY_PANEL = 'trajectoryPanel';
 static RISK_PANEL = 'riskPanel'
 static LABTEST_RESULT_PANEL = 'labtestResultPanel'
+static ORDER_PANEL = 'orderPanel'
+static VITAL_SIGN_PANEL = 'vitalSignPanel'
+static EXAM_PANEL = 'examPanel'
 
 // trajectory analysis div name
 static DIV_PATIENT_QUERY = 'divPatientQuery';

@@ -2,7 +2,7 @@ import React from 'react';
 import UnifiedPatientIDAndPatientBasicInfoPanel from './subview/UnifiedPatientIDAndPatientBasicInfoPanel'
 import Trajectory from './subview/Trajectory';
 import LabTestResult from './subview/LabTestResult';
-import OralMedicalIntervention from './subview/OralMedicalIntervention';
+import Order from './subview/Order';
 import Exam from './subview/Exam';
 import VitalSign from './subview/VitalSign';
 import Risk from './subview/Risk'
@@ -72,7 +72,7 @@ const TrajectoryAnalysis = () => {
                 md={12}
                 xs={12}
                 >
-                    <OralMedicalIntervention />
+                    <Order />
                 </Grid>
                 <Grid
                 item

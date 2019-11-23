@@ -1,7 +1,50 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import ParaName from '../../../utils/ParaName';
 import { useSelector, useDispatch } from 'react-redux';
 import {fetchPosts} from '../../../actions/dashboardAction/trajectoryAnalysisAction/vitalSignAction'
+import VitalSignTable from './VitalSign/Table'
+import VitalSignContent from './VitalSign/Content'
+import {
+    Card, 
+    CardHeader, 
+    CardContent, 
+    Divider
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
+
+const useStyles = makeStyles(() => ({
+    root: {
+        marginTop: 0,
+        height: 470,
+    },
+    content: {
+      padding: 0,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+    },
+  }));
+
+
+const dataReconstruct = (data) => {
+    let nameList = []
+    let dataMap = {}
+    
+    for(let vitalSignName in data){
+        nameList.push(vitalSignName);
+        dataMap[vitalSignName] = {'resultList': [], 'unit': data[vitalSignName][0].unit, 'isNumber': true}
+        for(let item of data[vitalSignName]){
+            let result = parseFloat(item[ParaName.RESULT])
+            if(isNaN(result)){
+                result = item[ParaName.RESULT]
+                dataMap[vitalSignName]['isNumber'] = false
+            }
+            const recordTime = Date.parse(item[ParaName.RECORD_TIME])
+            dataMap[vitalSignName]['resultList'].push([result, recordTime])
+        }
+    }
+    return [dataMap, nameList]
+}
 
 const VitalSign = () => {
     // 获取数据
@@ -9,50 +52,36 @@ const VitalSign = () => {
     const currentVisit = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisit)
     const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID)
     const visitIndentifier = {...currentVisit, unifiedPatientID: unifiedPatientID}
+    const [selectedVitalSign, setSelectedVitalSign] = useState('')
+
     useEffect(()=>{
         if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
-            dispatch(fetchPosts(visitIndentifier))          
+            dispatch(fetchPosts(visitIndentifier))
+            setSelectedVitalSign("")      
         }
     }, [currentVisit]);
 
-    const content = useSelector(state => state.dashboard.trajectoryAnalysis.vitalSign.content)
+    const classes = useStyles()
 
-    if (Object.keys(content).length > 0) {
-        let divDict = {};
-        for (let vitalSignItem in content) {
-            if (!content.hasOwnProperty(vitalSignItem))
-                continue;
+    // 重新整理数据
+    const data = useSelector(state => state.dashboard.trajectoryAnalysis.vitalSign.content)
+    const [dataMap, nameList] = dataReconstruct(data)
+    if(nameList && nameList.length > 0 && selectedVitalSign === '')
+    setSelectedVitalSign(nameList[0])
 
-            let vitalSignRecordNo = 1;
-            let vitalSignList = [];
-            for (let singleVitalSign of content[vitalSignItem]) {
-                let vitalSignName = singleVitalSign[ParaName.VITAL_SIGN_NAME];
-                let result = singleVitalSign[ParaName.RESULT];
-                let unit = singleVitalSign[ParaName.UNIT];
-                let recordTime = singleVitalSign[ParaName.RECORD_TIME];
-                vitalSignList.push({
-                    id: vitalSignName + "_" + vitalSignRecordNo,
-                    content: "指标编号: " + vitalSignRecordNo + ", 指标名称: " + vitalSignName + ", 结果: " + result
-                    + ", 单位: " + unit + ", 记录时间: " + recordTime});
-                    vitalSignRecordNo += 1;
-            }
-            divDict[vitalSignItem] = vitalSignList.map((item) => <h5 key={item.id}>{item.content}</h5>);
-        }
-        let outputDivList = [];
-        for (let key in divDict) {
-            if (!divDict.hasOwnProperty(key))
-                continue;
-            outputDivList.push({id: key, content: divDict[key]});
-        }
-        return(
-            <div id={ParaName.VITAL_SIGN}>
-                <h1> Vital Sign </h1>
-                {outputDivList.map((item) => <li key={item.id}>{item.content}</li>)}
-            </div>);
-    }
-    else{
-        return (<div id={ParaName.VITAL_SIGN}><h1>No Vital Sign Data</h1></div>)
-    }
+    const table = VitalSignTable(nameList, selectedVitalSign,setSelectedVitalSign)
+    const content = VitalSignContent(dataMap, selectedVitalSign)
+        
+    return  (
+        <Card id={ParaName.VITAL_SIGN_PANEL} className={classes.root}>
+        <CardHeader title="病人关键生理指标"/>
+        <Divider />
+        <CardContent className={classes.content}>
+            {table}
+            {content}
+        </CardContent>
+        </Card>
+    );
 }
 
 export default VitalSign;
