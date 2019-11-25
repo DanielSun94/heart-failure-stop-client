@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { monthAndDateAndTimeTrans } from '../../../../utils/queryUtilFunction';
 import {
   LineChart, 
   Line, 
@@ -7,6 +8,7 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip,
+  ResponsiveContainer
 } from 'recharts';
 import {
     Table,
@@ -20,22 +22,36 @@ const useStyles = makeStyles({
     root: {
         overflow: 'auto',
         height: '100%',
-        width: 623,
-        height: 400
-    },  
-    tableWrapper: {
+        width: '100%',
         maxHeight: 400,
-        width: 623,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+
+    },  
+    noData: {
+        width: 'auto',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    tableWrapper: {
+        height: '100%',
+        maxHeight: 400,
+        width: '100%',
         overflow: 'auto',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
     },
     chartWrapper: {
-        height: 400,
-        width: 600,
+        height: '100%',
+        maxHeight: 400,
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
     },
   });
 
@@ -93,7 +109,8 @@ const LabtestResultContent = (dataMap, selectedLabtest) => {
     
         return (
             <div className={classes.chartWrapper}>
-            <LineChart width={600} height={340} data={data}
+            <ResponsiveContainer width={'90%'} height={"90%"}>
+            <LineChart  data={data}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
@@ -115,11 +132,12 @@ const LabtestResultContent = (dataMap, selectedLabtest) => {
                 animationDuration={500}
                 strokeWidth={2}/>
             </LineChart>
+            </ResponsiveContainer>
             </div>
         )
       }
 
-    let content = <h1> No Data</h1>
+    let content = <div className={classes.noData}><h3>无显示数据</h3></div>
     if(dataMap && Object.keys(dataMap).length > 0 && selectedLabtest && selectedLabtest !== '' && dataMap[selectedLabtest]){
         const isNumber = dataMap[selectedLabtest].isNumber
         
@@ -131,14 +149,9 @@ const LabtestResultContent = (dataMap, selectedLabtest) => {
         
         if (isNumber){
             for(let item of result){
-                const time = new Date(item[1])
-                const date = time.getDate() >= 10 ? time.getDate() :'0'+time.getDate()
-                const hour = time.getHours() >= 10 ? time.getHours() :'0'+time.getHours()
-                const minute = time.getMinutes() >= 10 ? time.getMinutes() :'0'+time.getMinutes()
-                const month = time.getMonth()+1
-                const timeStr = month + '月' + date + '日 ' + hour +':'+minute
+                const timeStr = monthAndDateAndTimeTrans(item[1])
                 const value = item[0]
-                resultList.push({"日期": timeStr, "检测结果":value, 'time': time.getTime()})
+                resultList.push({"日期": timeStr, "检测结果":value, 'time': new Date(item[1])})
             }
             resultList.sort(function(a, b){return a['time']-b['time']});
 
@@ -146,14 +159,9 @@ const LabtestResultContent = (dataMap, selectedLabtest) => {
         }
         else{
             for(let item of result){
-                const time = new Date(item[1])
-                const date = time.getDate() >= 10 ? time.getDate() :'0'+time.getDate()
-                const hour = time.getHours() >= 10 ? time.getHours() :'0'+time.getHours()
-                const minute = time.getMinutes() >= 10 ? time.getMinutes() :'0'+time.getMinutes()
-                const month = time.getMonth()+1
-                const timeStr = month + '月' + date + '日 ' + hour +':'+minute
+                const timeStr = monthAndDateAndTimeTrans(item[1])
                 const value = item[0]
-                resultList.push({"日期": timeStr, "检测结果":value, 'time': time.getTime()})
+                resultList.push({"日期": timeStr, "检测结果":value, 'time': new Date(item[1])})
             }
             resultList.sort(function(a, b){return a['time']-b['time']});
 

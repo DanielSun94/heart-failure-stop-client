@@ -4,28 +4,23 @@ function queryParamsTrans(params) {
         .join('&');
 }
 
-function propertyConsistenceTest(props, state){
-    let flag = true;
-    if (props.unifiedPatientID === state.unifiedPatientID) {
-        if (props.hospitalCode === state.hospitalCode)
-            if (props.visitID === state.visitID)
-                if (props.visitType === state.visitType)
-                    flag = false;
-    }
-    if (props.unifiedPatientID.length === 0 || props.hospitalCode.length === 0 || props.visitID.length === 0
-        || props.visitType.length === 0)
-        flag = false;
-    return {updateFlag: flag}
+function monthAndDateTrans(globalDate){
+    const time = new Date(globalDate)
+    const date = time.getDate() >= 10 ? time.getDate() :'0'+time.getDate()
+    const month = time.getMonth()+1
+    const timeStr = month + '月' + date + '日 '
+    return timeStr
 }
 
-function propertyConsistenceTestOnlyUnifiedPatientID(props, state){
-    let newUnifiedPatientID = props.unifiedPatientID;
-    let prevUnifiedPatientID = state.unifiedPatientID;
-
-    if (prevUnifiedPatientID === newUnifiedPatientID || newUnifiedPatientID.length === 0)
-        return {updateFlag: false};
-    else
-        return {updateFlag: true};
+function monthAndDateAndTimeTrans(globalDate){
+    const time = new Date(globalDate)
+    const month = time.getMonth()+1
+    const date = time.getDate() >= 10 ? time.getDate() :'0'+time.getDate()
+    const hour = time.getHours() >= 10 ? time.getHours() :'0'+time.getHours()
+    const minute = time.getMinutes() >= 10 ? time.getMinutes() :'0'+time.getMinutes()
+    const timeStr = month + '月' + date + '日 ' + hour +':'+minute
+    return timeStr
 }
 
-export {queryParamsTrans, propertyConsistenceTest, propertyConsistenceTestOnlyUnifiedPatientID};
+
+export {queryParamsTrans, monthAndDateTrans, monthAndDateAndTimeTrans};

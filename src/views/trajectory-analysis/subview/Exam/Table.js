@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ExamTable = (nameList, selectedLabtest,setSelectedLabtest) => {
+const ExamTable = (nameMap, selectedExam, setSelectedExam) => {
   // 注意，不可以在条件语句中使用Hooks
   const classes = useStyles();
   return (
@@ -31,8 +31,8 @@ const ExamTable = (nameList, selectedLabtest,setSelectedLabtest) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {nameList.map(name => (
-              name === selectedLabtest ? (
+            {Object.keys(nameMap).map(name => (
+              name === selectedExam ? (
                 <TableRow key={name} selected>
                     <TableCell>
                         {name}
@@ -40,7 +40,7 @@ const ExamTable = (nameList, selectedLabtest,setSelectedLabtest) => {
                 </TableRow>
               ):
               (
-                <TableRow key={name} hover onClick={()=>setSelectedLabtest(name)}>
+                <TableRow key={name} hover onClick={()=>setSelectedExam(name)}>
                 <TableCell>
                     {name}
                 </TableCell>

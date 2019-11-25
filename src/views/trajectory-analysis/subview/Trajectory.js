@@ -10,13 +10,13 @@ import {
     Card, 
     CardHeader, 
     CardContent, 
-    Divider,
     Table,
     TableBody,
     TableCell,
     TableRow,
     Typography,
-    Tooltip
+    Tooltip,
+    Hidden
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles';
 import ParaName from '../../../utils/ParaName';
@@ -24,22 +24,14 @@ import ParaName from '../../../utils/ParaName';
 const useStyles = makeStyles(() => ({
     root: {
         marginTop: 0,
-        height: 350 
+        width: '100%'
     },
     content: {
       padding: 0,
-      height: 300,
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
     },
-    header: {
-        padding: 0,
-        height: 300,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      },
     // timeline 的marginTop 7px，height 106px均是为了和病人基本信息对齐
     timeline:{
         backgroundColor: '#f4f6f8',
@@ -150,6 +142,7 @@ const Trajectory = () => {
         los=''
     const table = (
         <Fragment>
+        <Hidden lgDown>
         <Table>
             <TableBody className={classes.table}>
                 <TableRow className={classes.row}>
@@ -168,8 +161,8 @@ const Trajectory = () => {
                     <TableCell>
                         <Tooltip title={detailedVisitInfo[ParaName.OPERATION]}>
                             <Typography>
-                            {detailedVisitInfo[ParaName.OPERATION].length > 15 ?
-                            detailedVisitInfo[ParaName.OPERATION].substr(0, 15)+'...' :
+                            {detailedVisitInfo[ParaName.OPERATION].length > 20 ?
+                            detailedVisitInfo[ParaName.OPERATION].substr(0, 20)+'...' :
                             detailedVisitInfo[ParaName.OPERATION]}
                             </Typography>
                         </Tooltip>
@@ -191,8 +184,8 @@ const Trajectory = () => {
                     <TableCell>
                         <Tooltip title={detailedVisitInfo[ParaName.MAIN_DIAGNOSIS]}>
                             <Typography>
-                            {detailedVisitInfo[ParaName.MAIN_DIAGNOSIS].length > 15 ?
-                            detailedVisitInfo[ParaName.MAIN_DIAGNOSIS].substr(0, 15)+'...' :
+                            {detailedVisitInfo[ParaName.MAIN_DIAGNOSIS].length > 20 ?
+                            detailedVisitInfo[ParaName.MAIN_DIAGNOSIS].substr(0, 20)+'...' :
                             detailedVisitInfo[ParaName.MAIN_DIAGNOSIS]}
                             </Typography>
                         </Tooltip>
@@ -206,15 +199,23 @@ const Trajectory = () => {
                     <TableCell className={classes.shortCell}>
                         <Typography>症状:</Typography>
                     </TableCell>
-                    <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.SYMPTOM]}</TableCell>
+                    <TableCell className={classes.shortCell}>
+                        <Tooltip title={detailedVisitInfo[ParaName.SYMPTOM]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.SYMPTOM].length > 20 ?
+                            detailedVisitInfo[ParaName.SYMPTOM].substr(0, 20)+'...' :
+                            detailedVisitInfo[ParaName.SYMPTOM]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
                     <TableCell className={classes.shortCell}>
                             <Typography>其它诊断:</Typography>                      
                     </TableCell>
                     <TableCell component='div'>
                         <Tooltip title={detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}>
                             <Typography>
-                            {detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].length > 15 ?
-                            detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].substr(0, 15)+'...' :
+                            {detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].length > 20 ?
+                            detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].substr(0, 20)+'...' :
                             detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}
                             </Typography>
                         </Tooltip>
@@ -223,6 +224,269 @@ const Trajectory = () => {
                 </TableRow>
             </TableBody>
         </Table>
+        </Hidden>
+        <Hidden xlUp smDown>
+        <Table>
+            <TableBody className={classes.table}>
+                <TableRow className={classes.row}>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>入院时间:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.ADMISSION_TIME]}</TableCell>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>年龄:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.AGE]}</TableCell>
+
+                    <TableCell className={classes.shortCell}>
+                        <Typography>手术:</Typography>
+                    </TableCell>
+                    <TableCell>
+                        <Tooltip title={detailedVisitInfo[ParaName.OPERATION]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.OPERATION].length > 10 ?
+                            detailedVisitInfo[ParaName.OPERATION].substr(0, 10)+'...' :
+                            detailedVisitInfo[ParaName.OPERATION]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                </TableRow>
+                <TableRow className={classes.row} selected>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>出院时间:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.DISCHARGE_TIME]}</TableCell>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>是否死亡:</Typography>
+                    </TableCell>
+                    <TableCell>{detailedVisitInfo[ParaName.DEATH_FLAG]}</TableCell>
+
+                    <TableCell className={classes.shortCell}>
+                        <Typography>主要诊断:</Typography>
+                    </TableCell>
+                    <TableCell>
+                        <Tooltip title={detailedVisitInfo[ParaName.MAIN_DIAGNOSIS]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.MAIN_DIAGNOSIS].length > 10 ?
+                            detailedVisitInfo[ParaName.MAIN_DIAGNOSIS].substr(0, 10)+'...' :
+                            detailedVisitInfo[ParaName.MAIN_DIAGNOSIS]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                </TableRow>
+                <TableRow className={classes.row}>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>住院日:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{los}</TableCell>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>症状:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>
+                    <Tooltip title={detailedVisitInfo[ParaName.SYMPTOM]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.SYMPTOM].length > 10 ?
+                            detailedVisitInfo[ParaName.SYMPTOM].substr(0, 10)+'...' :
+                            detailedVisitInfo[ParaName.SYMPTOM]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>
+                            <Typography>其它诊断:</Typography>                      
+                    </TableCell>
+                    <TableCell component='div'>
+                        <Tooltip title={detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].length > 10 ?
+                            detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].substr(0, 10)+'...' :
+                            detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                </TableRow>
+            </TableBody>
+        </Table>
+        </Hidden>
+        <Hidden mdUp xsDown>
+        <Table>
+            <TableBody className={classes.table}>
+                <TableRow className={classes.row}>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>入院时间:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.ADMISSION_TIME]}</TableCell>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>出院时间:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.DISCHARGE_TIME]}</TableCell>
+                </TableRow>
+                <TableRow className={classes.row} selected>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>年龄:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.AGE]}</TableCell>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>住院日:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{los}</TableCell>
+                </TableRow>
+                <TableRow className={classes.row}>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>手术:</Typography>
+                    </TableCell>
+                    <TableCell>
+                        <Tooltip title={detailedVisitInfo[ParaName.OPERATION]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.OPERATION].length > 7 ?
+                            detailedVisitInfo[ParaName.OPERATION].substr(0, 7)+'...' :
+                            detailedVisitInfo[ParaName.OPERATION]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>症状:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>
+                    <Tooltip title={detailedVisitInfo[ParaName.SYMPTOM]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.SYMPTOM].length > 7 ?
+                            detailedVisitInfo[ParaName.SYMPTOM].substr(0, 7)+'...' :
+                            detailedVisitInfo[ParaName.SYMPTOM]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                </TableRow>
+                <TableRow className={classes.row} selected>
+            
+                    <TableCell className={classes.shortCell}>
+                        <Typography>是否死亡:</Typography>
+                    </TableCell>
+                    <TableCell>{detailedVisitInfo[ParaName.DEATH_FLAG]}</TableCell>
+
+                    <TableCell className={classes.shortCell}>
+                        <Typography>主要诊断:</Typography>
+                    </TableCell>
+                    <TableCell>
+                        <Tooltip title={detailedVisitInfo[ParaName.MAIN_DIAGNOSIS]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.MAIN_DIAGNOSIS].length > 7 ?
+                            detailedVisitInfo[ParaName.MAIN_DIAGNOSIS].substr(0, 7)+'...' :
+                            detailedVisitInfo[ParaName.MAIN_DIAGNOSIS]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                </TableRow>
+                <TableRow className={classes.row}>
+                    
+                    
+                    <TableCell className={classes.shortCell}>
+                            <Typography>其它诊断:</Typography>                      
+                    </TableCell>
+                    <TableCell component='div'>
+                        <Tooltip title={detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].length > 7 ?
+                            detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].substr(0, 7)+'...' :
+                            detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                </TableRow>
+            </TableBody>
+        </Table>
+        </Hidden>
+        <Hidden smUp>
+        <Table>
+            <TableBody className={classes.table}>
+                <TableRow className={classes.row}>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>入院时间:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.ADMISSION_TIME]}</TableCell>
+                </TableRow>
+                <TableRow className={classes.row} selected>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>年龄:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.AGE]}</TableCell>
+                </TableRow>
+                <TableRow className={classes.row}>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>手术:</Typography>
+                    </TableCell>
+                    <TableCell>
+                        <Tooltip title={detailedVisitInfo[ParaName.OPERATION]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.OPERATION].length > 10 ?
+                            detailedVisitInfo[ParaName.OPERATION].substr(0, 10)+'...' :
+                            detailedVisitInfo[ParaName.OPERATION]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                </TableRow>
+                <TableRow className={classes.row} selected>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>出院时间:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.DISCHARGE_TIME]}</TableCell>
+                </TableRow>
+                <TableRow className={classes.row}>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>是否死亡:</Typography>
+                    </TableCell>
+                    <TableCell>{detailedVisitInfo[ParaName.DEATH_FLAG]}</TableCell>
+                </TableRow>
+                <TableRow className={classes.row} selected>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>主要诊断:</Typography>
+                    </TableCell>
+                    <TableCell>
+                        <Tooltip title={detailedVisitInfo[ParaName.MAIN_DIAGNOSIS]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.MAIN_DIAGNOSIS].length > 10 ?
+                            detailedVisitInfo[ParaName.MAIN_DIAGNOSIS].substr(0, 10)+'...' :
+                            detailedVisitInfo[ParaName.MAIN_DIAGNOSIS]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                </TableRow>
+                <TableRow className={classes.row}>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>住院日:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>{los}</TableCell>
+                </TableRow>
+                <TableRow className={classes.row} selected>
+                    <TableCell className={classes.shortCell}>
+                        <Typography>症状:</Typography>
+                    </TableCell>
+                    <TableCell className={classes.shortCell}>
+                    <Tooltip title={detailedVisitInfo[ParaName.SYMPTOM]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.SYMPTOM].length > 10 ?
+                            detailedVisitInfo[ParaName.SYMPTOM].substr(0, 10)+'...' :
+                            detailedVisitInfo[ParaName.SYMPTOM]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                </TableRow>
+                <TableRow className={classes.row}>
+                    <TableCell className={classes.shortCell}>
+                            <Typography>其它诊断:</Typography>                      
+                    </TableCell>
+                    <TableCell component='div'>
+                        <Tooltip title={detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}>
+                            <Typography>
+                            {detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].length > 10 ?
+                            detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].substr(0, 10)+'...' :
+                            detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                </TableRow>
+            </TableBody>
+        </Table>
+        </Hidden>
         </Fragment>
     )
     

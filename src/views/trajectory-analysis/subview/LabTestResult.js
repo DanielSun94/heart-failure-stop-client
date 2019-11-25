@@ -39,6 +39,8 @@ const useStyles = makeStyles(() => ({
     },
     content: {
       padding: 0,
+      height: '100%',
+      width: '100%',
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'flex-start',
@@ -74,7 +76,7 @@ const LabtestResult = () => {
     
     return  (
         <Card id={ParaName.LABTEST_RESULT_PANEL} className={classes.root}>
-        <CardHeader title="病人实验室检查结果"/>
+        <CardHeader title="实验室检查"/>
         <Divider />
         <CardContent className={classes.content}>
             {table}

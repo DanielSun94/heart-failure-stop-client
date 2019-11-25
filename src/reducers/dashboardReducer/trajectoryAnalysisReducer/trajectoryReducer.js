@@ -28,7 +28,7 @@ const initStateInfo = {
         operation: "", 
         otherDiagnosis:"", 
         deathFlag: "",
-        sypmtom: ""
+        symptom: ""
     },
     visitList: [],
     errorType: ERROR_NO_ERROR,

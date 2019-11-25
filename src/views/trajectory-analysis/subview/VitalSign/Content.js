@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { monthAndDateAndTimeTrans } from '../../../../utils/queryUtilFunction';
 import {
   LineChart, 
   Line, 
@@ -21,20 +22,20 @@ const useStyles = makeStyles({
     root: {
         overflow: 'auto',
         height: '100%',
-        width: 623,
-        height: 400
+        width: '100%',
+        maxHeight: 400
     },  
     tableWrapper: {
         maxHeight: 400,
-        width: 623,
+        width: '100%',
         overflow: 'auto',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
     },
     chartWrapper: {
-        height: 400,
-        width: 600,
+        maxHeight: 400,
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
     },
@@ -133,11 +134,7 @@ const VitalSignContent = (dataMap, selectedLabtest) => {
         if (isNumber){
             for(let item of result){
                 const time = new Date(item[1])
-                const date = time.getDate() >= 10 ? time.getDate() :'0'+time.getDate()
-                const hour = time.getHours() >= 10 ? time.getHours() :'0'+time.getHours()
-                const minute = time.getMinutes() >= 10 ? time.getMinutes() :'0'+time.getMinutes()
-                const month = time.getMonth()+1
-                const timeStr = month + '月' + date + '日 ' + hour +':'+minute
+                const timeStr = monthAndDateAndTimeTrans(item[1])
                 const value = item[0]
                 resultList.push({"日期": timeStr, "检测结果":value, 'time': time.getTime()})
             }
@@ -148,11 +145,7 @@ const VitalSignContent = (dataMap, selectedLabtest) => {
         else{
             for(let item of result){
                 const time = new Date(item[1])
-                const date = time.getDate() >= 10 ? time.getDate() :'0'+time.getDate()
-                const hour = time.getHours() >= 10 ? time.getHours() :'0'+time.getHours()
-                const minute = time.getMinutes() >= 10 ? time.getMinutes() :'0'+time.getMinutes()
-                const month = time.getMonth()+1
-                const timeStr = month + '月' + date + '日 ' + hour +':'+minute
+                const timeStr = monthAndDateAndTimeTrans(item[1])
                 const value = item[0]
                 resultList.push({"日期": timeStr, "检测结果":value, 'time': time.getTime()})
             }

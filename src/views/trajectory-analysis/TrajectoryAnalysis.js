@@ -10,7 +10,7 @@ import {TRAJECTORY_ANALYSIS, changeFrontPage} from '../../actions/frontPageActio
 import {useDispatch} from 'react-redux';
 import ParaName from '../../utils/ParaName'
 import { makeStyles } from '@material-ui/styles';
-import { colors, Grid } from '@material-ui/core';
+import { colors, Grid, Hidden } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -37,27 +37,36 @@ const TrajectoryAnalysis = () => {
                 <Grid
                 item
                 lg={2}
-                md={12}
+                sm={6}
                 xs={12}
                 >
                     <UnifiedPatientIDAndPatientBasicInfoPanel />
                 </Grid>
+                <Hidden lgUp>
                 <Grid
                 item
-                lg={7}
-                md={8}
-                xs={12}
-                >
-                    <Trajectory />
-                </Grid>
-                <Grid
-                item
-                lg={3}
-                md={4}
+                sm={6}
                 xs={12}
                 >
                     <Risk />
                 </Grid>
+                </Hidden>
+                <Grid
+                item
+                lg={8}
+                md={12}
+                xs={12}
+                >
+                    <Trajectory />
+                </Grid>
+                <Hidden mdDown>
+                <Grid
+                item
+                lg={2}
+                >
+                    <Risk />
+                </Grid>
+                </Hidden>
                 <Grid
                 item
                 lg={6}

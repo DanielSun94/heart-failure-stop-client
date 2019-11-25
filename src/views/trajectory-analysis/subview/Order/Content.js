@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { monthAndDateAndTimeTrans } from '../../../../utils/queryUtilFunction';
 import {
   LineChart, 
   Line, 
@@ -17,28 +18,27 @@ import {
 } from '@material-ui/core'
 
 const useStyles = makeStyles({
-    root: {
-        overflow: 'auto',
-        height: '100%',
-        width: 623,
-        height: 400
-    },  
-    tableWrapper: {
-        maxHeight: 400,
-        width: 623,
-        overflow: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-    },
-    chartWrapper: {
-        height: 400,
-        width: 600,
-        display: 'flex',
-        alignItems: 'center',
-    },
-  });
-
+  root: {
+      overflow: 'auto',
+      height: '100%',
+      width: '100%',
+      maxHeight: 400
+  },  
+  tableWrapper: {
+      maxHeight: 400,
+      width: '100%',
+      overflow: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+  },
+  chartWrapper: {
+      maxHeight: 400,
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+  },
+});
 const OrderContent = (dataMap, selectedOrder) => {
     const classes = useStyles()
 
@@ -102,19 +102,9 @@ const OrderContent = (dataMap, selectedOrder) => {
         let resultList = []
 
         for(let item of result){
-            const startTime = new Date(item['startTime'])
-            const startDate = startTime.getDate() >= 10 ? startTime.getDate() :'0'+startTime.getDate()
-            const startHour = startTime.getHours() >= 10 ? startTime.getHours() :'0'+startTime.getHours()
-            const startMinute = startTime.getMinutes() >= 10 ? startTime.getMinutes() :'0'+startTime.getMinutes()
-            const startMonth = startTime.getMonth()+1
-            const startTimeStr = startMonth + '月' + startDate + '日 ' + startHour +':'+startMinute
-            const endTime = new Date(item['endTime'])
-            const endDate = endTime.getDate() >= 10 ? endTime.getDate() :'0'+endTime.getDate()
-            const endHour = endTime.getHours() >= 10 ? endTime.getHours() :'0'+endTime.getHours()
-            const endMinute = endTime.getMinutes() >= 10 ? endTime.getMinutes() :'0'+endTime.getMinutes()
-            const endMonth = endTime.getMonth()+1
-            const endTimeStr = endMonth + '月' + endDate + '日 ' + endHour +':'+endMinute
-
+            const startTimeStr = monthAndDateAndTimeTrans(item['startTime'])
+            const endTimeStr = monthAndDateAndTimeTrans(item['endTime'])
+            
             resultList.push({"startTime": startTimeStr, "endTime": endTimeStr, 
             "dosage":item['dosage'], "unit":item['unit'],"frequency":item['frequency'],})
         }

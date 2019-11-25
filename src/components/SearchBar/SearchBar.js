@@ -4,16 +4,9 @@ import { makeStyles } from '@material-ui/styles';
 import { Search } from './components';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap'
-  },
   search: {
     flexGrow: 1,
-    maxWidth: 480,
-    flexBasis: 480
+    width: '100%'
   },
   filterButton: {
     marginLeft: 'auto'

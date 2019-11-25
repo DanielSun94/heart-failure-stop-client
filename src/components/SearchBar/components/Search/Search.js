@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Paper, Button, Input } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import { minWidth } from '@material-ui/system';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,11 +23,14 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.icon
   },
   searchInput: {
-    width: 120,
-    flexGrow: 1
+    flexGrow: 1,
+    flexShrink: 0.5,
+    width: '85%'
   },
   searchButton: {
-    marginLeft: theme.spacing(3)
+    marginLeft: theme.spacing(3),
+    flexShrink: 1,
+    minWidth: 75
   }
 }));
 
@@ -48,6 +52,10 @@ const Search = props => {
         <Input
           className={classes.searchInput}
           onChange={onChange}
+          inputProps={{
+            'aria-label': 'description',
+            'text-overflow': 'ellipsis'
+          }}
           disableUnderline
           placeholder= {defaultValue? defaultValue: "请输入病人ID"}
         />
