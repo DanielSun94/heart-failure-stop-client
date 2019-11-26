@@ -37,6 +37,10 @@ class RouteName{
     static B_TRAJECTORY_ANALYSIS_VITAL_SIGN ="/vitalSign";
     static B_TRAJECTORY_ANALYSIS_EXAM ="/exam";
 
+    // run machine learning model
+    static B_MACHINE_LEARNING = "/backend/machineLearning";
+    static B_TENSORFLOW_HAWKES_RNN = "/tensorflow/hawkesRNN";
+
     // Authentic Route
     static B_AUTHENTIC = "/backend/authentic";
     static B_AUTH_SIGNUP = '/signup';

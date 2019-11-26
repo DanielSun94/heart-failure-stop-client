@@ -14,5 +14,5 @@ export default combineReducers({
     exam: examReducer,
     labTestResult: labTestResultReducer,
     order: orderReducer,
-    vitalSign: vitalSignReducer
+    vitalSign: vitalSignReducer,
 })

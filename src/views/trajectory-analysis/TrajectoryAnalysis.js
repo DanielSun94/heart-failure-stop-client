@@ -5,7 +5,8 @@ import LabTestResult from './subview/LabTestResult';
 import Order from './subview/Order';
 import Exam from './subview/Exam';
 import VitalSign from './subview/VitalSign';
-import Risk from './subview/Risk'
+import RiskBriefPanel from './subview/RiskBriefPanel'
+import RiskFullPanel from './subview/RiskFullPanel'
 import {TRAJECTORY_ANALYSIS, changeFrontPage} from '../../actions/frontPageAction'
 import {useDispatch} from 'react-redux';
 import ParaName from '../../utils/ParaName'
@@ -14,7 +15,7 @@ import { colors, Grid, Hidden } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(2)
     },
     divider: {
       backgroundColor: colors.grey[300]
@@ -48,7 +49,7 @@ const TrajectoryAnalysis = () => {
                 sm={6}
                 xs={12}
                 >
-                    <Risk />
+                    <RiskBriefPanel />
                 </Grid>
                 </Hidden>
                 <Grid
@@ -64,9 +65,14 @@ const TrajectoryAnalysis = () => {
                 item
                 lg={2}
                 >
-                    <Risk />
+                    <RiskBriefPanel />
                 </Grid>
                 </Hidden>
+                <Grid
+                xs={12}
+                >  
+                    <RiskFullPanel />
+                </Grid>
                 <Grid
                 item
                 lg={6}
