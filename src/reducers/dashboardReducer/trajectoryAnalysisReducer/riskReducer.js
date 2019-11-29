@@ -1,35 +1,46 @@
 import {
-    RISK_RESET,
     RISK_REQUEST,
     REQUEST_RECEIVE_SUCCESS_POST,
     REQUEST_RECEIVE_FAILED_POST} 
     from '../../../actions/dashboardAction/trajectoryAnalysisAction/riskAction';
 
-const initStateInfo = {
-    content: {}
-}
+const initStateInfo = {}
 
 const riskReducer = (state=initStateInfo, action) => {
     switch (action.type){
-        case RISK_RESET: return initStateInfo;
-        case RISK_REQUEST: return state;
+        case RISK_REQUEST: {
+            let taskMap = {"current": -1, "previous": -1, "fetchStatus": "isFetching"} 
+            let newMap = {...state}
+            newMap[action.predictionTask] = taskMap
+            return newMap
+        };
         case REQUEST_RECEIVE_SUCCESS_POST: {
-            const isCurrent = action.isCurrent
+            const currentOrPrevious = action.currentOrPrevious
             const result= action.result.outputs[0][0]
-            let content = {...state.content}
-            let taskMap = {...state.content[action.predictTask]}
-            if(isCurrent){
+            let newMap = {...state}
+            let taskMap = {...state[action.predictTask]}
+
+            if(currentOrPrevious === "current"){
                 taskMap['current'] = result
             }
-            else{
+            else if (currentOrPrevious === "previous"){
                 taskMap['previous'] = result
             }
-            content[action.predictTask] = taskMap
-            return (
-            {...state, content: content}
-            )
+
+            if(taskMap['previous']!==-1 && taskMap['current']!== -1)
+                taskMap["fetchStatus"] = "success"
+
+            newMap[action.predictTask] = taskMap
+
+            return newMap
         };
-        case REQUEST_RECEIVE_FAILED_POST: return state;
+        case REQUEST_RECEIVE_FAILED_POST: {
+            let newMap = {...state}
+            let taskMap = {...state[action.predictTask]}
+            taskMap["fetchStatus"] = "failed"
+            newMap[action.predictTask] = taskMap
+            return newMap
+        };
         default: return state;
     }
 }

@@ -23,9 +23,21 @@ const useStyles = makeStyles({
         overflow: 'auto',
         height: '100%',
         width: '100%',
-        maxHeight: 400
+        maxHeight: 400,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+
     },  
+    noData: {
+        width: 'auto',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     tableWrapper: {
+        height: '100%',
         maxHeight: 400,
         width: '100%',
         overflow: 'auto',
@@ -34,10 +46,12 @@ const useStyles = makeStyles({
         alignItems: 'flex-start',
     },
     chartWrapper: {
+        height: '100%',
         maxHeight: 400,
         width: '100%',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
     },
   });
 
@@ -121,7 +135,7 @@ const VitalSignContent = (dataMap, selectedLabtest) => {
         )
       }
 
-    let content = <h1> No Data</h1>
+    let content = <div className={classes.noData}><h3>无可显示的数据</h3></div>
     if(dataMap && Object.keys(dataMap).length > 0 && selectedLabtest && selectedLabtest !== '' && dataMap[selectedLabtest]){
         const isNumber = dataMap[selectedLabtest].isNumber
         

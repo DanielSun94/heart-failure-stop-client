@@ -14,7 +14,7 @@ export const ERROR_NOT_FOUND = 'errorNotFound'
 export const ERROR_NO_ERROR = 'errorNoError'
 
 const initState = {
-    localPatientID: "S113202906",
+    localPatientID: "S115664930",
     unifiedPatientID: "",
     errorType: ERROR_NO_ERROR,
     patientBasicInfo:{

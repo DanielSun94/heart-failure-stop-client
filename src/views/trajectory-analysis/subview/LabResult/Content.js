@@ -137,7 +137,7 @@ const LabtestResultContent = (dataMap, selectedLabtest) => {
         )
       }
 
-    let content = <div className={classes.noData}><h3>无显示数据</h3></div>
+    let content = <div className={classes.noData}><h3>无可显示的数据</h3></div>
     if(dataMap && Object.keys(dataMap).length > 0 && selectedLabtest && selectedLabtest !== '' && dataMap[selectedLabtest]){
         const isNumber = dataMap[selectedLabtest].isNumber
         
