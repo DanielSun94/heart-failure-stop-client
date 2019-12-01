@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Paper, Button, Input } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import { minWidth } from '@material-ui/system';
 
 const useStyles = makeStyles(theme => ({
   root: {

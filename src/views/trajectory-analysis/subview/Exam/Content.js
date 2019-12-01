@@ -54,7 +54,7 @@ const ExamContent = (nameMap, dataList, selectedExam) => {
     else{
         return (
             <div className={classes.root}>     
-            {'No data'}
+                <div className={classes.noData}><h3>未找到相关报告</h3></div>
             </div>
           );
     }

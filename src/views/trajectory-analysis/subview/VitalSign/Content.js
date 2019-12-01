@@ -63,29 +63,29 @@ const VitalSignContent = (dataMap, selectedLabtest) => {
         return (
             <div className={classes.tableWrapper}>  
             <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                    <TableCell>
+              <TableHead key={'tableHead'}>
+                <TableRow key={'head'}>
+                    <TableCell  key={'recordTimeHead'}>
                       {'检测时间'}
                     </TableCell>
-                    <TableCell>
+                    <TableCell key={'resultHead'}>
                       {'检测结果'}
                     </TableCell>
-                    <TableCell>
+                    <TableCell key={'unitHead'}>
                       {'单位'}
                     </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {data.map(item => (
-                <TableRow key={item[ParaName.RECORD_TIME]}>
-                    <TableCell>
+              <TableBody key={'body'}>
+                {data.map((item, index) => (
+                <TableRow key={index}>
+                    <TableCell key={'recordTime'}>
                         {item[ParaName.RECORD_TIME]}
                     </TableCell>
-                    <TableCell>
+                    <TableCell key={'result'}>
                         {item[ParaName.RESULT]}
                     </TableCell>
-                    <TableCell>
+                    <TableCell key={'unit'}>
                         {unit}
                     </TableCell>
                 </TableRow>  
@@ -141,8 +141,7 @@ const VitalSignContent = (dataMap, selectedLabtest) => {
         
         const unit = dataMap[selectedLabtest].unit
         const result = dataMap[selectedLabtest].resultList
-        if(result.length > 1)
-            console.log(result)
+
         let resultList = []
         
         if (isNumber){

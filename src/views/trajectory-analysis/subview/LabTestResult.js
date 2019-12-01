@@ -6,7 +6,6 @@ import {
     Card, 
     CardHeader, 
     CardContent, 
-    Divider
 } from '@material-ui/core';
 import LabtestResultTable from './LabResult/Table'
 import LabtestResultContent from './LabResult/Content'
@@ -77,7 +76,6 @@ const LabtestResult = () => {
     return  (
         <Card id={ParaName.LABTEST_RESULT_PANEL} className={classes.root}>
         <CardHeader title="实验室检查"/>
-        <Divider />
         <CardContent className={classes.content}>
             {table}
             {content}

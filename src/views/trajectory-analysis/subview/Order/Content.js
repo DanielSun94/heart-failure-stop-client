@@ -2,14 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { monthAndDateAndTimeTrans } from '../../../../utils/queryUtilFunction';
 import {
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip,
-} from 'recharts';
-import {
     Table,
     TableBody,
     TableHead,
@@ -19,22 +11,22 @@ import {
 
 const useStyles = makeStyles({
   root: {
-      overflow: 'auto',
-      height: '100%',
-      width: '100%',
-      maxHeight: 400,
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'flex-start',
+    overflow: 'auto',
+    height: '100%',
+    width: '100%',
+    maxHeight: 400,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
 
-  },  
-  noData: {
-      width: 'auto',
-      height: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-  },
+},  
+noData: {
+    width: 'auto',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+},
   tableWrapper: {
       height: '100%',
       maxHeight: 400,
@@ -54,7 +46,7 @@ const useStyles = makeStyles({
   },
 });
 
-const OrderContent = (dataMap, selectedOrder) => {
+const OrderContent = ({dataMap, selectedOrder}) => {
     const classes = useStyles()
 
     const buildTable = (data) =>{
@@ -82,8 +74,8 @@ const OrderContent = (dataMap, selectedOrder) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map(item => (
-                <TableRow key={item.time}>
+                {data.map((item, index) => (
+                <TableRow key={index}>
                     <TableCell>
                         {item['startTime']}
                     </TableCell>

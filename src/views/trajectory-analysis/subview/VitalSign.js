@@ -18,11 +18,13 @@ const useStyles = makeStyles(() => ({
         height: 470,
     },
     content: {
-      padding: 0,
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-    },
+        padding: 0,
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+      },
   }));
 
 

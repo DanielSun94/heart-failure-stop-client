@@ -36,6 +36,7 @@
     "moment": "^2.24.0",
     "nivo": "^0.31.0",
     "node-sass": "^4.11.0",
+    "pinyin": "^2.9.0",
     "prismjs": "^1.17.1",
     "prop-types": "^15.7.2",
     "radium": "^0.26.0",
@@ -59,6 +60,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.2.0",
     "react-virtualized": "^9.21.2",
+    "react-window": "^1.8.5",
     "recharts": "^1.8.5",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
@@ -82,7 +84,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://172.16.119.183:8080",
+  "proxy": "http://localhost:8080",
   "eslintConfig": {
     "extends": "react-app"
   },

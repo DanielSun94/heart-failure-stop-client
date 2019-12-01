@@ -33,8 +33,10 @@ const RiskFullPanel = () => {
                 <Typography className={classes.heading}>展开以显示所有预测模型的结果</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails >
-            
-            <Grid container spacing={2} className={classes.detail}>
+                <h1>暂时隐藏</h1>
+            {
+                /*
+                <Grid container spacing={2} className={classes.detail}>
             <Grid item xs={12} >
             </Grid>
                 <Grid item xl={2} lg={3} md={4} sm={6}xs={12} >
@@ -97,7 +99,8 @@ const RiskFullPanel = () => {
                 <Grid item xl={2} lg={3} md={4} sm={6}xs={12} >
                     <RiskItem className={classes.item} predictionTask={'oneYearCancer'} />
                 </Grid>
-            </Grid>
+            </Grid>*/
+            }
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </div>

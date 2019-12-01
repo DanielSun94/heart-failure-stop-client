@@ -8,21 +8,31 @@ import {
     CardContent, 
     Divider
 } from '@material-ui/core';
-import OrderTable from './Order/Table'
+import OrderList from './Order/OrderList'
 import OrderContent from './Order/Content'
 import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         marginTop: 0,
         height: 470,
     },
     content: {
-      padding: 0,
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-    },
+        padding: 0,
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+      },
+      list: {
+        width: 300,
+        flexBasis: 300,
+        flexShrink: 0,
+        '@media (min-width: 864px)': {
+          borderRight: `1px solid ${theme.palette.divider}`
+        }
+      },
   }));
 
 // 目前全部使用表格进行描述
@@ -65,21 +75,18 @@ const Order = () => {
     const data = useSelector(state => state.dashboard.trajectoryAnalysis.order.content)
     const classes = useStyles()
 
+    const [dataMap, orders] = dataReconstruct(data)
 
-    const [dataMap, nameList] = dataReconstruct(data)
-    if(nameList && nameList.length > 0 && selectedOrder === '')
-    setSelectedOrder(nameList[0])
-
-    const table = OrderTable(nameList, selectedOrder,setSelectedOrder)
-    const content = OrderContent(dataMap, selectedOrder)
+    const listClassName = classes.list
     
     return  (
         <Card id={ParaName.ORDER_PANEL} className={classes.root}>
         <CardHeader title="病人医嘱"/>
         <Divider />
         <CardContent className={classes.content}>
-            {table}
-            {content}
+            <OrderList orders={orders} selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} 
+            listClassName={listClassName}/>
+            <OrderContent dataMap={dataMap} selectedOrder={selectedOrder} />
         </CardContent>
         </Card>
     );

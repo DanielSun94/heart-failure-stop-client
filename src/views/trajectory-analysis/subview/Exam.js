@@ -6,7 +6,6 @@ import {
     Card, 
     CardHeader, 
     CardContent, 
-    Divider
 } from '@material-ui/core';
 import ExamTable from './Exam/Table'
 import ExamContent from './Exam/Content'
@@ -42,11 +41,13 @@ const useStyles = makeStyles(() => ({
         height: 470,
     },
     content: {
-      padding: 0,
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-    },
+        padding: 0,
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+      },
   }));
 
 const Exam = () => {
@@ -78,7 +79,6 @@ const Exam = () => {
     return  (
         <Card id={ParaName.EXAM_PANEL} className={classes.root}>
         <CardHeader title="病人检查结果"/>
-        <Divider />
         <CardContent className={classes.content}>
             {table}
             {content}

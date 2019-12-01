@@ -69,6 +69,7 @@ const TrajectoryAnalysis = () => {
                 </Grid>
                 </Hidden>
                 <Grid
+                item
                 xs={12}
                 >  
                     <RiskFullPanel />

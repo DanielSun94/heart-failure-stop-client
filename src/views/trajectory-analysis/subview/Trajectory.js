@@ -211,7 +211,7 @@ const Trajectory = () => {
                     <TableCell className={classes.shortCell}>
                             <Typography>其它诊断:</Typography>                      
                     </TableCell>
-                    <TableCell component='div'>
+                    <TableCell>
                         <Tooltip title={detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}>
                             <Typography>
                             {detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].length > 20 ?
@@ -294,7 +294,7 @@ const Trajectory = () => {
                     <TableCell className={classes.shortCell}>
                             <Typography>其它诊断:</Typography>                      
                     </TableCell>
-                    <TableCell component='div'>
+                    <TableCell>
                         <Tooltip title={detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}>
                             <Typography>
                             {detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].length > 10 ?
@@ -377,12 +377,10 @@ const Trajectory = () => {
                     </TableCell>
                 </TableRow>
                 <TableRow className={classes.row}>
-                    
-                    
                     <TableCell className={classes.shortCell}>
                             <Typography>其它诊断:</Typography>                      
                     </TableCell>
-                    <TableCell component='div'>
+                    <TableCell>
                         <Tooltip title={detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}>
                             <Typography>
                             {detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].length > 7 ?
@@ -474,7 +472,7 @@ const Trajectory = () => {
                     <TableCell className={classes.shortCell}>
                             <Typography>其它诊断:</Typography>                      
                     </TableCell>
-                    <TableCell component='div'>
+                    <TableCell>
                         <Tooltip title={detailedVisitInfo[ParaName.OTHER_DIAGNOSIS]}>
                             <Typography>
                             {detailedVisitInfo[ParaName.OTHER_DIAGNOSIS].length > 10 ?
