@@ -1,7 +1,7 @@
 import React from 'react';
 import UnifiedPatientIDAndPatientBasicInfoPanel from './subview/UnifiedPatientIDAndPatientBasicInfoPanel'
 import Trajectory from './subview/Trajectory';
-import LabTestResult from './subview/LabTestResult';
+import LabtestResult from './subview/LabtestResult';
 import Order from './subview/Order';
 import Exam from './subview/Exam';
 import VitalSign from './subview/VitalSign';
@@ -54,7 +54,8 @@ const TrajectoryAnalysis = () => {
                 </Hidden>
                 <Grid
                 item
-                lg={8}
+                xl={8}
+                lg={7}
                 md={12}
                 xs={12}
                 >
@@ -63,7 +64,8 @@ const TrajectoryAnalysis = () => {
                 <Hidden mdDown>
                 <Grid
                 item
-                lg={2}
+                xl={2}
+                lg={3}
                 >
                     <RiskBriefPanel />
                 </Grid>
@@ -80,7 +82,7 @@ const TrajectoryAnalysis = () => {
                 md={12}
                 xs={12}
                 >
-                    <LabTestResult />
+                    <LabtestResult />
                 </Grid>
                 <Grid
                 item

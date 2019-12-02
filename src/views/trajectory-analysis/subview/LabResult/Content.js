@@ -55,7 +55,7 @@ const useStyles = makeStyles({
     },
   });
 
-const LabtestResultContent = (dataMap, selectedLabtest) => {
+const LabtestResultContent = ({dataMap, selectedLabtest}) => {
     const classes = useStyles()
 
     const buildTable = (unit, data) =>{

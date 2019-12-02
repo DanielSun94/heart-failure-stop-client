@@ -8,6 +8,7 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip,
+  ResponsiveContainer
 } from 'recharts';
 import {
     Table,
@@ -55,7 +56,7 @@ const useStyles = makeStyles({
     },
   });
 
-const VitalSignContent = (dataMap, selectedLabtest) => {
+const VitalSignContent = ({dataMap, selectedVitalSign}) => {
     const classes = useStyles()
 
     const buildTable = (unit, data) =>{
@@ -109,6 +110,7 @@ const VitalSignContent = (dataMap, selectedLabtest) => {
     
         return (
             <div className={classes.chartWrapper}>
+            <ResponsiveContainer width={'90%'} height={"90%"}>
             <LineChart width={600} height={340} data={data}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -131,16 +133,17 @@ const VitalSignContent = (dataMap, selectedLabtest) => {
                 animationDuration={500}
                 strokeWidth={2}/>
             </LineChart>
+            </ResponsiveContainer>
             </div>
         )
       }
 
     let content = <div className={classes.noData}><h3>无可显示的数据</h3></div>
-    if(dataMap && Object.keys(dataMap).length > 0 && selectedLabtest && selectedLabtest !== '' && dataMap[selectedLabtest]){
-        const isNumber = dataMap[selectedLabtest].isNumber
+    if(dataMap && Object.keys(dataMap).length > 0 && selectedVitalSign && selectedVitalSign !== '' && dataMap[selectedVitalSign]){
+        const isNumber = dataMap[selectedVitalSign].isNumber
         
-        const unit = dataMap[selectedLabtest].unit
-        const result = dataMap[selectedLabtest].resultList
+        const unit = dataMap[selectedVitalSign].unit
+        const result = dataMap[selectedVitalSign].resultList
 
         let resultList = []
         

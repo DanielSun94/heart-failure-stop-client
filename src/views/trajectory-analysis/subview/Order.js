@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, Fragment} from 'react';
 import ParaName from '../../../utils/ParaName';
 import { useSelector, useDispatch } from 'react-redux';
 import {fetchPosts} from '../../../actions/dashboardAction/trajectoryAnalysisAction/orderAction'
@@ -6,33 +6,67 @@ import {
     Card, 
     CardHeader, 
     CardContent, 
-    Divider
+    Typography,
+    Hidden,
+    TextField,
+    Divider,
+    CircularProgress,
 } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import OrderList from './Order/OrderList'
 import OrderContent from './Order/Content'
 import { makeStyles } from '@material-ui/styles';
+import {pinyinSort, pinYinFilter} from '../../../utils/queryUtilFunction'
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
         marginTop: 0,
         height: 470,
     },
-    content: {
+    bigViewContainer: {
+      padding: 0,
+      height: '100%',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      alignItems: 'flex-start',
+    },
+    smallViewContainer:{
         padding: 0,
         height: '100%',
         width: '100%',
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
+        flexWrap: 'nowrap',
         alignItems: 'flex-start',
-      },
-      list: {
-        width: 300,
-        flexBasis: 300,
+    },
+    list: {
+        width: 230,
+        flexBasis: 230,
         flexShrink: 0,
         '@media (min-width: 864px)': {
           borderRight: `1px solid ${theme.palette.divider}`
         }
-      },
+    },
+    smallViewHead:{
+        minWidth: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: "center",
+        borderBottomColor: '#f8f8f8',
+        borderBottomStyle: "solid"
+    },
+    loading:{
+        height: "100%",
+        width: "100%",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: "center",
+    }
   }));
 
 // 目前全部使用表格进行描述
@@ -73,22 +107,76 @@ const Order = () => {
 
     const [selectedOrder, setSelectedOrder] = useState('')
     const data = useSelector(state => state.dashboard.trajectoryAnalysis.order.content)
+    const isDataFetching = useSelector(state => state.dashboard.trajectoryAnalysis.order.isDataFetching)
+
     const classes = useStyles()
 
     const [dataMap, orders] = dataReconstruct(data)
-
+    pinyinSort(orders)
     const listClassName = classes.list
     
+    const filterFunc = (options, {inputValue}) => pinYinFilter(options, inputValue)
+    const orderOnChange = (event, value)=>{
+        setSelectedOrder(value)
+    }
     return  (
-        <Card id={ParaName.ORDER_PANEL} className={classes.root}>
-        <CardHeader title="病人医嘱"/>
-        <Divider />
-        <CardContent className={classes.content}>
-            <OrderList orders={orders} selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} 
-            listClassName={listClassName}/>
-            <OrderContent dataMap={dataMap} selectedOrder={selectedOrder} />
-        </CardContent>
-        </Card>
+        <Fragment>
+        <Hidden mdDown>
+            <Card id={ParaName.ORDER_PANEL} className={classes.root}>
+            <CardHeader title="病人医嘱"/>
+            <Divider />
+            {isDataFetching ?(
+                <div className={classes.loading}>
+                    <CircularProgress size={25} /> 
+                    <Typography style={{marginTop: 10}} variant="h5">
+                        载入中
+                    </Typography>
+                </div>
+            ):(
+                <CardContent className={classes.bigViewContainer}>
+                <OrderList orders={orders} selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} 
+                listClassName={listClassName}/>
+                <OrderContent dataMap={dataMap} selectedOrder={selectedOrder}/>
+                </CardContent>
+            )}
+
+            </Card>
+            </Hidden>
+        <Hidden lgUp>
+            <Card id={ParaName.ORDER_PANEL} className={classes.root}>
+            {isDataFetching ?(
+                <div className={classes.loading}>
+                <CircularProgress size={25} /> 
+                <Typography style={{marginTop: 10}} variant="h5">
+                    载入中
+                </Typography>
+            </div>
+            ):(
+            <CardContent className={classes.smallViewContainer}>
+                <div className={classes.smallViewHead}>
+                <Typography
+                    variant="h5"
+                    style={{paddingLeft: 20}}
+                >
+                    医嘱
+                </Typography>
+                <Autocomplete
+                    style={{ width: 250, paddingRight: 10}}
+                    options={orders}
+                    getOptionLabel={item => item}
+                    renderInput={params => (
+                        <TextField {...params} label="搜索" variant="outlined" fullWidth margin="normal" />
+                    )}
+                    onChange={orderOnChange}
+                    filterOptions={filterFunc}
+                />
+                </div>
+                <OrderContent dataMap={dataMap} selectedOrder={selectedOrder}/>
+            </CardContent>
+            )}
+            </Card>
+        </Hidden>
+        </Fragment>
     );
 }
 

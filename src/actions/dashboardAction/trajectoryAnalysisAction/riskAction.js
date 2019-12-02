@@ -37,7 +37,7 @@ export function fetchPosts(params, predictionTask, currentOrPrevious) {
             error => {console.log(error); dispatch(receiveFailedResult())})
       .then(
         res => {
-          if(res.status && !(res.status == '200' || res.status == 200)){
+          if(res.status && !(res.status === '200' || res.status === 200)){
             dispatch(receiveFailedResult())
             console.log('Unkown: Error, get detailed visit info failed')
           }

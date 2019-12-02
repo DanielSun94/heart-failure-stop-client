@@ -37,7 +37,7 @@ export function fetchPosts(params) {
               error => {console.log(error); dispatch(receiveFailedResult())})
         .then(
           res => {
-            if(res.status && !(res.status == '200' || res.status == 200)){
+            if(res.status && !(res.status === '200' || res.status === 200)){
               console.log('get lab test info successed')
             }
             else{

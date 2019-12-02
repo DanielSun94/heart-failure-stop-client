@@ -40,7 +40,7 @@ export function getValidVisitAndSetDefaultVisit(params){
     .then(res => res.json())
     .then(
       res => {
-        if(res.status && !(res.status == '200' || res.status == 200)){
+        if(res.status && !(res.status === '200' || res.status === 200)){
           dispatch(receiveTrajectoryFailedResult())
           console.log('Unkown: Error, get trajectory info failed')
         }
@@ -146,7 +146,7 @@ export function fetchDetailedVisitInfoPosts(params) {
             .then(res => stateContentReorganize(res))
             .then(
               res => {
-                if(res.status && !(res.status == '200' || res.status == 200)){
+                if(res.status && !(res.status === '200' || res.status === 200)){
                   dispatch(receiveDetailedVisitInfoFailedResult())
                   console.log('Unkown: Error, get detailed visit info failed')
                 }

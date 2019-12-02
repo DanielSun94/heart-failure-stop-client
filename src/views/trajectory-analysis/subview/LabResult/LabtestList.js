@@ -8,8 +8,9 @@ import {
   Divider
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import OrderListItem from './OrderListItem';
+import LabtestListItem from './LabtestListItem';
 import {pinYinFilter} from '../../../../utils/queryUtilFunction'
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,28 +23,27 @@ const useStyles = makeStyles(theme => ({
     overflow: 'auto',
     height: 353,
     maxHeight: 353,
-    
   }
 }));
 
 const defaultValue = "搜索（拼音首字母）"
 
 // 此处我们遇到了
-const OrderList = ({orders, selectedOrder, setSelectedOrder, listClassName}) => {
+const LabtestList = ({labtests, selectedLabtest, setLabtest, listClassName}) => {
 
   const classes = useStyles();
 
   const [searchText, setSearchText] = useState("")
-  const [filteredOrders, setFilteredOrders] = useState([])
+  const [filteredLabtest, setFilteredLabtest] = useState([])
 
   useEffect(()=>{
-    setFilteredOrders(pinYinFilter(orders, searchText, defaultValue))
+    setFilteredLabtest(pinYinFilter(labtests, searchText, defaultValue))
   } , [searchText]);
 
   useEffect(()=>{
-    const orderList = pinYinFilter(orders, searchText, defaultValue)
-    setFilteredOrders(orderList)
-  }, [orders])
+    const filteredList = pinYinFilter(labtests, searchText, defaultValue)
+    setFilteredLabtest(filteredList)
+  }, [labtests])
   
 
   return (
@@ -62,12 +62,12 @@ const OrderList = ({orders, selectedOrder, setSelectedOrder, listClassName}) => 
       <Divider />
       <div className={classes.list}>
         <List disablePadding >
-          {filteredOrders.map(orderName => (
-            <OrderListItem
-              active={orderName === selectedOrder}
-              orderName={orderName}
-              setSelectedOrder = {setSelectedOrder}
-              key={orderName}
+          {filteredLabtest.map(labtestName => (
+            <LabtestListItem
+              active={labtestName === selectedLabtest}
+              labtestName={labtestName}
+              setSelectedLabtest = {setLabtest}
+              key={labtestName}
             />
           ))}
         </List>
@@ -76,4 +76,4 @@ const OrderList = ({orders, selectedOrder, setSelectedOrder, listClassName}) => 
   );
 };
 
-export default OrderList;
+export default LabtestList;

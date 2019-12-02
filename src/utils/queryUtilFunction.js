@@ -1,3 +1,5 @@
+import pinyin from 'pinyin'
+
 function queryParamsTrans(params) {
     return "?" + Object.keys(params)
         .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
@@ -22,5 +24,49 @@ function monthAndDateAndTimeTrans(globalDate){
     return timeStr
 }
 
+const pinYinFilter = (listToFilter, text, textDefaultValue) => {
 
-export {queryParamsTrans, monthAndDateTrans, monthAndDateAndTimeTrans};
+    if(text==="" || text===textDefaultValue)
+      return listToFilter
+  
+    let filteredList = []
+    const lowCaseText = text.toLowerCase()
+  
+    for(let item of listToFilter){
+      const firstLetterList = pinyin(item, {style: pinyin.STYLE_FIRST_LETTER})
+      let firstLetterStr = ""
+      for(let strList of firstLetterList)
+        firstLetterStr += strList[0]
+      firstLetterStr = firstLetterStr.toLowerCase()
+  
+      if(firstLetterStr.includes(lowCaseText))
+        filteredList.push(item)
+    }
+    return filteredList
+  }
+
+const pinyinSort = (listToSort) => {
+
+    listToSort.sort(function(a, b){
+        const aList = pinyin(a, {style: pinyin.STYLE_FIRST_LETTER})
+        let aStr = ""
+        for(let strList of aList)
+          aStr += strList[0]
+        aStr = aStr.toLowerCase()
+
+        const bList = pinyin(b, {style: pinyin.STYLE_FIRST_LETTER})
+        let bStr = ""
+        for(let strList of bList)
+          bStr += strList[0]
+        bStr = bStr.toLowerCase()
+
+        if(aStr > bStr)
+          return 1
+        if(aStr < bStr)
+          return -1
+        return 0
+    })
+}
+
+
+export {queryParamsTrans, monthAndDateTrans, monthAndDateAndTimeTrans, pinYinFilter, pinyinSort};

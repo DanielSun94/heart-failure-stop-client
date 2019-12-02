@@ -2,14 +2,14 @@ import {
     LAB_TEST_RESULT_RECEIVE_SUCCESS_POSTS,
     LAB_TEST_RESULT_REQUEST_POSTS,
     LAB_TEST_RESULT_RECEIVE_FAILED_POSTS} 
-    from '../../../actions/dashboardAction/trajectoryAnalysisAction/labTestResultAction';
+    from '../../../actions/dashboardAction/trajectoryAnalysisAction/labtestResultAction';
 
 const initStateInfo = {
     isDataFetching: false,
     isDataValid: false,
     content: ""
 }
-const labTestResultReducer = (state=initStateInfo, action) => {
+const labtestResultReducer = (state=initStateInfo, action) => {
     switch (action.type){
         case LAB_TEST_RESULT_REQUEST_POSTS: return (
             {...state, isDataFetching: true,
@@ -27,4 +27,4 @@ const labTestResultReducer = (state=initStateInfo, action) => {
     }
 }
 
-export default labTestResultReducer;
+export default labtestResultReducer;

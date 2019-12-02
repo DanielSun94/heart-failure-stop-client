@@ -1,4 +1,4 @@
-import React, {useEffect, Fragment} from 'react';
+import React, {useEffect} from 'react';
 import {
     Card, 
     Typography,
@@ -90,15 +90,15 @@ const RiskItem = ({predictionTask}) => {
   let fetchStatus = FETCH_SUCCESS
 
   if(predictionTask in content){
-    if (content[predictionTask]["fetchStatus"] == FETCH_SUCCESS){
+    if (content[predictionTask]["fetchStatus"] === FETCH_SUCCESS){
       currentRisk = parseFloat(content[predictionTask]['current'])
       previousRisk = parseFloat(content[predictionTask]['previous'])
       fetchStatus = FETCH_SUCCESS
     }
-    else if (content[predictionTask]["fetchStatus"] == IS_FETCHING){
+    else if (content[predictionTask]["fetchStatus"] === IS_FETCHING){
       fetchStatus = IS_FETCHING
     }
-    else if (content[predictionTask]["fetchStatus"] == FETCH_FAILED){
+    else if (content[predictionTask]["fetchStatus"] === FETCH_FAILED){
       fetchStatus = FETCH_FAILED
     }
   }

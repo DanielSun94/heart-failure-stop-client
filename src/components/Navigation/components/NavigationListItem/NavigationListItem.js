@@ -140,7 +140,7 @@ const NavigationListItem = props => {
         disableGutters
       >
         <Button
-          activeClassName={classes.active}
+          activeclassname={classes.active}
           className={clsx(classes.buttonLeaf, `depth-${depth}`)}
           
           exact
