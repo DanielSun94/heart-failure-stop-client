@@ -19,5 +19,4 @@ export const predictTaskName ={
     'oneYearNYHAClass3': '一年内NYHA 3级再入院',
     'oneYearNYHAClass4': '一年内NYHA 4级再入院',
     'oneYearLungDisease': '一年内肺病',
-    'oneYearCancer': '一年内癌症再入院',
 };

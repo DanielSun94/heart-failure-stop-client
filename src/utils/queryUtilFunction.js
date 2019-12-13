@@ -24,6 +24,17 @@ function monthAndDateAndTimeTrans(globalDate){
     return timeStr
 }
 
+function fullTimeTrans(globalDate){
+  const time = new Date(globalDate)
+  const year = time.getFullYear()
+  const month = time.getMonth()+1
+  const date = time.getDate() >= 10 ? time.getDate() :'0'+time.getDate()
+  const hour = time.getHours() >= 10 ? time.getHours() :'0'+time.getHours()
+  const minute = time.getMinutes() >= 10 ? time.getMinutes() :'0'+time.getMinutes()
+  const timeStr1 = year+"年"+month + '月' + date + '日 ' + hour +':'+minute
+  return timeStr1
+}
+
 const pinYinFilter = (listToFilter, text, textDefaultValue) => {
 
     if(text==="" || text===textDefaultValue)
@@ -44,6 +55,18 @@ const pinYinFilter = (listToFilter, text, textDefaultValue) => {
     }
     return filteredList
   }
+
+const filter = (listToFilter, text, textDefaultValue) => {
+  let filteredList = []
+  const lowCaseText = text.toLowerCase()
+  
+  for(let item of listToFilter){
+    const firstLetterStr = item[1].toLowerCase()
+    if(firstLetterStr.includes(lowCaseText))
+      filteredList.push(item)
+  }
+  return filteredList
+}
 
 const pinyinSort = (listToSort) => {
 
@@ -69,4 +92,4 @@ const pinyinSort = (listToSort) => {
 }
 
 
-export {queryParamsTrans, monthAndDateTrans, monthAndDateAndTimeTrans, pinYinFilter, pinyinSort};
+export {queryParamsTrans, monthAndDateTrans, monthAndDateAndTimeTrans, pinYinFilter, pinyinSort, filter, fullTimeTrans};

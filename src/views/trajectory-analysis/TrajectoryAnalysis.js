@@ -90,6 +90,14 @@ const TrajectoryAnalysis = () => {
                 md={12}
                 xs={12}
                 >
+                    <VitalSign />
+                </Grid>
+                <Grid
+                item
+                lg={6}
+                md={12}
+                xs={12}
+                >
                     <Order />
                 </Grid>
                 <Grid
@@ -99,14 +107,6 @@ const TrajectoryAnalysis = () => {
                 xs={12}
                 >
                     <Exam />
-                </Grid>
-                <Grid
-                item
-                lg={6}
-                md={12}
-                xs={12}
-                >
-                    <VitalSign />
                 </Grid>
             </Grid>
         </div>

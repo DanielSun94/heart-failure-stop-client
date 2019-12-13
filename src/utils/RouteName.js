@@ -32,10 +32,15 @@ class RouteName{
     static B_TRAJECTORY_ANALYSIS_TRAJECTORY ="/trajectory";
     static B_TRAJECTORY_ANALYSIS_VISIT_DETAILED_INFO ="/visitDetailedInfo";
     static B_TRAJECTORY_ANALYSIS_VISIT_BRIEF_INFO ="/visitBriefInfo";
-    static B_TRAJECTORY_ANALYSIS_LAB_TEST ="/labTest";
+    static B_TRAJECTORY_ANALYSIS_LAB_TEST_LIST ="/labTestNameList";
+    static B_TRAJECTORY_ANALYSIS_LAB_TEST_SINGLE_VISIT_FULL_INFO ="/labTestSingleVisit";
+    static B_TRAJECTORY_ANALYSIS_LAB_TEST_SINGLE_VISIT_ONE_ITEM ="/labTestSingleItemInOneVisit";
+    static B_TRAJECTORY_ANALYSIS_LAB_TEST_ONE_ITEM_FULL_TRACE ="/labTestSingleItemTrace";
+    static B_TRAJECTORY_ANALYSIS_LAB_TEST_LIST ="/labTestNameList";
     static B_TRAJECTORY_ANALYSIS_ORDER ="/order";
     static B_TRAJECTORY_ANALYSIS_VITAL_SIGN ="/vitalSign";
     static B_TRAJECTORY_ANALYSIS_EXAM ="/exam";
+    static B_TRAJECTORY_ANALYSIS_LAB_TEST_LIST = '/labTestNameList'
 
     // run machine learning model
     static B_MACHINE_LEARNING = "/backend/machineLearning";

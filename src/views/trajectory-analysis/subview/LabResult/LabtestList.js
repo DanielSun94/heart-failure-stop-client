@@ -2,14 +2,12 @@ import React, {useState, useEffect} from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import {
-  Toolbar,
   Input,
   List,
-  Divider
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import LabtestListItem from './LabtestListItem';
-import {pinYinFilter} from '../../../../utils/queryUtilFunction'
+import {filter} from '../../../../utils/queryUtilFunction'
 
 
 const useStyles = makeStyles(theme => ({
@@ -17,57 +15,64 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.white
   },
   searchInput: {
-    flexGrow: 1
+    flexGrow: 1,
+    paddingLeft: 25
   },
   list: {
     overflow: 'auto',
     height: 353,
     maxHeight: 353,
+  },
+  toolBar:{
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 48,
+    '@media (min-width: 864px)': {
+      borderBottom: `1px solid ${theme.palette.divider}`
+  }
   }
 }));
 
 const defaultValue = "搜索（拼音首字母）"
 
-// 此处我们遇到了
-const LabtestList = ({labtests, selectedLabtest, setLabtest, listClassName}) => {
+const LabtestList = ({labtests, selectedLabtest, setLabtest, filterStr, setFilterStr}) => {
 
   const classes = useStyles();
 
-  const [searchText, setSearchText] = useState("")
   const [filteredLabtest, setFilteredLabtest] = useState([])
 
   useEffect(()=>{
-    setFilteredLabtest(pinYinFilter(labtests, searchText, defaultValue))
-  } , [searchText]);
+    setFilteredLabtest(filter(labtests, filterStr, defaultValue))
+  } , [filterStr]);
 
   useEffect(()=>{
-    const filteredList = pinYinFilter(labtests, searchText, defaultValue)
+    const filteredList = filter(labtests, filterStr, defaultValue)
     setFilteredLabtest(filteredList)
   }, [labtests])
   
 
   return (
     <div
-      className={clsx(classes.root, listClassName)}
+      className={clsx(classes.root)}
     >
-      <Toolbar>
+      <div className={classes.toolBar}>
         <Input
           className={classes.searchInput}
           disableUnderline
           placeholder={defaultValue}
-          onChange={(event)=>setSearchText(event.target.value)}
+          onChange={(event)=>setFilterStr(event.target.value)}
         />
-        <SearchIcon />
-      </Toolbar>
-      <Divider />
+        <SearchIcon style={{marginRight: '20'}}/>
+      </div>
       <div className={classes.list}>
         <List disablePadding >
           {filteredLabtest.map(labtestName => (
             <LabtestListItem
-              active={labtestName === selectedLabtest}
-              labtestName={labtestName}
+              active={labtestName[0] === selectedLabtest}
+              labtestName={labtestName[0]}
               setSelectedLabtest = {setLabtest}
-              key={labtestName}
+              key={labtestName[0]}
             />
           ))}
         </List>

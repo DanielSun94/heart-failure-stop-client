@@ -103,7 +103,7 @@ const Exam = () => {
             dispatch(fetchPosts(visitIndentifier))          
             setSelectedExam("")  
         }
-    }, [currentVisit]);
+    },  [currentVisit]);
 
     const classes = useStyles()
 

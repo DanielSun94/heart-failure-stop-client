@@ -1,12 +1,15 @@
 import React, {useEffect, useState, Fragment} from 'react';
 import ParaName from '../../../utils/ParaName';
 import { useSelector, useDispatch } from 'react-redux';
-import {fetchPosts} from '../../../actions/dashboardAction/trajectoryAnalysisAction/labtestResultAction'
+import {
+    reset,
+    fetchSingleVisitLabTestResult,
+    fetchFullTraceLabTestResult,
+    fetchLabTestList
+} from '../../../actions/dashboardAction/trajectoryAnalysisAction/labtestResultAction'
 import {
     Card, 
-    CardHeader, 
     CardContent, 
-    Divider,
     Hidden,
     TextField,
     Typography,
@@ -16,27 +19,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import LabtestList from './LabResult/LabtestList'
 import Content from './LabResult/Content'
 import { makeStyles } from '@material-ui/styles';
-import {pinyinSort, pinYinFilter} from '../../../utils/queryUtilFunction'
-
-const dataReconstruct = (data) => {
-    let nameList = []
-    let dataMap = {}
-    
-    for(let labtestName in data){
-        nameList.push(labtestName);
-        dataMap[labtestName] = {'resultList': [], 'unit': data[labtestName][0].unit, 'isNumber': true}
-        for(let labtest of data[labtestName]){
-            let result = parseFloat(labtest['result'])
-            if(isNaN(result)){
-                result = labtest['result']
-                dataMap[labtestName]['isNumber'] = false
-            }
-            const testTime = Date.parse(labtest['testTime'])
-            dataMap[labtestName]['resultList'].push([result, testTime])
-        }
-    }
-    return [dataMap, nameList]
-}
+import {filter} from '../../../utils/queryUtilFunction'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
       width: '100%',
       display: 'flex',
       flexDirection: 'row',
-      flexWrap: 'nowrap',
+      flexWrap: 'wrap',
       alignItems: 'flex-start',
     },
     smallViewContainer:{
@@ -61,22 +44,16 @@ const useStyles = makeStyles((theme) => ({
         flexWrap: 'nowrap',
         alignItems: 'flex-start',
     },
-    list: {
-        width: 230,
-        flexBasis: 230,
-        flexShrink: 0,
-        '@media (min-width: 864px)': {
-          borderRight: `1px solid ${theme.palette.divider}`
-        }
-    },
-    smallViewHead:{
+    head:{
         minWidth: '100%',
+        minHeight: 52,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: "center",
-        borderBottomColor: '#f8f8f8',
-        borderBottomStyle: "solid"
+        '@media (min-width: 864px)': {
+            borderBottom: `1px solid ${theme.palette.divider}`
+          }
     },
     loading:{
         height: "100%",
@@ -85,100 +62,148 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: "center",
-    }
+    },
+    content: {
+        display: 'flex',
+        width: "100%",
+        maxHeight: 418,
+    },
+    list: {
+        minWidth: 230,
+        width: "25%",
+        '@media (min-width: 864px)': {
+          borderRight: `1px solid ${theme.palette.divider}`
+        }
+    },
+    barAndChart: {
+        width: "75%"
+    },
   }));
 
 const LabtestResult = () => {
-    // 获取数据
     const dispatch = useDispatch()
-    const currentVisit = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisit)
-    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID)
-    const visitIndentifier = {...currentVisit, unifiedPatientID: unifiedPatientID}
-    const [selectedLabtest, setSelectedLabtest] = useState('')
-
-    useEffect(()=>{
-        if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
-            dispatch(fetchPosts(visitIndentifier))        
-            setSelectedLabtest("")  
-        }
-    }, [currentVisit]);
-
     const classes = useStyles()
 
-
-    // 重新整理数据
-    const data = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.content)
+    const currentVisit = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisit)
+    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID)
+    const singleVisitLabTestTrace = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.singleVisitLabTestTrace)
+    const fullTraceLabTest = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.labTestFullTrace)
+    const labTestList = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.labTestList)
     const isDataFetching = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.isDataFetching)
-    const [dataMap, nameList] = dataReconstruct(data)
-    pinyinSort(nameList)
-    
-    const listClassName = classes.list
 
-    const filterFunc = (options, {inputValue}) => pinYinFilter(options, inputValue)
-    const labTestOnChange = (event, value)=>{
-        setSelectedLabtest(value)
-    }
+    const [selectedLabtest, setSelectedLabtest] = useState('')
+    const [showSingleVisit, setShowSingleVisit] = useState(true)
+    const [filterStr, setFilterStr] = useState("")
+
+    // 载入LabTestList
+    useEffect(()=>{
+        dispatch(fetchLabTestList(dispatch, currentVisit, unifiedPatientID, selectedLabtest, showSingleVisit))
+    }, [])
+
+    // 切换visit时重置所有数据
+    useEffect(()=>{
+        if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
+            dispatch(reset())
+            fetchLabTest(dispatch, currentVisit, unifiedPatientID, selectedLabtest, showSingleVisit)
+        }
+    }, [unifiedPatientID, currentVisit.hospitalCode, currentVisit.visitType, currentVisit.visitID]);
+
+    // 当Labtest或者其余信息改变时获取相关信息
+    useEffect(()=>{
+        fetchLabTest(dispatch, currentVisit, unifiedPatientID, selectedLabtest, showSingleVisit)
+    }, [unifiedPatientID, currentVisit.hospitalCode, currentVisit.visitType, currentVisit.visitID, 
+        selectedLabtest, showSingleVisit]);
+
     return  (
         <Fragment>
         <Hidden mdDown>
             <Card id={ParaName.LABTEST_RESULT_PANEL} className={classes.root}>
-            <CardHeader title="实验室检查"/>
-            <Divider />
-            {isDataFetching ?(
-                <div className={classes.loading}>
-                    <CircularProgress size={25} /> 
-                    <Typography style={{marginTop: 10}} variant="h5">
-                        载入中
+                <CardContent className={classes.bigViewContainer}>
+                <div className={classes.head}>
+                    <Typography
+                        variant="h5"
+                        style={{paddingLeft: 20}}
+                        >
+                        实验室检查
                     </Typography>
                 </div>
-            ):(
-                <CardContent className={classes.bigViewContainer}>
-                <LabtestList labtests={nameList} selectedLabtest={selectedLabtest} setLabtest={setSelectedLabtest} 
-                listClassName={listClassName}/>
-                <Content dataMap={dataMap} selectedLabtest={selectedLabtest} />
+                {isDataFetching ?(
+                    <div className={classes.loading}>
+                        <CircularProgress size={25} /> 
+                        <Typography style={{marginTop: 10}} variant="h5">
+                            载入中
+                        </Typography>
+                    </div>
+                ):(
+                    <div className={classes.content}>
+                        <div className={classes.list}>
+                            <LabtestList labtests={labTestList} selectedLabtest={selectedLabtest} setLabtest={setSelectedLabtest}
+                            filterStr={filterStr} setFilterStr={setFilterStr}/>
+                        </div>
+                        <div className={classes.barAndChart}>
+                            <Content 
+                            singleVisitLabTestTrace={singleVisitLabTestTrace} 
+                            selectedLabtest={selectedLabtest}
+                            fullTraceLabTest={fullTraceLabTest}
+                            showSingleVisit={showSingleVisit}
+                            setShowSingleVisit={setShowSingleVisit} />
+                        </div>
+                    </div>    
+                )}
                 </CardContent>
-            )}
-
             </Card>
         </Hidden>
         <Hidden lgUp>
             <Card id={ParaName.LABTEST_RESULT_PANEL} className={classes.root}>
-            {isDataFetching ?(
-                <div className={classes.loading}>
-                <CircularProgress size={25} /> 
-                <Typography style={{marginTop: 10}} variant="h5">
-                    载入中
-                </Typography>
-            </div>
-            ):(
-            <CardContent className={classes.smallViewContainer}>
-                <div className={classes.smallViewHead}>
-                <Typography
-                    variant="h5"
-                    style={{paddingLeft: 20}}
-                >
-                    实验室检查
-                </Typography>
-                <Autocomplete
-                    style={{ width: 250, paddingRight: 10}}
-                    options={nameList}
-                    getOptionLabel={item => item}
-                    renderInput={params => (
-                        <TextField {...params} label="搜索" variant="outlined" fullWidth margin="normal" />
+                <CardContent className={classes.smallViewContainer}>
+                    <div className={classes.head}>
+                        <Typography
+                            variant="h5"
+                            style={{paddingLeft: 20}}
+                            >
+                            实验室检查
+                        </Typography>
+                        <Autocomplete
+                            style={{ width: 250, paddingRight: 10}}
+                            options={labTestList}
+                            getOptionLabel={item => item[0]}
+                            renderInput={params => (
+                                <TextField {...params} label="搜索" variant="outlined" fullWidth margin="normal" />
+                                )}
+                            filterOptions={(options, {inputValue}) => filter(options, inputValue, "")}
+                            onChange={(event, value)=>{setSelectedLabtest(value[0])}}
+                        />
+                    </div>
+                    {isDataFetching ?(
+                    <div className={classes.loading}>
+                        <CircularProgress size={25} /> 
+                        <Typography style={{marginTop: 10}} variant="h5">载入中</Typography>
+                    </div>
+                    ):(
+                        <Content 
+                        singleVisitLabTestTrace={singleVisitLabTestTrace} 
+                        selectedLabtest={selectedLabtest}
+                        fullTraceLabTest={fullTraceLabTest}
+                        showSingleVisit={showSingleVisit}
+                        setShowSingleVisit={setShowSingleVisit} />
                     )}
-                    filterOptions={filterFunc}
-                    onChange={labTestOnChange}
-                />
-                </div>
-                <Content dataMap={dataMap} selectedLabtest={selectedLabtest} />
             </CardContent>
-            )}
-
             </Card>
         </Hidden>
         </Fragment>
     );
 }
 
+const fetchLabTest = (dispatch, currentVisit, unifiedPatientID, selectedLabtest, showSingleVisit)=>{
+    const singleParam = {...currentVisit, unifiedPatientID: unifiedPatientID, itemName: selectedLabtest}
+    if(showSingleVisit && selectedLabtest!==""){
+        dispatch(fetchSingleVisitLabTestResult(singleParam))        
+    }
+
+    const traceParam = {unifiedPatientID: unifiedPatientID, itemName: selectedLabtest}
+    if(!showSingleVisit && selectedLabtest!==""){
+        dispatch(fetchFullTraceLabTestResult(traceParam))
+    }
+}
 
 export default LabtestResult;

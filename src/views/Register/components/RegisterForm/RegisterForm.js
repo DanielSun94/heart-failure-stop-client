@@ -121,7 +121,7 @@ const RegisterForm = props => {
       }));
       setSignupResponse(() => ({'status': false, 'message': ""}));
     }
-  }, [formState.values]);
+  }, [formState.values, dispatch]);
 
   const handleChange = event => {
     event.persist();

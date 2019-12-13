@@ -103,7 +103,7 @@ const Order = () => {
         if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
             dispatch(fetchPosts(visitIndentifier))          
         }
-    }, [currentVisit]);
+    },  [currentVisit]);
 
     const [selectedOrder, setSelectedOrder] = useState('')
     const data = useSelector(state => state.dashboard.trajectoryAnalysis.order.content)
