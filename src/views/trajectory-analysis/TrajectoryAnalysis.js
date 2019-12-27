@@ -23,11 +23,11 @@ const useStyles = makeStyles(theme => ({
   }));
 
 const TrajectoryAnalysis = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const classes = useStyles();
 
-    document.title = ParaName.HF_STOP+TRAJECTORY_ANALYSIS
-    dispatch(changeFrontPage(TRAJECTORY_ANALYSIS))
+    document.title = ParaName.HF_STOP+TRAJECTORY_ANALYSIS;
+    dispatch(changeFrontPage(TRAJECTORY_ANALYSIS));
 
     return (
         <div className={classes.root}>

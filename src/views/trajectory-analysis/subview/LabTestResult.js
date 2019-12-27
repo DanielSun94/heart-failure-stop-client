@@ -170,7 +170,7 @@ const LabtestResult = () => {
                             renderInput={params => (
                                 <TextField {...params} label="搜索" variant="outlined" fullWidth margin="normal" />
                                 )}
-                            filterOptions={(options, {inputValue}) => filter(options, inputValue, "")}
+                            filterOptions={(options, {inputValue}) => filter(options, inputValue, "", false)}
                             onChange={(event, value)=>{setSelectedLabtest(value[0])}}
                         />
                     </div>

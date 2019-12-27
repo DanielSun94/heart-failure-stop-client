@@ -66,10 +66,10 @@ const LabtestResultContent = ({
     singleVisitLabTestTrace, selectedLabtest, fullTraceLabTest,
     showSingleVisit, setShowSingleVisit}) => {
 
-    const classes = useStyles()
-    const [tab, setTab] = useState(showSingleVisit? 0: 1)
+    const classes = useStyles();
+    const [tab, setTab] = useState(showSingleVisit? 0: 1);
 
-    let content = null
+    let content = null;
     if(selectedLabtest === ''){
         content = <div className={classes.noData}><h3>无需要显示的数据</h3></div>
     }

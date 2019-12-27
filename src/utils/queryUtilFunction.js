@@ -36,9 +36,6 @@ function fullTimeTrans(globalDate){
 }
 
 const pinYinFilter = (listToFilter, text, textDefaultValue) => {
-
-    if(text==="" || text===textDefaultValue)
-      return listToFilter
   
     let filteredList = []
     const lowCaseText = text.toLowerCase()
@@ -56,9 +53,12 @@ const pinYinFilter = (listToFilter, text, textDefaultValue) => {
     return filteredList
   }
 
-const filter = (listToFilter, text, textDefaultValue) => {
+const filter = (listToFilter, text, textDefaultValue, defaultShowAll) => {
   let filteredList = []
   const lowCaseText = text.toLowerCase()
+
+  if(!defaultShowAll&& (text==="" || text===textDefaultValue))
+      return []
   
   for(let item of listToFilter){
     const firstLetterStr = item[1].toLowerCase()

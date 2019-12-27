@@ -6,14 +6,12 @@ class RouteName{
     // Main page
     static MAIN_PAGE = "/heart-failure-stop";
 
-    // Dashboard content route
-    static DASHBOARD_TRAJECTORY_ANALYSIS = '/trajectory-analysis';
-    static DASHBOARD_BLANK_PAGE = '/blank-page';
-    static USER_INFO = "/userInfo"
-    static OVERVIEW = "/overview"
-    static GROUP_ANALYSIS = "/group-analysis"
-    static KNOWLEDGE_GRAPH = "/knowledge-graph"
+    // content route
+    static ANALYSIS = '/analysis';
+    static DATA_OUTPUT = '/data-output';
+    static ALGORITHM_MANAGEMENT = "/algorithm-management"
     static ACCOUNT_MANAGEMENT = "/account-management"
+    static LOG_OUT = "/log-out"
 
     // Authentic Route
     static AUTHENTIC_PAGE = "/authentic";
