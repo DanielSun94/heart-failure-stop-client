@@ -27,11 +27,11 @@ const useStyles = makeStyles({
   });
 
 const ExamContent = ({nameMap, dataList, selectedExam}) => {
-    const classes = useStyles()
+    const classes = useStyles();
 
     if (dataList && nameMap && dataList.length > 0 && Object.keys(nameMap).length>0 && selectedExam !== "" &&
         nameMap[selectedExam] && nameMap[selectedExam].length>0){
-        const content = dataList[nameMap[selectedExam][0]]
+        const content = dataList[nameMap[selectedExam][0]];
         if(content && content.para){
             return (
                 <div className={classes.root}>  

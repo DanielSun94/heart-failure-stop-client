@@ -18,10 +18,10 @@ import ExamContent from './Exam/Content'
 import { makeStyles } from '@material-ui/styles';
 
 const dataReconstruct = (data) => {
-    let nameMap = {}
-    let dataList = []
+    let nameMap = {};
+    let dataList = [];
     
-    let index = 0
+    let index = 0;
     for(let item of data){
         const name = item.examName;
         const examTime = item.examTime;
@@ -30,16 +30,16 @@ const dataReconstruct = (data) => {
         const description = item.description;
 
         const time = new Date(Date.parse(examTime));
-        const date = time.getDate() >= 10 ? time.getDate() :'0'+time.getDate()
-        const month = time.getMonth()+1
+        const date = time.getDate() >= 10 ? time.getDate() :'0'+time.getDate();
+        const month = time.getMonth()+1;
         const timeStr = month + '月' + date + '日 ';
         
-        nameMap[timeStr + ' '+name] = [index, time.getTime()]
-        dataList.push({'para': para, 'impression': impression, 'description': description})
+        nameMap[timeStr + ' '+name] = [index, time.getTime()];
+        dataList.push({'para': para, 'impression': impression, 'description': description});
         index += 1
     }
     return [dataList, nameMap]
-}
+};
 
 const useStyles = makeStyles((theme) => ({
     root: {
