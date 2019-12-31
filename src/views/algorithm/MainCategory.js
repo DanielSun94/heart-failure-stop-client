@@ -11,6 +11,15 @@ import MuiExpansionPanel from "@material-ui/core/ExpansionPanel";
 import MuiExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import MuiExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 
+import {
+    MODEL_CATEGORY_DATA_IMPUTATION,
+    MODEL_CATEGORY_PROGRESSION_ANALYSIS,
+    MODEL_CATEGORY_RISK_ASSESSMENT,
+    MODEL_CATEGORY_SURVIVAL_ANALYSIS,
+    MODEL_CATEGORY_TREATMENT_COMPARISION,
+    MODEL_CATEGORY_TREATMENT_RECOMMENDATION
+} from "./AlgorithmManagement"
+
 const useStyles = makeStyles(theme => ({
     list: {
         width: '100%'
@@ -97,10 +106,10 @@ const Panel = ({pId, pTitle, expandPanel, setExpandPanel, algorithmList, selecte
                         <ListItem
                             className={classes.listItem}
                             button
-                            selected={selectedAlgorithm === item}
-                            onClick={event => handleListItemClick(event, item)}
+                            selected={selectedAlgorithm === item[0]}
+                            onClick={event => handleListItemClick(event, item[0])}
                         >
-                            {item}
+                            {item[1]}
                         </ListItem>
                     )}
                 </List>
@@ -109,65 +118,83 @@ const Panel = ({pId, pTitle, expandPanel, setExpandPanel, algorithmList, selecte
     );
 };
 
-const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelectedAlgorithm}) => {
+const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelectedAlgorithm, algorithmMap}) => {
     const classes = useStyles();
+
+    // data prepare
+    const subMap = {
+        "progressionAnalysis": [],
+        "riskAssessment": [],
+        "survivalAnalysis": [],
+        "treatmentRecommendation": [],
+        "treatmentComparison": [],
+        "dataImputation": []
+    };
+
+    for(let key in subMap){
+        if(!algorithmMap.has(key)) {
+            subMap[key] = [['noModel', '无模型']];
+            continue;
+        }
+        const modelEnglishNameList = Array.from(algorithmMap.get(key).keys());
+        subMap[key] = modelEnglishNameList.map(item=>[item, algorithmMap.get(key).get(item)[0]])
+    }
 
     return (
         <div className={classes.expansionPanelList}>
             <Panel
-                pId={'progressionAnalysis'}
+                pId={MODEL_CATEGORY_PROGRESSION_ANALYSIS}
                 pTitle={'演变过程'}
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}
-                algorithmList={['算法1', '算法2']}
+                algorithmList={subMap[MODEL_CATEGORY_PROGRESSION_ANALYSIS]}
             />
             <Panel
-                pId={'riskAssessment'}
+                pId={MODEL_CATEGORY_RISK_ASSESSMENT}
                 pTitle={'风险分析'}
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}
-                algorithmList={['算法3', '算法4']}
+                algorithmList={subMap[MODEL_CATEGORY_RISK_ASSESSMENT]}
             />
             <Panel
-                pId={'survivalAnalysis'}
+                pId={MODEL_CATEGORY_SURVIVAL_ANALYSIS}
                 pTitle={'生存分析'}
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}
-                algorithmList={['算法5', '算法6']}
+                algorithmList={subMap[MODEL_CATEGORY_SURVIVAL_ANALYSIS]}
             />
             <Panel
-                pId={'treatmentRecommendation'}
+                pId={MODEL_CATEGORY_TREATMENT_RECOMMENDATION}
                 pTitle={'干预推荐'}
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}
-                algorithmList={['算法7', '算法8', '算法7', '算法8', '算法7', '算法8', '算法7', '算法8','算法7', '算法8','算法7', '算法8',
-                    '算法8','算法7', '算法8']}
+                algorithmList={subMap[MODEL_CATEGORY_TREATMENT_RECOMMENDATION]}
             />
             <Panel
-                pId={'treatmentComparison'}
+                pId={MODEL_CATEGORY_TREATMENT_COMPARISION}
                 pTitle={'干预比较'}
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}
-                algorithmList={['算法9', '算法10']}
+                algorithmList={subMap[MODEL_CATEGORY_TREATMENT_COMPARISION]}
             />
             <Panel
-                pId={'dataImputation'}
+                pId={MODEL_CATEGORY_DATA_IMPUTATION}
                 pTitle={'数据插补'}
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}
-                algorithmList={['算法11', '算法12']}
+                algorithmList={subMap[MODEL_CATEGORY_DATA_IMPUTATION]}
             />
         </div>
     )

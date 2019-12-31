@@ -34,11 +34,9 @@ class RouteName{
     static B_TRAJECTORY_ANALYSIS_LAB_TEST_SINGLE_VISIT_FULL_INFO ="/labTestSingleVisit";
     static B_TRAJECTORY_ANALYSIS_LAB_TEST_SINGLE_VISIT_ONE_ITEM ="/labTestSingleItemInOneVisit";
     static B_TRAJECTORY_ANALYSIS_LAB_TEST_ONE_ITEM_FULL_TRACE ="/labTestSingleItemTrace";
-    static B_TRAJECTORY_ANALYSIS_LAB_TEST_LIST ="/labTestNameList";
     static B_TRAJECTORY_ANALYSIS_ORDER ="/order";
     static B_TRAJECTORY_ANALYSIS_VITAL_SIGN ="/vitalSign";
     static B_TRAJECTORY_ANALYSIS_EXAM ="/exam";
-    static B_TRAJECTORY_ANALYSIS_LAB_TEST_LIST = '/labTestNameList'
 
     // run machine learning model
     static B_MACHINE_LEARNING = "/backend/machineLearning";
@@ -52,7 +50,21 @@ class RouteName{
 
     // Get User Info Route
     static B_USER_INFO_DATA_ROOT = "/backend/data/userInfo";
-    static B_USER_INFO = "/userInfo"
+    static B_USER_INFO = "/userInfo";
+
+    // Algorithm Management
+    static B_ALGORITHM_MANAGEMENT = "/backend/algorithmManagement";
+    static UPLOAD_MODEL_FILE = "/uploadModelFile";
+    static DOWNLOAD_MODEL_FILE = "/downloadModelFile";
+    static UPLOAD_MODEL_CONFIG = "/uploadModelConfig";
+    static DOWNLOAD_MODEL_CONFIG = "/downloadModelConfig";
+    static UPLOAD_PREPROCESSING_MODULE = "/uploadPreprocessingModule";
+    static DOWNLOAD_PREPROCESSING_MODULE = "/downloadPreprocessingModule";
+    static UPLOAD_MODEL_DOCUMENT = "/uploadModelDoc";
+    static DOWNLOAD_MODEL_DOCUMENT="/downloadModelDoc";
+    static CREATE_NEW_MODEL= "/createNewModel";
+    static DELETE_EXIST_MODEL = "/deleteExistModel";
+    static FETCH_MODEL_LIST = "/fetchModelList";
 }
 
 export default RouteName;

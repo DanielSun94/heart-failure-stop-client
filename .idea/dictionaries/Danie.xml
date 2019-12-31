@@ -2,10 +2,15 @@
   <dictionary name="Danie">
     <words>
       <w>hawkes</w>
+      <w>hospitalcode</w>
+      <w>labtest</w>
       <w>preprocessing</w>
       <w>pytorch</w>
+      <w>signup</w>
       <w>sklearn</w>
       <w>tensorflow</w>
+      <w>visitid</w>
+      <w>visittype</w>
     </words>
   </dictionary>
 </component>
