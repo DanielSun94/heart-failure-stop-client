@@ -120,12 +120,7 @@ const PreprocessingManagement = () => {
                 </Typography>
             </div>
             <div className={classes.updateTime}>
-                <Typography variant="overline">
-                    上传成功，本次上传时间
-                </Typography>
-                <Typography variant="h6">
-                    2019-12-30 10:58:20
-                </Typography>
+                <UploadPreprocessing/>
             </div>
             <div className={classes.buttonGroup}>
                 <UploadPreprocessing/>

@@ -16,7 +16,7 @@ import MainCategory from './MainCategory'
 import SubCategory from './SubCategory'
 import Content from './Content'
 import {makeStyles} from "@material-ui/styles";
-import {fetchPosts} from "../../actions/algorithmManagementAction";
+import {fetchModelListPosts} from "../../actions/algorithmManagementAction";
 
 export const MODEL_CATEGORY_PROGRESSION_ANALYSIS = "progressionAnalysis";
 export const MODEL_CATEGORY_RISK_ASSESSMENT = "riskAssessment";
@@ -122,6 +122,19 @@ const SquareButton = withStyles({
     },
 })(Button);
 
+const constructAlgorithmSubList = (selectedMainCateGory, selectedAlgorithmMainCategory, algorithmMap) => {
+    let algorithmSubList= [];
+    if(selectedMainCateGory!=="NotSelected"&&selectedAlgorithmMainCategory!=="NotSelected"
+        &&selectedAlgorithmMainCategory!=="noModel"){
+        const algorithmSubKeyList = Array.from(algorithmMap.get(selectedMainCateGory).get(selectedAlgorithmMainCategory)[1].keys());
+        for(let item of algorithmSubKeyList){
+            const modelInfo = algorithmMap.get(selectedMainCateGory).get(selectedAlgorithmMainCategory)[1].get(item);
+            algorithmSubList.push([modelInfo.modelChineseFunctionName, item])
+        }
+    }
+    return algorithmSubList;
+};
+
 const AlgorithmManagement = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -129,7 +142,7 @@ const AlgorithmManagement = () => {
     // 目前仅支持到这一程度，以后可以使用WebSocket技术更改，使得算法数据库更新时，后端可以通知前端
     // 这样就不用重新打开界面才能看到新载入的数据了
     useEffect(()=>{
-        dispatch(fetchPosts())
+        dispatch(fetchModelListPosts())
     }, []);
 
     const user = useSelector(state=>state.session.user.userName);
@@ -140,16 +153,8 @@ const AlgorithmManagement = () => {
     const [selectedAlgorithmMainCategory, setAlgorithmMainCategory] = useState('NotSelected');
     const [selectedAlgorithmSubCategory, setAlgorithmSubCategory] = useState('NotSelected');
 
-    // set sublist
-    let algorithmSubList= [];
-    if(selectedMainCateGory!=="NotSelected"&&selectedAlgorithmMainCategory!=="NotSelected"
-        &&selectedAlgorithmMainCategory!=="noModel"){
-        const algorithmSubKeyList = Array.from(algorithmMap.get(selectedMainCateGory).get(selectedAlgorithmMainCategory)[1].keys());
-        for(let item of algorithmSubKeyList){
-            const modelInfo = algorithmMap.get(selectedMainCateGory).get(selectedAlgorithmMainCategory)[1].get(item);
-            algorithmSubList.push([modelInfo.modelChineseFunctionName, item])
-        }
-    }
+    const algorithmSubList= constructAlgorithmSubList(selectedMainCateGory, selectedAlgorithmMainCategory, algorithmMap);
+
     return (
         <div className={classes.root}>
             <div className={classes.algorithmSelect}>
@@ -169,6 +174,7 @@ const AlgorithmManagement = () => {
                         setExpandPanel={setMainCateGory}
                         selectedAlgorithm={selectedAlgorithmMainCategory}
                         setSelectedAlgorithm={setAlgorithmMainCategory}
+                        setAlgorithmSubCategory={setAlgorithmSubCategory}
                         algorithmMap={algorithmMap}
                     />
                 </div>

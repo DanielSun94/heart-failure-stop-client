@@ -38,17 +38,26 @@ const AccessControl = () => {
             </div>
             <div>
                 <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                    <FormControlLabel value="all" control={<Radio />} label="所有用户可用" />
+                    <FormControlLabel value="public" control={<Radio />} label="所有用户可用" />
                     <FormControlLabel
-                        value="me"
+                        value="private"
                         control={
                             <Radio
                                 color={'primary'}
                             />}
                         label="仅本人可用"
                     />
+                    <FormControlLabel
+                        value="close"
+                        control={
+                            <Radio
+                                color={'primary'}
+                            />}
+                        label="关闭"
+                    />
                 </RadioGroup>
             </div>
+
         </div>
     )
 };

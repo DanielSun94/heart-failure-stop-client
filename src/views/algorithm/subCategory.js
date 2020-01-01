@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const SubCategory = ({selectedAlgorithmSubCategory, algorithmList, setAlgorithmSubCategory}) => {
+const SubCategory = ({selectedAlgorithmSubCategory, algorithmList, user, setAlgorithmSubCategory}) => {
     const classes = useStyles();
 
     const handleListItemClick = (event, name) => {
@@ -55,10 +55,10 @@ const SubCategory = ({selectedAlgorithmSubCategory, algorithmList, setAlgorithmS
                 <ListItem
                     button
                     className={classes.listItem}
-                    selected={item === selectedAlgorithmSubCategory}
-                    onClick={event => handleListItemClick(event, item)}
+                    selected={item[1] === selectedAlgorithmSubCategory}
+                    onClick={event => handleListItemClick(event, item[1])}
                 >
-                    <ListItemText primary={item}/>
+                    <ListItemText primary={item[0]}/>
                 </ListItem>
             )}
         </List>

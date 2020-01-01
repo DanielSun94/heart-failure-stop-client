@@ -1,9 +1,21 @@
-import React from "react";
-import {IconButton, Tooltip, Typography} from "@material-ui/core";
+import React, {useState} from "react";
+import {
+    IconButton,
+    Tooltip,
+    Typography
+} from "@material-ui/core";
+import {useSelector, useDispatch} from 'react-redux';
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import UpdateInfoComponent from "./UpdateInfoComponent";
 import {makeStyles} from "@material-ui/styles";
+import {
+    updateModelUpdateInfo,
+    MODEL_FILE,
+    modelUpdatePost
+} from "../../../actions/algorithmManagementAction"
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -34,11 +46,14 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const UploadModel = () => {
+const UploadModel = ({mainCateGory, algorithmMainCategory, algorithmSubCategory, setModelFileName, setUpdate}) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
 
-    const uploadModel = (event) => {
-        console.log(event.target)
+    const uploadModel = (event, mainCateGory, algorithmMainCategory, algorithmSubCategory, setModelFileName, setUpdate) => {
+        const file = event.target;
+        dispatch(updateModelUpdateInfo(mainCateGory, algorithmMainCategory, algorithmSubCategory, file));
+        console.log(file)
     };
 
     return (
@@ -103,8 +118,16 @@ const DownloadModel = () => {
     )
 };
 
-const ModelFileManagement = () => {
+const ModelFileManagement = ({mainCateGory, algorithmMainCategory, algorithmSubCategory}) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const unifiedName = mainCateGory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
+    const [modelFileName, setModelFileName] = useState("未上传");
+
+    const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updateModelFile[unifiedName]);
+    const setUpdateStatus = (updateInfo, updateInfoTime) => {
+        dispatch(updateModelUpdateInfo(MODEL_FILE, updateInfo, updateInfoTime, unifiedName));
+    };
 
     return (
         <div className={classes.root}>
@@ -115,19 +138,23 @@ const ModelFileManagement = () => {
             </div>
             <div className={classes.modelName}>
                 <Typography variant="h6">
-                    HawkesRNN.zip
+                    {modelFileName}
                 </Typography>
             </div>
             <div className={classes.updateTime}>
-                <Typography variant="overline">
-                    上传成功，本次上传时间
-                </Typography>
-                <Typography variant="h6">
-                    2019-12-30 10:58:20
-                </Typography>
+                <UpdateInfoComponent
+                    status={updateStatus}
+                    updateTime={updateTime}
+                />
             </div>
             <div className={classes.buttonGroup}>
-                <UploadModel/>
+                <UploadModel
+                    mainCateGory={mainCateGory}
+                    algorithmMainCategory={algorithmMainCategory}
+                    algorithmSubCategory={algorithmSubCategory}
+                    setModelFileName={setModelFileName}
+                    setUpdate={setUpdateStatus}
+                />
                 <DownloadModel/>
                 <Question />
             </div>

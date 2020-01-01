@@ -19,9 +19,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const PlatformSelect = ({platformList, selectedPlatform, setPlatform}) => {
+const PlatformSelect = ({selectedPlatform, setPlatform, setUpdate}) => {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
+    const platformList = ['Tensorflow', "Pytorch", 'Sklearn'];
 
     const handleClose = () => {
         setOpen(false);
@@ -32,6 +33,7 @@ const PlatformSelect = ({platformList, selectedPlatform, setPlatform}) => {
     };
     const handleChange = event => {
         setPlatform(event.target.value);
+        setUpdate(true)
     };
 
     return (
@@ -41,7 +43,7 @@ const PlatformSelect = ({platformList, selectedPlatform, setPlatform}) => {
                     运行平台：
                 </Typography>
             </div>
-            <div className={classes.formControl}>
+            <div>
                 <FormControl className={classes.formControl}>
                     <Select
                         open={open}

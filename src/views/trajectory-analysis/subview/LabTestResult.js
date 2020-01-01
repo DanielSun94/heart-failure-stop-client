@@ -84,26 +84,26 @@ const LabtestResult = () => {
     const dispatch = useDispatch()
     const classes = useStyles()
 
-    const currentVisit = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisit)
-    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID)
+    const currentVisit = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisit);
+    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID);
     const singleVisitLabTestTrace = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.singleVisitLabTestTrace)
-    const fullTraceLabTest = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.labTestFullTrace)
-    const labTestList = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.labTestList)
-    const isDataFetching = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.isDataFetching)
+    const fullTraceLabTest = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.labTestFullTrace);
+    const labTestList = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.labTestList);
+    const isDataFetching = useSelector(state => state.dashboard.trajectoryAnalysis.labtestResult.isDataFetching);
 
-    const [selectedLabtest, setSelectedLabtest] = useState('')
-    const [showSingleVisit, setShowSingleVisit] = useState(true)
-    const [filterStr, setFilterStr] = useState("")
+    const [selectedLabtest, setSelectedLabtest] = useState('');
+    const [showSingleVisit, setShowSingleVisit] = useState(true);
+    const [filterStr, setFilterStr] = useState("");
 
     // 载入LabTestList
     useEffect(()=>{
         dispatch(fetchLabTestList(dispatch, currentVisit, unifiedPatientID, selectedLabtest, showSingleVisit))
-    }, [])
+    }, []);
 
     // 切换visit时重置所有数据
     useEffect(()=>{
         if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
-            dispatch(reset())
+            dispatch(reset());
             fetchLabTest(dispatch, currentVisit, unifiedPatientID, selectedLabtest, showSingleVisit)
         }
     }, [unifiedPatientID, currentVisit.hospitalCode, currentVisit.visitType, currentVisit.visitID]);

@@ -86,9 +86,14 @@ const ExpansionPanelDetails = withStyles(theme => ({
     },
 }))(MuiExpansionPanelDetails);
 
-const Panel = ({pId, pTitle, expandPanel, setExpandPanel, algorithmList, selectedAlgorithm, setSelectedAlgorithm}) => {
+const Panel = ({pId, pTitle, expandPanel, setExpandPanel, algorithmList, selectedAlgorithm,
+                   setSelectedAlgorithm, setAlgorithmSubCategory}) => {
     const classes = useStyles();
-    const handleChange = id => (event, isExpanded) => {setExpandPanel(id)};
+    const handleChange = id => (event, isExpanded) => {
+        setExpandPanel(id);
+        setSelectedAlgorithm("NotSelected");
+        setAlgorithmSubCategory("NotSelected");
+    };
     const handleListItemClick = (event, item) => {setSelectedAlgorithm(item)};
     return (
         <ExpansionPanel
@@ -118,9 +123,7 @@ const Panel = ({pId, pTitle, expandPanel, setExpandPanel, algorithmList, selecte
     );
 };
 
-const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelectedAlgorithm, algorithmMap}) => {
-    const classes = useStyles();
-
+const dataFormatConvert = (algorithmMap) => {
     // data prepare
     const subMap = {
         "progressionAnalysis": [],
@@ -139,6 +142,13 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
         const modelEnglishNameList = Array.from(algorithmMap.get(key).keys());
         subMap[key] = modelEnglishNameList.map(item=>[item, algorithmMap.get(key).get(item)[0]])
     }
+    return subMap
+};
+
+const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelectedAlgorithm, setAlgorithmSubCategory,
+                         algorithmMap}) => {
+    const classes = useStyles();
+    const subMap = dataFormatConvert(algorithmMap);
 
     return (
         <div className={classes.expansionPanelList}>
@@ -149,6 +159,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}
+                setAlgorithmSubCategory={setAlgorithmSubCategory}
                 algorithmList={subMap[MODEL_CATEGORY_PROGRESSION_ANALYSIS]}
             />
             <Panel
@@ -158,6 +169,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}
+                setAlgorithmSubCategory={setAlgorithmSubCategory}
                 algorithmList={subMap[MODEL_CATEGORY_RISK_ASSESSMENT]}
             />
             <Panel
@@ -167,6 +179,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}
+                setAlgorithmSubCategory={setAlgorithmSubCategory}
                 algorithmList={subMap[MODEL_CATEGORY_SURVIVAL_ANALYSIS]}
             />
             <Panel
@@ -176,6 +189,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}
+                setAlgorithmSubCategory={setAlgorithmSubCategory}
                 algorithmList={subMap[MODEL_CATEGORY_TREATMENT_RECOMMENDATION]}
             />
             <Panel
@@ -184,6 +198,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
+                setAlgorithmSubCategory={setAlgorithmSubCategory}
                 setSelectedAlgorithm={setSelectedAlgorithm}
                 algorithmList={subMap[MODEL_CATEGORY_TREATMENT_COMPARISION]}
             />
@@ -193,6 +208,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
                 selectedAlgorithm={selectedAlgorithm}
+                setAlgorithmSubCategory={setAlgorithmSubCategory}
                 setSelectedAlgorithm={setSelectedAlgorithm}
                 algorithmList={subMap[MODEL_CATEGORY_DATA_IMPUTATION]}
             />

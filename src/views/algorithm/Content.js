@@ -7,11 +7,11 @@ import ModelConfigManagement from  './Content/ModelConfigManagement';
 import ModelDocumentManagement from  './Content/ModelDocumentManagement';
 import ModelFileManagement from  './Content/ModelFileManagement';
 import PreprocessingManagement from  './Content/PreprocessingManagement';
-import SubmitPanel from  './Content/SubmitPanel';
 import {
     Typography,
     colors,
 } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -69,26 +69,27 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
     },
     accessControl: {
-        height: '12%',
+        height: '16%',
         width: '100%',
     },
-    submitPanel: {
-        height: '8%',
-        width: '100%',
+    deleteDiv: {
+        height: "12%",
+        width: "100%",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end'
+    },
+    note: {
+        height: "12%",
+        width: "100%",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'start'
     },
 }));
 
 const Content = ({selectedMainCateGory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory})=> {
     const classes = useStyles();
-    const [selectedPlatform, setPlatform] = useState('');
-    const platFormList = ['Tensorflow', "Pytorch", 'Sklearn'];
-
-    const [isUpdated, setIsUpdate] = useState(false);
-    const [modelFile, setModelFile] = useState('notUpdate');
-    const [modelConfig, setModelConfig] = useState('notUpdate');
-    const [preprocessModule, setPreprocessModule] = useState('notUpdate');
-    const [modelDoc, setModelDoc] = useState('notUpdate');
-    const [accessControl, setAccessControl] = useState('notUpdate');
 
     return (
         <div className={classes.root}>
@@ -99,10 +100,14 @@ const Content = ({selectedMainCateGory, selectedAlgorithmMainCategory, selectedA
             </div>
             <div className={classes.modelModify}>
                 <div className={classes.platform}>
-                    <PlatformSelect platformList={platFormList} selectedPlatform={selectedPlatform} setPlatform={setPlatform}/>
+                    <PlatformSelect/>
                 </div>
                 <div className={classes.modelFile}>
-                    <ModelFileManagement/>
+                    <ModelFileManagement
+                        mainCateGory={selectedMainCateGory}
+                        algorithmSubCategory={selectedAlgorithmSubCategory}
+                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                    />
                 </div>
                 <div className={classes.modelConfig}>
                     <ModelConfigManagement/>
@@ -117,8 +122,21 @@ const Content = ({selectedMainCateGory, selectedAlgorithmMainCategory, selectedA
                 <div className={classes.accessControl}>
                     <AccessControl/>
                 </div>
-                <div className={classes.submitPanel}>
-                    <SubmitPanel/>
+                <div className={classes.note}>
+                    <Typography
+                        style={{marginLeft:32}}
+                        variant="h6"
+                    >
+                        注意，由于技术原因，模型文件更新后需等待约1分钟才可使用，其余修改即时生效
+                    </Typography>
+                </div>
+                <div className={classes.deleteDiv}>
+                    <Button
+                        style={{marginRight:32}}
+                        variant="contained"
+                    >
+                        删除模型
+                    </Button>
                 </div>
             </div>
             <div className={classes.docPreview}>
