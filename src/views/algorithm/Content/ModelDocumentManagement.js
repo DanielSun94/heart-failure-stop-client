@@ -1,9 +1,17 @@
-import React from "react";
-import {IconButton, Tooltip, Typography} from "@material-ui/core";
+import React, {useState} from "react";
+import {
+    IconButton,
+    Tooltip,
+    Typography
+} from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import {makeStyles} from "@material-ui/styles";
+import {MODEL_CONFIG, MODEL_DOC} from "../../../actions/algorithmManagementAction";
+import HintDialog from "./Components/HintDialog";
+import DownloadComponent from "./Components/DownloadComponent";
+import {useSelector} from "react-redux";
+import UploadComponent from "./Components/UploadComponent";
+import UploadInfoComponent from "./Components/UploadInfoComponent";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,82 +37,13 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         justifyContent: 'flex-end',
     },
-    input: {
-        display: 'none',
-    }
 }));
 
-const UploadDoc = () => {
+const ModelDocumentManagement = ({mainCategory, algorithmMainCategory, algorithmSubCategory}) => {
     const classes = useStyles();
-
-    const uploadDoc = (event) => {
-        console.log(event.target)
-    };
-
-    return (
-        <div>
-            <input
-                accept=".zip"
-                className={classes.input}
-                id="upload-doc"
-                type="file"
-                onChange={uploadDoc}
-            />
-            <Tooltip title="上传文档">
-                <label htmlFor="upload-doc">
-                    <IconButton color="primary" component="span">
-                        <CloudUploadIcon />
-                    </IconButton>
-                </label>
-            </Tooltip>
-        </div>
-    )
-};
-
-const Question = () => {
-    return (
-        <Tooltip title="帮助">
-            <IconButton color="primary" component="span">
-                <HelpOutlineIcon />
-            </IconButton>
-        </Tooltip>
-    )
-};
-
-const DownloadDoc = () => {
-    const downloadDoc = ()=>{
-        console.log('Download Doc');
-        fetch('http://localhost:8080/employees/download')
-            .then(response => {
-                response.blob().then(blob => {
-                    let url = window.URL.createObjectURL(blob);
-                    let a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'employees.json';
-                    a.click();
-                });
-                //window.location.href = response.url;
-            });
-    };
-    return (
-        <Tooltip title="下载文档">
-            <label
-                htmlFor="download-doc"
-            >
-                <IconButton
-                    color="primary"
-                    component="Link"
-                    onClick={downloadDoc}
-                >
-                    <CloudDownloadIcon />
-                </IconButton>
-            </label>
-        </Tooltip>
-    )
-};
-
-const ModelDocumentManagement = () => {
-    const classes = useStyles();
+    const unifiedModelName = mainCategory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
+    const [modelDocName, setModelDocName] = useState("未上传");
+    const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updateModelDoc[unifiedModelName]);
 
     return (
         <div className={classes.root}>
@@ -115,21 +54,30 @@ const ModelDocumentManagement = () => {
             </div>
             <div className={classes.docName}>
                 <Typography variant="h6">
-                    HawkesRNNDoc.md
+                    {modelDocName}
                 </Typography>
             </div>
             <div className={classes.updateTime}>
-                <Typography variant="overline">
-                    上传成功，本次上传时间
-                </Typography>
-                <Typography variant="h6">
-                    2019-12-30 10:58:20
-                </Typography>
+                <UploadInfoComponent
+                    status={updateStatus}
+                    updateTime={updateTime}
+                />
             </div>
             <div className={classes.buttonGroup}>
-                <UploadDoc/>
-                <DownloadDoc/>
-                <Question />
+                <UploadComponent
+                    mainCategory={mainCategory}
+                    algorithmMainCategory={algorithmMainCategory}
+                    algorithmSubCategory={algorithmSubCategory}
+                    fileType={MODEL_DOC}
+                    setName={setModelDocName}
+                />
+                <DownloadComponent
+                    mainCategory={mainCategory}
+                    algorithmMainCategory={algorithmMainCategory}
+                    algorithmSubCategory={algorithmSubCategory}
+                    fileType={MODEL_DOC}
+                />
+                <HintDialog fileType={MODEL_DOC} />
             </div>
         </div>
     )

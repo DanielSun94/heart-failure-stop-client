@@ -10,9 +10,9 @@ import {
     MODEL_PLATFORM,
     MODEL_PREPROCESS,
     ACCESS_CONTROL,
-    MODEL_FILE_UPDATE_FAILED,
-    MODEL_FILE_UPDATE_SUCCESS,
-    MODEL_FILE_UPDATE_REQUEST
+    MODEL_UPDATE_FAILED,
+    MODEL_UPDATE_SUCCESS,
+    MODEL_UPDATE_REQUEST,
 } from "../actions/algorithmManagementAction"
 
 const initialState = {
@@ -50,42 +50,42 @@ const algorithmReducer = (state = initialState, action) => {
         case UPDATE_MODEL_UPDATE_INFO: {
             if(action.infoCategory===MODEL_CONFIG){
                 let newMap = {...state.updateModelConfig};
-                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
                 return {
                     ...state,
                     updateModelConfig: newMap};
             }
             else if(action.infoCategory===MODEL_DOC){
                 let newMap = {...state.updateModelDoc};
-                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
                 return {
                     ...state,
                     updateModelDoc: newMap};
             }
             else if(action.infoCategory===MODEL_FILE){
                 let newMap = {...state.updateModelFile};
-                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
                 return {
                     ...state,
                     updateModelFile: newMap};
             }
             else if(action.infoCategory===MODEL_PLATFORM){
                 let newMap = {...state.updatePlatForm};
-                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
                 return {
                     ...state,
                     updatePlatForm: newMap};
             }
             else if(action.infoCategory===MODEL_PREPROCESS){
                 let newMap = {...state.updatePreprocess};
-                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
                 return {
                     ...state,
                     updatePreprocess: newMap};
             }
             else if(action.infoCategory===ACCESS_CONTROL){
                 let newMap = {...state.updateAccessControl};
-                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
                 return {
                     ...state,
                     updateAccessControl: newMap};
@@ -94,13 +94,13 @@ const algorithmReducer = (state = initialState, action) => {
                 return {...state};
             }
         }
-        case MODEL_FILE_UPDATE_REQUEST: {
+        case MODEL_UPDATE_REQUEST: {
             return {...state};
         }
-        case MODEL_FILE_UPDATE_FAILED: {
+        case MODEL_UPDATE_FAILED: {
             return {...state};
         }
-        case MODEL_FILE_UPDATE_SUCCESS: {
+        case MODEL_UPDATE_SUCCESS: {
             return {...state};
         }
         // eslint-disable-next-line no-fallthrough

@@ -3,11 +3,11 @@ import {
     Typography,
     CircularProgress
 } from "@material-ui/core";
-import {SUCCESS, NOT_UPDATE, IN_PROGRESS, FAILED, FILE_NAME_ERROR} from "../../../actions/algorithmManagementAction";
-import {monthAndDateAndTimeTrans} from "../../../utils/queryUtilFunction";
+import {SUCCESS, NOT_UPDATE, IN_PROGRESS, FAILED, FILE_NAME_ERROR} from "../../../../actions/algorithmManagementAction";
+import {monthAndDateAndTimeTrans} from "../../../../utils/queryUtilFunction";
 
 
-const UpdateInfoComponent = ({updateTime, status}) => {
+const UploadInfoComponent = ({updateTime, status}) => {
     if(status===NOT_UPDATE){
         return (
             <div>
@@ -68,4 +68,4 @@ const UpdateInfoComponent = ({updateTime, status}) => {
     }
 };
 
-export default UpdateInfoComponent;
+export default UploadInfoComponent;

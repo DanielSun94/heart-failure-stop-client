@@ -110,14 +110,26 @@ const Content = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedA
                     />
                 </div>
                 <div className={classes.modelConfig}>
-                    <ModelConfigManagement/>
+                    <ModelConfigManagement
+                        mainCategory={selectedMainCategory}
+                        algorithmSubCategory={selectedAlgorithmSubCategory}
+                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                    />
                 </div>
 
                 <div className={classes.preprocessModule}>
-                    <PreprocessingManagement/>
+                    <PreprocessingManagement
+                        mainCategory={selectedMainCategory}
+                        algorithmSubCategory={selectedAlgorithmSubCategory}
+                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                    />
                 </div>
                 <div className={classes.modelDoc}>
-                    <ModelDocumentManagement/>
+                    <ModelDocumentManagement
+                        mainCategory={selectedMainCategory}
+                        algorithmSubCategory={selectedAlgorithmSubCategory}
+                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                    />
                 </div>
                 <div className={classes.accessControl}>
                     <AccessControl/>
