@@ -44,7 +44,8 @@ static RECORD_TIME = "recordTime";
 static USER_AFFILIATED_HOSPITAL_CODE = 'userAffiliatedHospitalCode';
 static VISIT_NO ='visitNo';
 
-
+static GET = "GET";
+static POST = "POST";
 
 // trajectory analysis panel name
 static QUERY_AND_BASIC_INFO_PANEL = 'queryAndBasicInfoPanel';

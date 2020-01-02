@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React from "react";
 import {
     Typography,
     CircularProgress
 } from "@material-ui/core";
-import {SUCCESS, NOT_UPDATE, FILE_NAME_ERROR, IN_PROGRESS, FAILED} from "../../../actions/algorithmManagementAction"
+import {SUCCESS, NOT_UPDATE, IN_PROGRESS, FAILED, FILE_NAME_ERROR} from "../../../actions/algorithmManagementAction";
+import {monthAndDateAndTimeTrans} from "../../../utils/queryUtilFunction";
 
 
 const UpdateInfoComponent = ({updateTime, status}) => {
@@ -16,18 +17,6 @@ const UpdateInfoComponent = ({updateTime, status}) => {
             </div>
         )
     }
-    else if(status===FILE_NAME_ERROR){
-        return (
-            <div>
-                <Typography
-                    variant="overline"
-                    color={'red'}
-                >
-                    文件名错误
-                </Typography>
-            </div>
-        )
-    }
     else if(status===SUCCESS){
         return (
             <div>
@@ -35,17 +24,26 @@ const UpdateInfoComponent = ({updateTime, status}) => {
                     更新成功，本次上传时间
                 </Typography>
                 <Typography variant="h6">
-                    2019-12-30 10:58:20
+                    {monthAndDateAndTimeTrans(updateTime)}
                 </Typography>
             </div>
         )
     }
     else if(status===IN_PROGRESS){
         return (
-            <div>
-                <CircularProgress />
+            <div >
+                <CircularProgress size={25} />
                 <Typography variant="h6">
                     更新中
+                </Typography>
+            </div>
+        )
+    }
+    else if(status===FILE_NAME_ERROR){
+        return (
+            <div>
+                <Typography variant="overline">
+                    文件名错误，请修改后上传
                 </Typography>
             </div>
         )

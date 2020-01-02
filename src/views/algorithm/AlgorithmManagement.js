@@ -122,13 +122,13 @@ const SquareButton = withStyles({
     },
 })(Button);
 
-const constructAlgorithmSubList = (selectedMainCateGory, selectedAlgorithmMainCategory, algorithmMap) => {
+const constructAlgorithmSubList = (selectedMainCategory, selectedAlgorithmMainCategory, algorithmMap) => {
     let algorithmSubList= [];
-    if(selectedMainCateGory!=="NotSelected"&&selectedAlgorithmMainCategory!=="NotSelected"
+    if(selectedMainCategory!=="NotSelected"&&selectedAlgorithmMainCategory!=="NotSelected"
         &&selectedAlgorithmMainCategory!=="noModel"){
-        const algorithmSubKeyList = Array.from(algorithmMap.get(selectedMainCateGory).get(selectedAlgorithmMainCategory)[1].keys());
+        const algorithmSubKeyList = Array.from(algorithmMap.get(selectedMainCategory).get(selectedAlgorithmMainCategory)[1].keys());
         for(let item of algorithmSubKeyList){
-            const modelInfo = algorithmMap.get(selectedMainCateGory).get(selectedAlgorithmMainCategory)[1].get(item);
+            const modelInfo = algorithmMap.get(selectedMainCategory).get(selectedAlgorithmMainCategory)[1].get(item);
             algorithmSubList.push([modelInfo.modelChineseFunctionName, item])
         }
     }
@@ -149,11 +149,11 @@ const AlgorithmManagement = () => {
     const algorithmList = useSelector(state=>state.algorithm.algorithmList);
     const algorithmMap = algorithmTransfer(algorithmList);
 
-    const [selectedMainCateGory, setMainCateGory] = useState('NotSelected');
+    const [selectedMainCategory, setMainCategory] = useState('NotSelected');
     const [selectedAlgorithmMainCategory, setAlgorithmMainCategory] = useState('NotSelected');
     const [selectedAlgorithmSubCategory, setAlgorithmSubCategory] = useState('NotSelected');
 
-    const algorithmSubList= constructAlgorithmSubList(selectedMainCateGory, selectedAlgorithmMainCategory, algorithmMap);
+    const algorithmSubList= constructAlgorithmSubList(selectedMainCategory, selectedAlgorithmMainCategory, algorithmMap);
 
     return (
         <div className={classes.root}>
@@ -170,8 +170,8 @@ const AlgorithmManagement = () => {
                 </div>
                 <div className={classes.categoryList}>
                     <MainCategory
-                        expandPanel={selectedMainCateGory}
-                        setExpandPanel={setMainCateGory}
+                        expandPanel={selectedMainCategory}
+                        setExpandPanel={setMainCategory}
                         selectedAlgorithm={selectedAlgorithmMainCategory}
                         setSelectedAlgorithm={setAlgorithmMainCategory}
                         setAlgorithmSubCategory={setAlgorithmSubCategory}
@@ -197,13 +197,13 @@ const AlgorithmManagement = () => {
                 </div>
             </div>
             <div className={classes.content}>
-                {(  selectedMainCateGory !== "NotSelected"
+                {(  selectedMainCategory !== "NotSelected"
                     && selectedAlgorithmMainCategory !== "NotSelected"
                     && selectedAlgorithmSubCategory !== "NotSelected"
                 )
                     ?
                     <Content
-                        selectedMainCateGory={selectedMainCateGory}
+                        selectedMainCategory={selectedMainCategory}
                         selectedAlgorithmMainCategory={selectedAlgorithmMainCategory}
                         selectedAlgorithmSubCategory={selectedAlgorithmSubCategory}
                     />

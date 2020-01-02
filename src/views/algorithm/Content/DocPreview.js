@@ -16,7 +16,6 @@ const useStyles = makeStyles(theme => ({
     },
     preview: {
         marginLeft: theme.spacing(4),
-        marginRight: theme.spacing(4),
         height: "92%",
         overflow: 'scroll'
     }

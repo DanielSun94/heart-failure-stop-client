@@ -1,4 +1,4 @@
-import NormalizedName from '../utils/ParaName';
+import ParaName from '../utils/ParaName';
 import RouteName from '../utils/RouteName';
 
 export const SUCCESS = "SUCCESS";
@@ -26,47 +26,52 @@ export const MODEL_FILE_UPDATE_SUCCESS = "MODEL_FILE_UPDATE_SUCCESS";
 export const MODEL_FILE_UPDATE_FAILED = "MODEL_FILE_UPDATE_FAILED";
 
 
-export function requestPosts() {
+function modelListRequest() {
     return ({type: ALGORITHM_LIST_REQUEST_POSTS})
 }
 
 
-export function receiveSuccessResult(res) {
+function receiveModelListSuccessResult(res) {
     return ({
         type: ALGORITHM_LIST_RECEIVE_SUCCESS_POSTS,
         content: res
     })
 }
 
-export function receiveFailedResult() {
+function receiveModelListFailedResult() {
     return {type: ALGORITHM_LIST_RECEIVE_FAILED_POSTS,}
 }
 
-export function initializeUpdateInfo(res){
+export function initializeModelUpdateInfo(res){
     return {type: MODEL_UPDATE_INFO_INITIALIZE, content: res}
 }
 
-export function updateModelUpdateInfo(infoCategory, infoType, updateInfoTime, unifiedName){
-    return {type: UPDATE_MODEL_UPDATE_INFO, infoCategory: infoCategory, unifiedName: unifiedName, infoType: infoType,
-        updateInfoTime: updateInfoTime}
+export function updateModelUpdateInfo(infoCategory, infoType, unifiedName, updateInfoTime){
+    return {
+        type: UPDATE_MODEL_UPDATE_INFO,
+        infoCategory: infoCategory,
+        infoType: infoType,
+        unifiedName: unifiedName,
+        updateInfoTime: updateInfoTime
+    }
 }
 
 export function fetchModelListPosts() {
     return function(dispatch, getState) {
-        dispatch(requestPosts());
+        dispatch(modelListRequest());
         let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.FETCH_MODEL_LIST;
         let token = getState().session.authenticToken;
         let header = {'Authorization': token};
-        return fetch(url, {method: NormalizedName.GET, headers: header})
+        return fetch(url, {method: ParaName.GET, headers: header})
             .then(res => res.json())
             .then(
                 res => {
                     if(res.status && !(res.status === '200' || res.status === 200)){
-                        dispatch(receiveFailedResult());
+                        dispatch(receiveModelListFailedResult());
                         console.log('Unknown: Error, get algorithm info failed')
                     }
                     else{
-                        dispatch(receiveSuccessResult(res));
+                        dispatch(receiveModelListSuccessResult(res));
                         console.log('get algorithm info succeed');
 
                         //初始化所有模型更新信息的状态
@@ -89,33 +94,63 @@ export function fetchModelListPosts() {
                             modelUpdateInfo.updateAccessControl[unifiedName]=[NOT_UPDATE, defaultDate];
                             modelUpdateInfo.updatePlatForm[unifiedName]=[NOT_UPDATE, defaultDate];
                         }
-                        dispatch(initializeUpdateInfo(modelUpdateInfo))
+                        dispatch(initializeModelUpdateInfo(modelUpdateInfo))
                     }
                 }
             );
     }
 }
 
-export function modelUpdatePost(mainCateGory, algorithmMainCategory, algorithmSubCategory, file){
+function modelFileUpdateRequest() {
+    return ({type: MODEL_FILE_UPDATE_REQUEST})
+}
+
+
+function modelFileUpdateSuccess() {
+    return ({
+        type: MODEL_FILE_UPDATE_SUCCESS,
+    })
+}
+
+function modelFileUpdateFailed() {
+    return {type: MODEL_FILE_UPDATE_FAILED,}
+}
+
+export function modelUpdatePost(mainCategory, algorithmMainCategory, algorithmSubCategory, file){
     return function(dispatch, getState) {
-        dispatch(requestPosts());
-        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.FETCH_MODEL_LIST;
+        const unifiedModelName = mainCategory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
+
+        dispatch(modelFileUpdateRequest());
+        dispatch(updateModelUpdateInfo(MODEL_FILE, IN_PROGRESS, unifiedModelName, Date.now()));
+
         let token = getState().session.authenticToken;
-        let header = {'Authorization': token};
-        return fetch(url, {method: NormalizedName.GET, headers: header})
-            .then(res => res.json())
+        let header = {
+            'Authorization': token,
+        };
+        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.UPLOAD_MODEL_FILE;
+
+        let formData = new FormData();
+        formData.append('modelFile', file);
+        formData.append('modelNameEnglish', algorithmMainCategory);
+        formData.append('mainCategory', mainCategory);
+        formData.append('modelFunctionEnglish', algorithmSubCategory);
+
+
+        return fetch(url, {method: ParaName.POST, headers: header, body: formData})
             .then(
                 res => {
+
                     if(res.status && !(res.status === '200' || res.status === 200)){
-                        dispatch(receiveFailedResult());
-                        console.log('Unknown: Error, get algorithm info failed')
+                        dispatch(modelFileUpdateFailed());
+                        dispatch(updateModelUpdateInfo(MODEL_FILE, FAILED, unifiedModelName, Date.now()));
+                        console.log('Unknown: Error, update model file failed')
                     }
                     else{
-                        dispatch(receiveSuccessResult(res));
-                        console.log('get algorithm info succeed');
-
+                        dispatch(modelFileUpdateSuccess());
+                        dispatch(updateModelUpdateInfo(MODEL_FILE, SUCCESS, unifiedModelName, Date.now()));
+                        console.log('update model file success')
                     }
                 }
-            );
+            )
     }
 }

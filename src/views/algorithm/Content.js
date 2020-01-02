@@ -88,7 +88,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Content = ({selectedMainCateGory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory})=> {
+const Content = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory})=> {
     const classes = useStyles();
 
     return (
@@ -104,7 +104,7 @@ const Content = ({selectedMainCateGory, selectedAlgorithmMainCategory, selectedA
                 </div>
                 <div className={classes.modelFile}>
                     <ModelFileManagement
-                        mainCateGory={selectedMainCateGory}
+                        mainCategory={selectedMainCategory}
                         algorithmSubCategory={selectedAlgorithmSubCategory}
                         algorithmMainCategory={selectedAlgorithmMainCategory}
                     />
