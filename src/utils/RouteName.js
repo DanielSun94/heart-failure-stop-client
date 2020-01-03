@@ -9,9 +9,9 @@ class RouteName{
     // content route
     static ANALYSIS = '/analysis';
     static DATA_OUTPUT = '/data-output';
-    static ALGORITHM_MANAGEMENT = "/algorithm-management"
-    static ACCOUNT_MANAGEMENT = "/account-management"
-    static LOG_OUT = "/log-out"
+    static ALGORITHM_MANAGEMENT = "/algorithm-management";
+    static ACCOUNT_MANAGEMENT = "/account-management";
+    static LOG_OUT = "/log-out";
 
     // Authentic Route
     static AUTHENTIC_PAGE = "/authentic";
@@ -65,6 +65,9 @@ class RouteName{
     static CREATE_NEW_MODEL= "/createNewModel";
     static DELETE_EXIST_MODEL = "/deleteExistModel";
     static FETCH_MODEL_LIST = "/fetchModelList";
+    static UPDATE_PLATFORM='/updatePlatform';
+    static UPDATE_ACCESS_CONTROL = '/updateAccessControl';
+    static MODEL_INFO = '/modelInfo';
 }
 
 export default RouteName;

@@ -13,22 +13,31 @@ import {
     MODEL_UPDATE_FAILED,
     MODEL_UPDATE_SUCCESS,
     MODEL_UPDATE_REQUEST,
+    RESET,
+    GET_MODEL_INFO_FAILED,
+    GET_MODEL_INFO_REQUEST,
+    GET_MODEL_INFO_SUCCESS
 } from "../actions/algorithmManagementAction"
 
 const initialState = {
     algorithmList: [],
     // format; modelName: updateFlag
+    modelInfo: {},
     updateModelFile:{},
     updateModelConfig:{},
     updateModelDoc:{},
     updatePreprocess:{},
     updateAccessControl:{},
     updatePlatForm:{},
+    modelCreateUser: {}
 };
 
 const algorithmReducer = (state = initialState, action) => {
     switch (action.type) {
         case ALGORITHM_LIST_REQUEST_POSTS: {
+            return {...initialState};
+        }
+        case RESET: {
             return {...initialState};
         }
         case ALGORITHM_LIST_RECEIVE_SUCCESS_POSTS: {
@@ -40,6 +49,7 @@ const algorithmReducer = (state = initialState, action) => {
         case MODEL_UPDATE_INFO_INITIALIZE: {
             return {
                 ...state,
+                modelCreateUser: action.content.modelCreateUser,
                 updateModelFile: action.content.updateModelFile,
                 updateModelConfig: action.content.updateModelConfig,
                 updateModelDoc: action.content.updateModelDoc,
@@ -50,42 +60,42 @@ const algorithmReducer = (state = initialState, action) => {
         case UPDATE_MODEL_UPDATE_INFO: {
             if(action.infoCategory===MODEL_CONFIG){
                 let newMap = {...state.updateModelConfig};
-                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
                 return {
                     ...state,
                     updateModelConfig: newMap};
             }
             else if(action.infoCategory===MODEL_DOC){
                 let newMap = {...state.updateModelDoc};
-                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
                 return {
                     ...state,
                     updateModelDoc: newMap};
             }
             else if(action.infoCategory===MODEL_FILE){
                 let newMap = {...state.updateModelFile};
-                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
                 return {
                     ...state,
                     updateModelFile: newMap};
             }
             else if(action.infoCategory===MODEL_PLATFORM){
                 let newMap = {...state.updatePlatForm};
-                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
                 return {
                     ...state,
                     updatePlatForm: newMap};
             }
             else if(action.infoCategory===MODEL_PREPROCESS){
                 let newMap = {...state.updatePreprocess};
-                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
                 return {
                     ...state,
                     updatePreprocess: newMap};
             }
             else if(action.infoCategory===ACCESS_CONTROL){
                 let newMap = {...state.updateAccessControl};
-                newMap[action.unifiedName] = [action.fileType, action.updateInfoTime];
+                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
                 return {
                     ...state,
                     updateAccessControl: newMap};
@@ -101,6 +111,15 @@ const algorithmReducer = (state = initialState, action) => {
             return {...state};
         }
         case MODEL_UPDATE_SUCCESS: {
+            return {...state};
+        }
+        case GET_MODEL_INFO_REQUEST: {
+            return {...state};
+        }
+        case GET_MODEL_INFO_SUCCESS: {
+            return {...state, modelInfo: action.content};
+        }
+        case GET_MODEL_INFO_FAILED: {
             return {...state};
         }
         // eslint-disable-next-line no-fallthrough

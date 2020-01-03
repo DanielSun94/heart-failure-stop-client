@@ -1,17 +1,12 @@
 import React, {useState} from "react";
-import {
-    Typography
-} from "@material-ui/core";
-import {useSelector} from 'react-redux';
+import {Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
-import {
-    MODEL_FILE,
-} from "../../../actions/algorithmManagementAction"
-import HintDialog from "./Components/HintDialog";
-import DownloadComponent from "./Components/DownloadComponent";
-import UploadComponent from "./Components/UploadComponent";
-import UploadInfoComponent from "./Components/UploadInfoComponent";
-
+import {MODEL_CONFIG} from "../../../../actions/algorithmManagementAction";
+import HintDialog from "../Components/HintDialog";
+import DownloadComponent from "../Components/DownloadComponent";
+import {useSelector} from "react-redux";
+import UploadComponent from "../Components/UploadComponent";
+import UploadInfoComponent from "../Components/UploadInfoComponent";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -20,11 +15,11 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
     },
-    modelLabel: {
+    configLabel: {
         marginLeft: theme.spacing(4),
         width: "15%",
     },
-    modelName: {
+    configName: {
         width: "35%",
         overflow: "hidden"
     },
@@ -39,25 +34,22 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-
-
-const ModelFileManagement = ({mainCategory, algorithmMainCategory, algorithmSubCategory}) => {
+const ModelConfigManagement = ({mainCategory, algorithmMainCategory, algorithmSubCategory}) => {
     const classes = useStyles();
     const unifiedModelName = mainCategory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
-
-    const [modelFileName, setModelFileName] = useState("未上传");
-    const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updateModelFile[unifiedModelName]);
+    const [modelConfigName, setModelConfigName] = useState("未上传");
+    const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updateModelConfig[unifiedModelName]);
 
     return (
         <div className={classes.root}>
-            <div className={classes.modelLabel}>
+            <div className={classes.configLabel}>
                 <Typography variant="h5">
-                    模型文件：
+                    配置文件：
                 </Typography>
             </div>
-            <div className={classes.modelName}>
+            <div className={classes.configName}>
                 <Typography variant="h6">
-                    {modelFileName}
+                    {modelConfigName}
                 </Typography>
             </div>
             <div className={classes.updateTime}>
@@ -71,19 +63,19 @@ const ModelFileManagement = ({mainCategory, algorithmMainCategory, algorithmSubC
                     mainCategory={mainCategory}
                     algorithmMainCategory={algorithmMainCategory}
                     algorithmSubCategory={algorithmSubCategory}
-                    fileType={MODEL_FILE}
-                    setName={setModelFileName}
+                    fileType={MODEL_CONFIG}
+                    setName={setModelConfigName}
                 />
                 <DownloadComponent
                     mainCategory={mainCategory}
                     algorithmMainCategory={algorithmMainCategory}
                     algorithmSubCategory={algorithmSubCategory}
-                    fileType={MODEL_FILE}
+                    fileType={MODEL_CONFIG}
                 />
-                <HintDialog fileType={MODEL_FILE} />
+                <HintDialog fileType={MODEL_CONFIG} />
             </div>
         </div>
     )
 };
 
-export default ModelFileManagement;
+export default ModelConfigManagement;

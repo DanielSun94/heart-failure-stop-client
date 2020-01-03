@@ -51,16 +51,18 @@ const UploadComponent = ({mainCategory, algorithmMainCategory, algorithmSubCateg
         }
     };
 
+    // 下面那个value置空是为了每次上传完文件后都重设value，不然onChange函数不会第二次响应同样名称的文件上传请求
     return (
         <div>
             <input
-                id={"upload-"+fileType}
+                id={"upload-"+unifiedModelName+"_"+fileType}
                 className={classes.input}
                 type="file"
+                value={''}
                 onChange={uploadModel}
             />
             <Tooltip title={content.toolTipTitle}>
-                <label htmlFor={"upload-"+fileType}>
+                <label htmlFor={"upload-"+unifiedModelName+"_"+fileType}>
                     <IconButton color="primary" component="span">
                         <CloudUploadIcon />
                     </IconButton>

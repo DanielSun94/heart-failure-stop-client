@@ -30,6 +30,10 @@ const HintDialog = ({fileType}) => {
         setOpen(true);
     };
 
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     let content;
     switch (fileType) {
         case MODEL_FILE: content=infoMap.updateModelFile; break;
@@ -39,9 +43,6 @@ const HintDialog = ({fileType}) => {
         default: content="NO DATA";
     }
 
-    const handleClose = () => {
-        setOpen(false);
-    };
     return (
         <Tooltip title="帮助">
             <div>

@@ -1,6 +1,8 @@
 import ParaName from '../utils/ParaName';
 import RouteName from '../utils/RouteName';
+import {queryParamsTrans} from "../utils/queryUtilFunction";
 
+export const RESET = "RESET";
 export const SUCCESS = "SUCCESS";
 export const FAILED = "FAILED";
 export const IN_PROGRESS = "IN_PROGRESS";
@@ -21,9 +23,70 @@ export const ALGORITHM_LIST_RECEIVE_FAILED_POSTS = 'ALGORITHM_LIST_RECEIVE_FAILE
 export const MODEL_UPDATE_INFO_INITIALIZE = 'MODEL_UPDATE_INFO_INITIALIZE';
 export const UPDATE_MODEL_UPDATE_INFO = "UPDATE_MODEL_UPDATE_INFO";
 
-export const MODEL_UPDATE_REQUEST = "MODEL_FILE_UPDATE_REQUEST";
-export const MODEL_UPDATE_SUCCESS = "MODEL_FILE_UPDATE_SUCCESS";
-export const MODEL_UPDATE_FAILED = "MODEL_FILE_UPDATE_FAILED";
+export const MODEL_UPDATE_REQUEST = "MODEL_UPDATE_REQUEST";
+export const MODEL_UPDATE_SUCCESS = "MODEL_UPDATE_SUCCESS";
+export const MODEL_UPDATE_FAILED = "MODEL_UPDATE_FAILED";
+
+export const MODEL_DELETE_REQUEST = "MODEL_DELETE_REQUEST";
+export const MODEL_DELETE_SUCCESS = "MODEL_DELETE_SUCCESS";
+export const MODEL_DELETE_FAILED = "MODEL_DELETE_FAILED";
+
+export const GET_MODEL_INFO_REQUEST = "GET_MODEL_INFO_REQUEST";
+export const GET_MODEL_INFO_SUCCESS = "GET_MODEL_INFO_SUCCESS";
+export const GET_MODEL_INFO_FAILED = "GET_MODEL_INFO_FAILED";
+
+function getModelInfoRequest() {
+    return ({type: GET_MODEL_INFO_REQUEST})
+}
+
+
+function getModelInfoSuccess(res) {
+    return ({
+        type: GET_MODEL_INFO_SUCCESS,
+        content: res
+    })
+}
+
+function getModelInfoFailed() {
+    return {type: GET_MODEL_INFO_FAILED,}
+}
+
+export function getModelInfo(mainCategory, algorithmMainCategory, algorithmSubCategory){
+    return function(dispatch, getState) {
+
+        dispatch(getModelInfoRequest());
+
+        let token = getState().session.authenticToken;
+        let header = {
+            'Authorization': token,
+        };
+        const param = {
+            'modelNameEnglish': algorithmMainCategory,
+            'mainCategory': mainCategory,
+            'modelFunctionEnglish': algorithmSubCategory
+        };
+        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.MODEL_INFO+queryParamsTrans(param);
+
+        return fetch(url, {method: ParaName.GET, headers: header})
+            .then(res => res.json())
+            .then(
+                res => {
+                    if(res.status && !(res.status === '200' || res.status === 200)){
+                        dispatch(getModelInfoFailed());
+                        console.log('Unknown: Error, get model info failed')
+                    }
+                    else{
+                        dispatch(getModelInfoSuccess(res));
+                        console.log('get model info success')
+                    }
+                }
+            )
+    }
+}
+
+function reset(){
+    return ({type: RESET})
+}
 
 
 function modelListRequest() {
@@ -46,13 +109,59 @@ export function initializeModelUpdateInfo(res){
     return {type: MODEL_UPDATE_INFO_INITIALIZE, content: res}
 }
 
-export function updateModelUpdateInfo(infoCategory, fileType, unifiedName, updateInfoTime){
+export function updateModelUpdateInfo(infoCategory, infoType, unifiedName, updateInfoTime){
     return {
         type: UPDATE_MODEL_UPDATE_INFO,
         infoCategory: infoCategory,
-        fileType: fileType,
+        infoType: infoType,
         unifiedName: unifiedName,
         updateInfoTime: updateInfoTime
+    }
+}
+
+function modelDeleteRequest() {
+    return ({type: MODEL_DELETE_REQUEST})
+}
+
+
+function receiveModelDeleteSuccess() {
+    return ({type: MODEL_DELETE_SUCCESS})
+}
+
+function receiveModelDeleteFailed() {
+    return {type: MODEL_DELETE_FAILED,}
+}
+
+export function deleteModel(mainCategory, algorithmMainCategory, algorithmSubCategory){
+    return function(dispatch, getState) {
+        dispatch(modelDeleteRequest());
+        let token = getState().session.authenticToken;
+        let header = {
+            'Authorization': token,
+        };
+        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.DELETE_EXIST_MODEL;
+
+        let formData = new FormData();
+        formData.append('modelNameEnglish', algorithmMainCategory);
+        formData.append('mainCategory', mainCategory);
+        formData.append('modelFunctionEnglish', algorithmSubCategory);
+
+        return fetch(url, {method: ParaName.POST, headers: header, body: formData})
+            .then(
+                res => {
+                    if(res.status && !(res.status === '200' || res.status === 200)){
+                        dispatch(receiveModelDeleteFailed());
+                        console.log('Unknown: Error, delete model failed')
+                    }
+                    else{
+                        dispatch(receiveModelDeleteSuccess());
+                        console.log('delete model success')
+                    }
+                }
+            )
+            // 删除成功后重设List
+            .then(()=>dispatch(reset()))
+            .then(()=>dispatch(fetchModelListPosts()))
     }
 }
 
@@ -82,11 +191,14 @@ export function fetchModelListPosts() {
                             updatePreprocess:{},
                             updateAccessControl:{},
                             updatePlatForm:{},
+                            modelCreateUser:{}
                         };
                         for(let item of res){
                             const unifiedName = item['mainCategory']+ "_"+item['modelEnglishName']+
                                 "_"+ item['modelEnglishFunctionName'];
+                            const createUser = item['createUser'];
                             const defaultDate = new Date(1970, 1, 1, 0, 0, 0, 0);
+                            modelUpdateInfo.modelCreateUser[unifiedName]=createUser;
                             modelUpdateInfo.updateModelFile[unifiedName]=[NOT_UPDATE, defaultDate];
                             modelUpdateInfo.updateModelConfig[unifiedName]=[NOT_UPDATE, defaultDate];
                             modelUpdateInfo.updateModelDoc[unifiedName]=[NOT_UPDATE, defaultDate];
@@ -116,12 +228,12 @@ function modelUpdateFailed() {
     return {type: MODEL_UPDATE_FAILED}
 }
 
-export function modelUpdatePost(mainCategory, algorithmMainCategory, algorithmSubCategory, file, fileType, path){
+export function modelUpdatePost(mainCategory, algorithmMainCategory, algorithmSubCategory, fileOrMessage, infoType, path){
     return function(dispatch, getState) {
         const unifiedModelName = mainCategory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
 
-        dispatch(modelUpdateRequest(fileType));
-        dispatch(updateModelUpdateInfo(fileType, IN_PROGRESS, unifiedModelName, Date.now()));
+        dispatch(modelUpdateRequest(infoType));
+        dispatch(updateModelUpdateInfo(infoType, IN_PROGRESS, unifiedModelName, Date.now()));
 
         let token = getState().session.authenticToken;
         let header = {
@@ -130,7 +242,7 @@ export function modelUpdatePost(mainCategory, algorithmMainCategory, algorithmSu
         let url = RouteName.B_ALGORITHM_MANAGEMENT + path;
 
         let formData = new FormData();
-        formData.append('file', file);
+        formData.append('fileOrMessage', fileOrMessage);
         formData.append('modelNameEnglish', algorithmMainCategory);
         formData.append('mainCategory', mainCategory);
         formData.append('modelFunctionEnglish', algorithmSubCategory);
@@ -141,13 +253,13 @@ export function modelUpdatePost(mainCategory, algorithmMainCategory, algorithmSu
                 res => {
 
                     if(res.status && !(res.status === '200' || res.status === 200)){
-                        dispatch(modelUpdateFailed(fileType));
-                        dispatch(updateModelUpdateInfo(fileType, FAILED, unifiedModelName, Date.now()));
+                        dispatch(modelUpdateFailed(infoType));
+                        dispatch(updateModelUpdateInfo(infoType, FAILED, unifiedModelName, Date.now()));
                         console.log('Unknown: Error, update model failed')
                     }
                     else{
-                        dispatch(modelUpdateSuccess(fileType));
-                        dispatch(updateModelUpdateInfo(fileType, SUCCESS, unifiedModelName, Date.now()));
+                        dispatch(modelUpdateSuccess(infoType));
+                        dispatch(updateModelUpdateInfo(infoType, SUCCESS, unifiedModelName, Date.now()));
                         console.log('update model success')
                     }
                 }

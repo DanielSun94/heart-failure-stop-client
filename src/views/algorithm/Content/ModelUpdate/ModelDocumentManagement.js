@@ -1,12 +1,14 @@
 import React, {useState} from "react";
-import {Typography} from "@material-ui/core";
+import {
+    Typography
+} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
-import {MODEL_PREPROCESS} from "../../../actions/algorithmManagementAction";
-import HintDialog from "./Components/HintDialog";
-import DownloadComponent from "./Components/DownloadComponent";
+import {MODEL_DOC} from "../../../../actions/algorithmManagementAction";
+import HintDialog from "../Components/HintDialog";
+import DownloadComponent from "../Components/DownloadComponent";
 import {useSelector} from "react-redux";
-import UploadComponent from "./Components/UploadComponent";
-import UploadInfoComponent from "./Components/UploadInfoComponent";
+import UploadComponent from "../Components/UploadComponent";
+import UploadInfoComponent from "../Components/UploadInfoComponent";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -15,11 +17,11 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
     },
-    preprocessingLabel: {
+    docLabel: {
         marginLeft: theme.spacing(4),
         width: "15%",
     },
-    preprocessingName: {
+    docName: {
         width: "35%",
         overflow: "hidden"
     },
@@ -32,27 +34,24 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         justifyContent: 'flex-end',
     },
-    input: {
-        display: 'none',
-    }
 }));
 
-const PreprocessingManagement = ({mainCategory, algorithmMainCategory, algorithmSubCategory}) => {
+const ModelDocumentManagement = ({mainCategory, algorithmMainCategory, algorithmSubCategory}) => {
     const classes = useStyles();
     const unifiedModelName = mainCategory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
-    const [modelPreprocessName, setModelPreprocessName] = useState("未上传");
-    const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updatePreprocess[unifiedModelName]);
+    const [modelDocName, setModelDocName] = useState("未上传");
+    const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updateModelDoc[unifiedModelName]);
 
     return (
         <div className={classes.root}>
-            <div className={classes.preprocessingLabel}>
+            <div className={classes.docLabel}>
                 <Typography variant="h5">
-                    预处理文件：
+                    模型文档：
                 </Typography>
             </div>
-            <div className={classes.preprocessingName}>
+            <div className={classes.docName}>
                 <Typography variant="h6">
-                    {modelPreprocessName}
+                    {modelDocName}
                 </Typography>
             </div>
             <div className={classes.updateTime}>
@@ -66,19 +65,19 @@ const PreprocessingManagement = ({mainCategory, algorithmMainCategory, algorithm
                     mainCategory={mainCategory}
                     algorithmMainCategory={algorithmMainCategory}
                     algorithmSubCategory={algorithmSubCategory}
-                    fileType={MODEL_PREPROCESS}
-                    setName={setModelPreprocessName}
+                    fileType={MODEL_DOC}
+                    setName={setModelDocName}
                 />
                 <DownloadComponent
                     mainCategory={mainCategory}
                     algorithmMainCategory={algorithmMainCategory}
                     algorithmSubCategory={algorithmSubCategory}
-                    fileType={MODEL_PREPROCESS}
+                    fileType={MODEL_DOC}
                 />
-                <HintDialog fileType={MODEL_PREPROCESS} />
+                <HintDialog fileType={MODEL_DOC} />
             </div>
         </div>
     )
 };
 
-export default PreprocessingManagement;
+export default ModelDocumentManagement;

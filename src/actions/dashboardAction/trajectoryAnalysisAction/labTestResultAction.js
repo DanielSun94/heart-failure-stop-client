@@ -87,9 +87,9 @@ export function reset() {
 export function fetchSingleVisitLabTestResult(params) {
   
     return function(dispatch, getState) {
-        dispatch(requestSingleVisitPosts())
+        dispatch(requestSingleVisitPosts());
         let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_LAB_TEST_SINGLE_VISIT_ONE_ITEM + queryParamsTrans(params);
-        let token = getState().session.authenticToken
+        let token = getState().session.authenticToken;
         let header = {'Authorization': token};
 
         return fetch(url, {method: ParaName.GET, headers: header})
@@ -101,7 +101,7 @@ export function fetchSingleVisitLabTestResult(params) {
               console.log('get lab test info successed')
             }
             else{
-              dispatch(receiveSingleVisitSuccessResult(params.itemName, res))
+              dispatch(receiveSingleVisitSuccessResult(params.itemName, res));
               console.log('get lab test info successed')
             }
           }
@@ -112,9 +112,9 @@ export function fetchSingleVisitLabTestResult(params) {
 export function fetchFullTraceLabTestResult(params) {
   
   return function(dispatch, getState) {
-      dispatch(requestFullTracePosts())
+      dispatch(requestFullTracePosts());
       let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_LAB_TEST_ONE_ITEM_FULL_TRACE + queryParamsTrans(params);
-      let token = getState().session.authenticToken
+      let token = getState().session.authenticToken;
       let header = {'Authorization': token};
 
       return fetch(url, {method: ParaName.GET, headers: header})
@@ -126,7 +126,7 @@ export function fetchFullTraceLabTestResult(params) {
             console.log('get lab test info successed')
           }
           else{
-            dispatch(receiveFullTraceSuccessResult(params.itemName, res))
+            dispatch(receiveFullTraceSuccessResult(params.itemName, res));
             console.log('get lab test info successed')
           }
         }
@@ -137,9 +137,9 @@ export function fetchFullTraceLabTestResult(params) {
 export function fetchLabTestList() {
   
   return function(dispatch, getState) {
-      dispatch(requestListPosts())
-      let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_LAB_TEST_LIST
-      let token = getState().session.authenticToken
+      dispatch(requestListPosts());
+      let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_LAB_TEST_LIST;
+      let token = getState().session.authenticToken;
       let header = {'Authorization': token};
       
       
@@ -152,17 +152,17 @@ export function fetchLabTestList() {
             console.log('get lab test list successed')
           }
           else{
-            pinyinSort(res)
-            let itemListWithPinyin = []
+            pinyinSort(res);
+            let itemListWithPinyin = [];
             for(let item of res){
-              const firstLetterList = pinyin(item, {style: pinyin.STYLE_FIRST_LETTER})
-              let firstLetterStr = ""
+              const firstLetterList = pinyin(item, {style: pinyin.STYLE_FIRST_LETTER});
+              let firstLetterStr = "";
               for(let strList of firstLetterList)
-                firstLetterStr += strList[0]
-              firstLetterStr = firstLetterStr.toLowerCase()
+                firstLetterStr += strList[0];
+              firstLetterStr = firstLetterStr.toLowerCase();
               itemListWithPinyin.push([item, firstLetterStr])
             }
-            dispatch(receiveListSuccessResult(itemListWithPinyin))
+            dispatch(receiveListSuccessResult(itemListWithPinyin));
             console.log('get lab test list successed')
           }
         }

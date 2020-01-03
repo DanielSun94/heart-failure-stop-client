@@ -8,7 +8,7 @@ const initStateInfo = {
     isDataFetching: false,
     isDataValid: false,
     content: []
-}
+};
 const examReducer = (state=initStateInfo, action) => {
     switch (action.type){
         case EXAM_REQUEST_POSTS: return (
@@ -25,6 +25,6 @@ const examReducer = (state=initStateInfo, action) => {
             );
         default: return state;
     }
-}
+};
 
 export default examReducer;

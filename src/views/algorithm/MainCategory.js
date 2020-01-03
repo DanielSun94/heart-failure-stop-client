@@ -20,7 +20,7 @@ import {
     MODEL_CATEGORY_TREATMENT_RECOMMENDATION
 } from "./AlgorithmManagement"
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     list: {
         width: '100%'
     },
@@ -87,9 +87,9 @@ const ExpansionPanelDetails = withStyles(theme => ({
 }))(MuiExpansionPanelDetails);
 
 const Panel = ({pId, pTitle, expandPanel, setExpandPanel, algorithmList, selectedAlgorithm,
-                   setSelectedAlgorithm, setAlgorithmSubCategory}) => {
+                   setSelectedAlgorithm, setAlgorithmSubCategory, block}) => {
     const classes = useStyles();
-    const handleChange = id => (event, isExpanded) => {
+    const handleChange = id => () => {
         setExpandPanel(id);
         setSelectedAlgorithm("NotSelected");
         setAlgorithmSubCategory("NotSelected");
@@ -98,7 +98,7 @@ const Panel = ({pId, pTitle, expandPanel, setExpandPanel, algorithmList, selecte
     return (
         <ExpansionPanel
             square
-            expanded={expandPanel === pId}
+            expanded={expandPanel === pId && (!block)}
             onChange={handleChange(pId)}>
             <ExpansionPanelSummary id={pId+'-summary'}>
                 <Typography>{pTitle}</Typography>
@@ -146,7 +146,7 @@ const dataFormatConvert = (algorithmMap) => {
 };
 
 const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelectedAlgorithm, setAlgorithmSubCategory,
-                         algorithmMap}) => {
+                         algorithmMap, block}) => {
     const classes = useStyles();
     const subMap = dataFormatConvert(algorithmMap);
 
@@ -161,6 +161,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 setSelectedAlgorithm={setSelectedAlgorithm}
                 setAlgorithmSubCategory={setAlgorithmSubCategory}
                 algorithmList={subMap[MODEL_CATEGORY_PROGRESSION_ANALYSIS]}
+                block={block}
             />
             <Panel
                 pId={MODEL_CATEGORY_RISK_ASSESSMENT}
@@ -171,6 +172,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 setSelectedAlgorithm={setSelectedAlgorithm}
                 setAlgorithmSubCategory={setAlgorithmSubCategory}
                 algorithmList={subMap[MODEL_CATEGORY_RISK_ASSESSMENT]}
+                block={block}
             />
             <Panel
                 pId={MODEL_CATEGORY_SURVIVAL_ANALYSIS}
@@ -181,6 +183,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 setSelectedAlgorithm={setSelectedAlgorithm}
                 setAlgorithmSubCategory={setAlgorithmSubCategory}
                 algorithmList={subMap[MODEL_CATEGORY_SURVIVAL_ANALYSIS]}
+                block={block}
             />
             <Panel
                 pId={MODEL_CATEGORY_TREATMENT_RECOMMENDATION}
@@ -191,6 +194,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 setSelectedAlgorithm={setSelectedAlgorithm}
                 setAlgorithmSubCategory={setAlgorithmSubCategory}
                 algorithmList={subMap[MODEL_CATEGORY_TREATMENT_RECOMMENDATION]}
+                block={block}
             />
             <Panel
                 pId={MODEL_CATEGORY_TREATMENT_COMPARISION}
@@ -201,6 +205,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 setAlgorithmSubCategory={setAlgorithmSubCategory}
                 setSelectedAlgorithm={setSelectedAlgorithm}
                 algorithmList={subMap[MODEL_CATEGORY_TREATMENT_COMPARISION]}
+                block={block}
             />
             <Panel
                 pId={MODEL_CATEGORY_DATA_IMPUTATION}
@@ -211,6 +216,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 setAlgorithmSubCategory={setAlgorithmSubCategory}
                 setSelectedAlgorithm={setSelectedAlgorithm}
                 algorithmList={subMap[MODEL_CATEGORY_DATA_IMPUTATION]}
+                block={block}
             />
         </div>
     )

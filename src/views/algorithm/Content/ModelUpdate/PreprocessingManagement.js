@@ -1,17 +1,12 @@
 import React, {useState} from "react";
-import {
-    IconButton,
-    Tooltip,
-    Typography
-} from "@material-ui/core";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import {Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
-import {MODEL_CONFIG, MODEL_DOC} from "../../../actions/algorithmManagementAction";
-import HintDialog from "./Components/HintDialog";
-import DownloadComponent from "./Components/DownloadComponent";
+import {MODEL_PREPROCESS} from "../../../../actions/algorithmManagementAction";
+import HintDialog from "../Components/HintDialog";
+import DownloadComponent from "../Components/DownloadComponent";
 import {useSelector} from "react-redux";
-import UploadComponent from "./Components/UploadComponent";
-import UploadInfoComponent from "./Components/UploadInfoComponent";
+import UploadComponent from "../Components/UploadComponent";
+import UploadInfoComponent from "../Components/UploadInfoComponent";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -20,11 +15,11 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
     },
-    docLabel: {
+    preprocessingLabel: {
         marginLeft: theme.spacing(4),
         width: "15%",
     },
-    docName: {
+    preprocessingName: {
         width: "35%",
         overflow: "hidden"
     },
@@ -37,24 +32,27 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         justifyContent: 'flex-end',
     },
+    input: {
+        display: 'none',
+    }
 }));
 
-const ModelDocumentManagement = ({mainCategory, algorithmMainCategory, algorithmSubCategory}) => {
+const PreprocessingManagement = ({mainCategory, algorithmMainCategory, algorithmSubCategory}) => {
     const classes = useStyles();
     const unifiedModelName = mainCategory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
-    const [modelDocName, setModelDocName] = useState("未上传");
-    const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updateModelDoc[unifiedModelName]);
+    const [modelPreprocessName, setModelPreprocessName] = useState("未上传");
+    const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updatePreprocess[unifiedModelName]);
 
     return (
         <div className={classes.root}>
-            <div className={classes.docLabel}>
+            <div className={classes.preprocessingLabel}>
                 <Typography variant="h5">
-                    模型文档：
+                    预处理文件：
                 </Typography>
             </div>
-            <div className={classes.docName}>
+            <div className={classes.preprocessingName}>
                 <Typography variant="h6">
-                    {modelDocName}
+                    {modelPreprocessName}
                 </Typography>
             </div>
             <div className={classes.updateTime}>
@@ -68,19 +66,19 @@ const ModelDocumentManagement = ({mainCategory, algorithmMainCategory, algorithm
                     mainCategory={mainCategory}
                     algorithmMainCategory={algorithmMainCategory}
                     algorithmSubCategory={algorithmSubCategory}
-                    fileType={MODEL_DOC}
-                    setName={setModelDocName}
+                    fileType={MODEL_PREPROCESS}
+                    setName={setModelPreprocessName}
                 />
                 <DownloadComponent
                     mainCategory={mainCategory}
                     algorithmMainCategory={algorithmMainCategory}
                     algorithmSubCategory={algorithmSubCategory}
-                    fileType={MODEL_DOC}
+                    fileType={MODEL_PREPROCESS}
                 />
-                <HintDialog fileType={MODEL_DOC} />
+                <HintDialog fileType={MODEL_PREPROCESS} />
             </div>
         </div>
     )
 };
 
-export default ModelDocumentManagement;
+export default PreprocessingManagement;

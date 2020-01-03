@@ -20,16 +20,16 @@ const initStateInfo = {
     fetchDataFailed: false,
     labTestFullTrace: {},
     singleVisitLabTestTrace: {}
-}
+};
 const labtestResultReducer = (state=initStateInfo, action) => {
     switch (action.type){
         case LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POSTS: return (
             {...state, isDataFetching: true}
             );
         case LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_SUCCESS_POSTS: {
-            let singleVisitTrace = {...state.singleVisitLabTestTrace}
-            const labTestName = action.labTestName
-            singleVisitTrace[labTestName] = action.labTestTrace
+            let singleVisitTrace = {...state.singleVisitLabTestTrace};
+            const labTestName = action.labTestName;
+            singleVisitTrace[labTestName] = action.labTestTrace;
             return {...state, isDataFetching: false, singleVisitLabTestTrace: singleVisitTrace};
         }
         case LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_FAILED_POSTS: return (
@@ -39,9 +39,9 @@ const labtestResultReducer = (state=initStateInfo, action) => {
             {...state, isDataFetching: true}
             );
         case LAB_TEST_RESULT_FULL_TRACE_RECEIVE_SUCCESS_POSTS: {
-            let fullTrace = {...state.labTestFullTrace}
-            const labTestName = action.labTestName
-            fullTrace[labTestName] = action.labTestTrace
+            let fullTrace = {...state.labTestFullTrace};
+            const labTestName = action.labTestName;
+            fullTrace[labTestName] = action.labTestTrace;
             return (
             {...state, isDataFetching: false, labTestFullTrace: fullTrace}
             );
@@ -69,6 +69,6 @@ const labtestResultReducer = (state=initStateInfo, action) => {
         }
         default: return state;
     }
-}
+};
 
 export default labtestResultReducer;

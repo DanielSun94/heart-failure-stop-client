@@ -36,17 +36,17 @@ const useStyles = makeStyles(() => ({
   }));
 
 const UnifiedPatientIDAndPatientBasicInfoPanel = () => {
-    const dispatch = useDispatch()
-    const classes = useStyles()
+    const dispatch = useDispatch();
+    const classes = useStyles();
 
     // query part
     const handlePatientQuery = (value) => dispatch(requestUnifiedPatientID(value));
-    const handleLocalPatientIDChange = (event) => dispatch(changeLocalPatientID(event.target.value))
+    const handleLocalPatientIDChange = (event) => dispatch(changeLocalPatientID(event.target.value));
     const defaultLLocalPatientID = useSelector(
         state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.localPatientID);
     const errorType = useSelector(
         state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.errorType);
-    let errorTag = null;
+    let errorTag;
     switch(errorType){
         case ERROR_NOT_FOUND: errorTag= <h5> 该ID无法匹配到患者 </h5>; break;
         case ERROR_UNKNOWN: errorTag= <h5> 由于未知原因的匹配失败 </h5>; break;
@@ -61,15 +61,15 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = () => {
                 defaultValue={defaultLLocalPatientID}/>
             {errorTag}
         </Fragment>
-    )
+    );
 
     // patient basic info part
     // 监听unifiedPatientID，当unifiedPatientID变化时自动触发更新
-    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID)
+    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID);
     useEffect(()=>{
         if (unifiedPatientID!=="")
             dispatch(requestPatientBasicInfo({unifiedPatientID: unifiedPatientID}))
-    }, [unifiedPatientID])
+    }, [unifiedPatientID]);
 
     const patientBasicInfoDict = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.patientBasicInfo);
     const errorFlag = useSelector(
@@ -95,7 +95,7 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = () => {
                 </TableRow>
             </TableBody>
         </Table>
-    )
+    );
 
     return (
         <div className={classes.root}>
@@ -109,6 +109,6 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = () => {
             </Card>
         </div>
     );
-}
+};
 
 export default UnifiedPatientIDAndPatientBasicInfoPanel;

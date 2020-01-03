@@ -1,19 +1,21 @@
-import React, {useState} from 'react';
-import {makeStyles} from "@material-ui/styles";
-import PlatformSelect from  './Content/PlatformSelect';
-import AccessControl from  './Content/AccessControl';
-import DocPreview from  './Content/DocPreview';
-import ModelConfigManagement from  './Content/ModelConfigManagement';
-import ModelDocumentManagement from  './Content/ModelDocumentManagement';
-import ModelFileManagement from  './Content/ModelFileManagement';
-import PreprocessingManagement from  './Content/PreprocessingManagement';
+import React, {useEffect} from 'react';
+import PlatformSelect from './Content/ModelUpdate/PlatformSelect';
+import AccessControl from './Content/ModelUpdate/AccessControl';
+import ModelConfigManagement from './Content/ModelUpdate/ModelConfigManagement';
+import ModelDocumentManagement from './Content/ModelUpdate/ModelDocumentManagement';
+import ModelFileManagement from './Content/ModelUpdate/ModelFileManagement';
+import PreprocessingManagement from './Content/ModelUpdate/PreprocessingManagement';
+import {getModelInfo} from '../../actions/algorithmManagementAction'
 import {
     Typography,
-    colors,
+    colors
 } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import DeleteModel from "./Content/ModelUpdate/DeleteModel";
+import ModelInfo from "./Content/ModelUpdate/ModelInfo";
+import {useDispatch, useSelector} from "react-redux";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     root: {
         height: '100%',
         width: '100%',
@@ -34,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     },
     modelModify: {
         height: '96%',
-        width: '50%',
+        width: '60%',
         backgroundColor: 'white',
         display: 'flex',
         flexDirection: 'row',
@@ -44,9 +46,12 @@ const useStyles = makeStyles(theme => ({
         borderRightStyle: 'solid',
         borderRightWidth: 1
     },
-    docPreview: {
+    modelInfo: {
         height: '96%',
-        width: '50%',
+        width: '40%',
+        borderRightColor: colors.grey[200],
+        borderRightStyle: 'solid',
+        borderRightWidth: 1
     },
     platform: {
         height: '8%',
@@ -88,8 +93,14 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Content = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory})=> {
+const Content = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory,
+                     setMainCategory, setAlgorithmMainCategory, setAlgorithmSubCategory})=> {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const modelInfo = useSelector(state=>state.algorithm.modelInfo);
+    useEffect(()=>{
+        dispatch(getModelInfo(selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory))
+        }, [selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory]);
 
     return (
         <div className={classes.root}>
@@ -98,9 +109,16 @@ const Content = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedA
                     算法管理
                 </Typography>
             </div>
+            <div className={classes.modelInfo}>
+                <ModelInfo modelInfo={modelInfo}/>
+            </div>
             <div className={classes.modelModify}>
                 <div className={classes.platform}>
-                    <PlatformSelect/>
+                    <PlatformSelect
+                        mainCategory={selectedMainCategory}
+                        algorithmSubCategory={selectedAlgorithmSubCategory}
+                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                    />
                 </div>
                 <div className={classes.modelFile}>
                     <ModelFileManagement
@@ -132,7 +150,11 @@ const Content = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedA
                     />
                 </div>
                 <div className={classes.accessControl}>
-                    <AccessControl/>
+                    <AccessControl
+                        mainCategory={selectedMainCategory}
+                        algorithmSubCategory={selectedAlgorithmSubCategory}
+                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                    />
                 </div>
                 <div className={classes.note}>
                     <Typography
@@ -143,16 +165,15 @@ const Content = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedA
                     </Typography>
                 </div>
                 <div className={classes.deleteDiv}>
-                    <Button
-                        style={{marginRight:32}}
-                        variant="contained"
-                    >
-                        删除模型
-                    </Button>
+                    <DeleteModel
+                        mainCategory={selectedMainCategory}
+                        algorithmSubCategory={selectedAlgorithmSubCategory}
+                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                        setMainCategory={setMainCategory}
+                        setAlgorithmMainCategory={setAlgorithmMainCategory}
+                        setAlgorithmSubCategory={setAlgorithmSubCategory}
+                    />
                 </div>
-            </div>
-            <div className={classes.docPreview}>
-                <DocPreview/>
             </div>
         </div>
     )

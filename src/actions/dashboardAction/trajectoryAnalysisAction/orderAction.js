@@ -30,7 +30,7 @@ export function fetchPosts(params) {
       dispatch(requestPosts());
       
       let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_ORDER + queryParamsTrans(params);
-      let token = getState().session.authenticToken
+      let token = getState().session.authenticToken;
       let header = {'Authorization': token};
       return fetch(url, {method: NormalizedName.GET, headers: header})
             .then(res => res.json(),
@@ -38,12 +38,12 @@ export function fetchPosts(params) {
             .then(
               res => {
                 if(res.status && !(res.status === '200' || res.status === 200)){
-                  dispatch(receiveFailedResult())
-                  console.log('Unkown: Error, get order info failed')
+                  dispatch(receiveFailedResult());
+                  console.log('Unknown: Error, get order info failed')
                 }
                 else{
-                  dispatch(receiveSuccessResult(res))
-                  console.log('get order info successed')
+                  dispatch(receiveSuccessResult(res));
+                  console.log('get order info succeed')
                 }
               }
             )

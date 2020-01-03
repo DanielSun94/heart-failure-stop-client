@@ -25,7 +25,7 @@ export const MODEL_CATEGORY_TREATMENT_RECOMMENDATION = "treatmentRecommendation"
 export const MODEL_CATEGORY_TREATMENT_COMPARISION = "treatmentComparison";
 export const MODEL_CATEGORY_DATA_IMPUTATION = "dataImputation";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     root: {
         height: '100%',
         width: '100%',
@@ -145,10 +145,10 @@ const AlgorithmManagement = () => {
         dispatch(fetchModelListPosts())
     }, []);
 
-    const user = useSelector(state=>state.session.user.userName);
     const algorithmList = useSelector(state=>state.algorithm.algorithmList);
     const algorithmMap = algorithmTransfer(algorithmList);
 
+    const [blockAlgorithmChange, setBlockAlgorithmChange] = useState(false);
     const [selectedMainCategory, setMainCategory] = useState('NotSelected');
     const [selectedAlgorithmMainCategory, setAlgorithmMainCategory] = useState('NotSelected');
     const [selectedAlgorithmSubCategory, setAlgorithmSubCategory] = useState('NotSelected');
@@ -176,20 +176,25 @@ const AlgorithmManagement = () => {
                         setSelectedAlgorithm={setAlgorithmMainCategory}
                         setAlgorithmSubCategory={setAlgorithmSubCategory}
                         algorithmMap={algorithmMap}
+                        block={blockAlgorithmChange}
                     />
                 </div>
                 <div className={classes.categoryList}>
                     <SubCategory
+                        selectedMainCategory={selectedMainCategory}
+                        selectedAlgorithmMainCategory={selectedAlgorithmMainCategory}
                         selectedAlgorithmSubCategory={selectedAlgorithmSubCategory}
                         algorithmList={algorithmSubList}
                         setAlgorithmSubCategory={setAlgorithmSubCategory}
-                        user={user}
+                        block={blockAlgorithmChange}
+
                     />
                 </div>
                 <div className={classes.addAlgorithm}>
                     <SquareButton
                         variant="contained"
                         color="primary"
+                        disabled={blockAlgorithmChange}
                         className={classes.button}
                     >
                         添加新算法
@@ -206,6 +211,9 @@ const AlgorithmManagement = () => {
                         selectedMainCategory={selectedMainCategory}
                         selectedAlgorithmMainCategory={selectedAlgorithmMainCategory}
                         selectedAlgorithmSubCategory={selectedAlgorithmSubCategory}
+                        setMainCategory={setMainCategory}
+                        setAlgorithmMainCategory={setAlgorithmMainCategory}
+                        setAlgorithmSubCategory={setAlgorithmSubCategory}
                     />
                     :
                     <div className={classes.nullContainer}>
