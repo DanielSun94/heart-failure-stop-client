@@ -137,7 +137,7 @@ const ModelInfo = ({modelInfo})=>{
           </div>
           <div className={classes.note}>
               <Typography variant="h6">
-                  本栏所示模型信息创建后不可修改
+                  本栏所示模型信息不可修改
               </Typography>
           </div>
       </div>

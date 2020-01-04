@@ -1,10 +1,10 @@
-import RouteName from "../../../../utils/RouteName";
-import {queryParamsTrans} from "../../../../utils/queryUtilFunction";
+import RouteName from "../../../../../utils/RouteName";
+import {queryParamsTrans} from "../../../../../utils/queryUtilFunction";
 import {useSelector} from "react-redux";
 import {IconButton, Tooltip} from "@material-ui/core";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import React from "react";
-import {MODEL_CONFIG, MODEL_DOC, MODEL_FILE, MODEL_PREPROCESS} from "../../../../actions/algorithmManagementAction";
+import {MODEL_CONFIG, MODEL_DOC, MODEL_FILE, MODEL_PREPROCESS} from "../../../../../actions/algorithmManagementAction";
 
 const downloadInfoMap = {
     updateModelFile: {toolTipTitle: "下载模型", downloadPath: RouteName.DOWNLOAD_MODEL_FILE, fileName: 'model.zip'},

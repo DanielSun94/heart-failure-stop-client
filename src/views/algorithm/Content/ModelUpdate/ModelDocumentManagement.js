@@ -4,11 +4,11 @@ import {
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 import {MODEL_DOC} from "../../../../actions/algorithmManagementAction";
-import HintDialog from "../Components/HintDialog";
-import DownloadComponent from "../Components/DownloadComponent";
+import HintDialog from "./Components/HintDialog";
+import DownloadComponent from "./Components/DownloadComponent";
 import {useSelector} from "react-redux";
-import UploadComponent from "../Components/UploadComponent";
-import UploadInfoComponent from "../Components/UploadInfoComponent";
+import UploadComponent from "./Components/UploadComponent";
+import UploadInfoComponent from "./Components/UploadInfoComponent";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,7 +39,6 @@ const useStyles = makeStyles(theme => ({
 const ModelDocumentManagement = ({mainCategory, algorithmMainCategory, algorithmSubCategory}) => {
     const classes = useStyles();
     const unifiedModelName = mainCategory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
-    const [modelDocName, setModelDocName] = useState("未上传");
     const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updateModelDoc[unifiedModelName]);
 
     return (
@@ -51,7 +50,7 @@ const ModelDocumentManagement = ({mainCategory, algorithmMainCategory, algorithm
             </div>
             <div className={classes.docName}>
                 <Typography variant="h6">
-                    {modelDocName}
+                    doc.md
                 </Typography>
             </div>
             <div className={classes.updateTime}>
@@ -66,7 +65,6 @@ const ModelDocumentManagement = ({mainCategory, algorithmMainCategory, algorithm
                     algorithmMainCategory={algorithmMainCategory}
                     algorithmSubCategory={algorithmSubCategory}
                     fileType={MODEL_DOC}
-                    setName={setModelDocName}
                 />
                 <DownloadComponent
                     mainCategory={mainCategory}

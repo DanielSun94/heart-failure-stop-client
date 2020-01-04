@@ -4,12 +4,12 @@ import {
     MODEL_FILE, MODEL_PREPROCESS,
     modelUpdatePost,
     updateModelUpdateInfo
-} from "../../../../actions/algorithmManagementAction";
+} from "../../../../../actions/algorithmManagementAction";
 import {IconButton, Tooltip} from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import React from "react";
 import {makeStyles} from "@material-ui/styles";
-import RouteName from "../../../../utils/RouteName";
+import RouteName from "../../../../../utils/RouteName";
 
 const useStyles = makeStyles(() => ({
     input: {
@@ -24,7 +24,7 @@ const uploadInfoMap = {
     updateModelPreprocess: {toolTipTitle: "上传预处理文件", uploadPath: RouteName.UPLOAD_PREPROCESSING_MODULE, fileName: 'preprocess.zip'},
 };
 
-const UploadComponent = ({mainCategory, algorithmMainCategory, algorithmSubCategory, setName, fileType}) => {
+const UploadComponent = ({mainCategory, algorithmMainCategory, algorithmSubCategory, fileType}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const unifiedModelName = mainCategory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
@@ -42,7 +42,6 @@ const UploadComponent = ({mainCategory, algorithmMainCategory, algorithmSubCateg
         const file = event.target.files[0];
         const fileName = file.name;
         if(fileName===content.fileName){
-            setName(fileName);
             const path = content.uploadPath;
             dispatch(modelUpdatePost(mainCategory, algorithmMainCategory, algorithmSubCategory, file, fileType, path));
         }

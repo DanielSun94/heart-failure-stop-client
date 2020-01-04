@@ -7,10 +7,10 @@ import {makeStyles} from "@material-ui/styles";
 import {
     MODEL_FILE,
 } from "../../../../actions/algorithmManagementAction"
-import HintDialog from "../Components/HintDialog";
-import DownloadComponent from "../Components/DownloadComponent";
-import UploadComponent from "../Components/UploadComponent";
-import UploadInfoComponent from "../Components/UploadInfoComponent";
+import HintDialog from "./Components/HintDialog";
+import DownloadComponent from "./Components/DownloadComponent";
+import UploadComponent from "./Components/UploadComponent";
+import UploadInfoComponent from "./Components/UploadInfoComponent";
 
 
 const useStyles = makeStyles(theme => ({
@@ -45,7 +45,6 @@ const ModelFileManagement = ({mainCategory, algorithmMainCategory, algorithmSubC
     const classes = useStyles();
     const unifiedModelName = mainCategory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
 
-    const [modelFileName, setModelFileName] = useState("未上传");
     const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updateModelFile[unifiedModelName]);
 
     return (
@@ -57,7 +56,7 @@ const ModelFileManagement = ({mainCategory, algorithmMainCategory, algorithmSubC
             </div>
             <div className={classes.modelName}>
                 <Typography variant="h6">
-                    {modelFileName}
+                    model.zip
                 </Typography>
             </div>
             <div className={classes.updateTime}>
@@ -72,7 +71,6 @@ const ModelFileManagement = ({mainCategory, algorithmMainCategory, algorithmSubC
                     algorithmMainCategory={algorithmMainCategory}
                     algorithmSubCategory={algorithmSubCategory}
                     fileType={MODEL_FILE}
-                    setName={setModelFileName}
                 />
                 <DownloadComponent
                     mainCategory={mainCategory}

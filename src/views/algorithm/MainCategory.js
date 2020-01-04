@@ -109,6 +109,7 @@ const Panel = ({pId, pTitle, expandPanel, setExpandPanel, algorithmList, selecte
                 >
                     {algorithmList.map(item=>
                         <ListItem
+                            key={item[0]}
                             className={classes.listItem}
                             button
                             selected={selectedAlgorithm === item[0]}
@@ -154,6 +155,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
         <div className={classes.expansionPanelList}>
             <Panel
                 pId={MODEL_CATEGORY_PROGRESSION_ANALYSIS}
+                key={MODEL_CATEGORY_PROGRESSION_ANALYSIS}
                 pTitle={'演变过程'}
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
@@ -164,6 +166,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 block={block}
             />
             <Panel
+                key={MODEL_CATEGORY_RISK_ASSESSMENT}
                 pId={MODEL_CATEGORY_RISK_ASSESSMENT}
                 pTitle={'风险分析'}
                 expandPanel={expandPanel}
@@ -176,6 +179,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
             />
             <Panel
                 pId={MODEL_CATEGORY_SURVIVAL_ANALYSIS}
+                key={MODEL_CATEGORY_SURVIVAL_ANALYSIS}
                 pTitle={'生存分析'}
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
@@ -187,6 +191,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
             />
             <Panel
                 pId={MODEL_CATEGORY_TREATMENT_RECOMMENDATION}
+                key={MODEL_CATEGORY_TREATMENT_RECOMMENDATION}
                 pTitle={'干预推荐'}
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
@@ -198,6 +203,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
             />
             <Panel
                 pId={MODEL_CATEGORY_TREATMENT_COMPARISION}
+                key={MODEL_CATEGORY_TREATMENT_COMPARISION}
                 pTitle={'干预比较'}
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}
@@ -209,6 +215,7 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
             />
             <Panel
                 pId={MODEL_CATEGORY_DATA_IMPUTATION}
+                key={MODEL_CATEGORY_DATA_IMPUTATION}
                 pTitle={'数据插补'}
                 expandPanel={expandPanel}
                 setExpandPanel={setExpandPanel}

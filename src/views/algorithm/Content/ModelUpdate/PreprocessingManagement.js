@@ -2,11 +2,11 @@ import React, {useState} from "react";
 import {Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 import {MODEL_PREPROCESS} from "../../../../actions/algorithmManagementAction";
-import HintDialog from "../Components/HintDialog";
-import DownloadComponent from "../Components/DownloadComponent";
+import HintDialog from "./Components/HintDialog";
+import DownloadComponent from "./Components/DownloadComponent";
 import {useSelector} from "react-redux";
-import UploadComponent from "../Components/UploadComponent";
-import UploadInfoComponent from "../Components/UploadInfoComponent";
+import UploadComponent from "./Components/UploadComponent";
+import UploadInfoComponent from "./Components/UploadInfoComponent";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -40,7 +40,6 @@ const useStyles = makeStyles(theme => ({
 const PreprocessingManagement = ({mainCategory, algorithmMainCategory, algorithmSubCategory}) => {
     const classes = useStyles();
     const unifiedModelName = mainCategory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
-    const [modelPreprocessName, setModelPreprocessName] = useState("未上传");
     const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updatePreprocess[unifiedModelName]);
 
     return (
@@ -52,7 +51,7 @@ const PreprocessingManagement = ({mainCategory, algorithmMainCategory, algorithm
             </div>
             <div className={classes.preprocessingName}>
                 <Typography variant="h6">
-                    {modelPreprocessName}
+                    preprocessing.zip
                 </Typography>
             </div>
             <div className={classes.updateTime}>
@@ -67,7 +66,6 @@ const PreprocessingManagement = ({mainCategory, algorithmMainCategory, algorithm
                     algorithmMainCategory={algorithmMainCategory}
                     algorithmSubCategory={algorithmSubCategory}
                     fileType={MODEL_PREPROCESS}
-                    setName={setModelPreprocessName}
                 />
                 <DownloadComponent
                     mainCategory={mainCategory}

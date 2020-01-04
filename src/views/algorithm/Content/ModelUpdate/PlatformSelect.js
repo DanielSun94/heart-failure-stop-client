@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {FormControl, MenuItem, Select, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 import {useSelector, useDispatch} from "react-redux";
-import UploadInfoComponent from "../Components/UploadInfoComponent";
+import UploadInfoComponent from "./Components/UploadInfoComponent";
 import {MODEL_PLATFORM, modelUpdatePost} from "../../../../actions/algorithmManagementAction";
 import RouteName from "../../../../utils/RouteName";
 

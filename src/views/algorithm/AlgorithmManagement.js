@@ -14,9 +14,10 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import MainCategory from './MainCategory'
 import SubCategory from './SubCategory'
-import Content from './Content'
+import UpdateModelContent from './Content/ModelUpdate/UpdateModelContent'
 import {makeStyles} from "@material-ui/styles";
 import {fetchModelListPosts} from "../../actions/algorithmManagementAction";
+import CreateNewModel from "./Content/ModelCreate/CreateNewModelContent";
 
 export const MODEL_CATEGORY_PROGRESSION_ANALYSIS = "progressionAnalysis";
 export const MODEL_CATEGORY_RISK_ASSESSMENT = "riskAssessment";
@@ -148,12 +149,53 @@ const AlgorithmManagement = () => {
     const algorithmList = useSelector(state=>state.algorithm.algorithmList);
     const algorithmMap = algorithmTransfer(algorithmList);
 
+    // create or upload
+    const [pageType, setPageType] = useState("upload");
     const [blockAlgorithmChange, setBlockAlgorithmChange] = useState(false);
     const [selectedMainCategory, setMainCategory] = useState('NotSelected');
     const [selectedAlgorithmMainCategory, setAlgorithmMainCategory] = useState('NotSelected');
     const [selectedAlgorithmSubCategory, setAlgorithmSubCategory] = useState('NotSelected');
 
     const algorithmSubList= constructAlgorithmSubList(selectedMainCategory, selectedAlgorithmMainCategory, algorithmMap);
+
+    const changeToCreatePage = ()=>{
+        setPageType("create");
+        setBlockAlgorithmChange(true)
+    };
+    const changeToUpdatePage = ()=>{
+        setPageType("update");
+        setBlockAlgorithmChange(false)
+    };
+
+    let content;
+    if(pageType==="create")(
+        content = <CreateNewModel
+            changeToUpdatePage={changeToUpdatePage} setBlockAlgorithmChange={setBlockAlgorithmChange}
+        />
+    );
+    else if(pageType==="update"){
+        if(selectedMainCategory !== "NotSelected"
+            && selectedAlgorithmMainCategory !== "NotSelected"
+            && selectedAlgorithmSubCategory !== "NotSelected") {
+            content = (<UpdateModelContent
+                selectedMainCategory={selectedMainCategory}
+                selectedAlgorithmMainCategory={selectedAlgorithmMainCategory}
+                selectedAlgorithmSubCategory={selectedAlgorithmSubCategory}
+                setMainCategory={setMainCategory}
+                setAlgorithmMainCategory={setAlgorithmMainCategory}
+                setAlgorithmSubCategory={setAlgorithmSubCategory}
+            />)
+        }
+        else{
+            content = (
+                <div className={classes.nullContainer}>
+                    <Typography variant={'h4'}>
+                        请选择算法
+                    </Typography>
+                </div>
+            )
+        }
+    }
 
     return (
         <div className={classes.root}>
@@ -196,32 +238,14 @@ const AlgorithmManagement = () => {
                         color="primary"
                         disabled={blockAlgorithmChange}
                         className={classes.button}
+                        onClick={changeToCreatePage}
                     >
                         添加新算法
                     </SquareButton>
                 </div>
             </div>
             <div className={classes.content}>
-                {(  selectedMainCategory !== "NotSelected"
-                    && selectedAlgorithmMainCategory !== "NotSelected"
-                    && selectedAlgorithmSubCategory !== "NotSelected"
-                )
-                    ?
-                    <Content
-                        selectedMainCategory={selectedMainCategory}
-                        selectedAlgorithmMainCategory={selectedAlgorithmMainCategory}
-                        selectedAlgorithmSubCategory={selectedAlgorithmSubCategory}
-                        setMainCategory={setMainCategory}
-                        setAlgorithmMainCategory={setAlgorithmMainCategory}
-                        setAlgorithmSubCategory={setAlgorithmSubCategory}
-                    />
-                    :
-                    <div className={classes.nullContainer}>
-                        <Typography variant={'h4'}>
-                            请选择算法
-                        </Typography>
-                    </div>
-                }
+                {content}
             </div>
         </div>
     )

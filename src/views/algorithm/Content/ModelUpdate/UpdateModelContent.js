@@ -1,18 +1,18 @@
 import React, {useEffect} from 'react';
-import PlatformSelect from './Content/ModelUpdate/PlatformSelect';
-import AccessControl from './Content/ModelUpdate/AccessControl';
-import ModelConfigManagement from './Content/ModelUpdate/ModelConfigManagement';
-import ModelDocumentManagement from './Content/ModelUpdate/ModelDocumentManagement';
-import ModelFileManagement from './Content/ModelUpdate/ModelFileManagement';
-import PreprocessingManagement from './Content/ModelUpdate/PreprocessingManagement';
-import {getModelInfo} from '../../actions/algorithmManagementAction'
+import PlatformSelect from './PlatformSelect';
+import AccessControl from './AccessControl';
+import ModelConfigManagement from './ModelConfigManagement';
+import ModelDocumentManagement from './ModelDocumentManagement';
+import ModelFileManagement from './ModelFileManagement';
+import PreprocessingManagement from './PreprocessingManagement';
+import {getModelInfo} from '../../../../actions/algorithmManagementAction'
 import {
     Typography,
     colors
 } from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import DeleteModel from "./Content/ModelUpdate/DeleteModel";
-import ModelInfo from "./Content/ModelUpdate/ModelInfo";
+import DeleteModel from "./DeleteModel";
+import ModelInfo from "./ModelInfo";
 import {useDispatch, useSelector} from "react-redux";
 
 const useStyles = makeStyles(() => ({
@@ -93,7 +93,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const Content = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory,
+const UpdateModelContent = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory,
                      setMainCategory, setAlgorithmMainCategory, setAlgorithmSubCategory})=> {
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -179,4 +179,4 @@ const Content = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedA
     )
 };
 
-export default Content;
+export default UpdateModelContent;

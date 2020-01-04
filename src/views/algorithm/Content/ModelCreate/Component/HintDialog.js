@@ -15,7 +15,7 @@ import {
     MODEL_DOC,
     MODEL_CONFIG,
     MODEL_PREPROCESS
-} from "../../../../actions/algorithmManagementAction"
+} from "../../../../../actions/algorithmManagementAction"
 
 const infoMap = {
     updateModelFile: "模型文件名必须为model.zip。模型文件结构必须符合各平台标准结构（具体细节之后补充）",

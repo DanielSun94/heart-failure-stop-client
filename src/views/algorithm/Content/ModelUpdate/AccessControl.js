@@ -7,7 +7,7 @@ import {
     Radio
 } from "@material-ui/core";
 import {useSelector} from "react-redux";
-import UploadInfoComponent from "../Components/UploadInfoComponent";
+import UploadInfoComponent from "./Components/UploadInfoComponent";
 import RouteName from "../../../../utils/RouteName";
 import {ACCESS_CONTROL, modelUpdatePost} from "../../../../actions/algorithmManagementAction";
 import {useDispatch} from "react-redux";

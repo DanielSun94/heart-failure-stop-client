@@ -2,11 +2,11 @@ import React, {useState} from "react";
 import {Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 import {MODEL_CONFIG} from "../../../../actions/algorithmManagementAction";
-import HintDialog from "../Components/HintDialog";
-import DownloadComponent from "../Components/DownloadComponent";
+import HintDialog from "./Components/HintDialog";
+import DownloadComponent from "./Components/DownloadComponent";
 import {useSelector} from "react-redux";
-import UploadComponent from "../Components/UploadComponent";
-import UploadInfoComponent from "../Components/UploadInfoComponent";
+import UploadComponent from "./Components/UploadComponent";
+import UploadInfoComponent from "./Components/UploadInfoComponent";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -37,7 +37,6 @@ const useStyles = makeStyles(theme => ({
 const ModelConfigManagement = ({mainCategory, algorithmMainCategory, algorithmSubCategory}) => {
     const classes = useStyles();
     const unifiedModelName = mainCategory+"_"+algorithmMainCategory+"_"+algorithmSubCategory;
-    const [modelConfigName, setModelConfigName] = useState("未上传");
     const [updateStatus, updateTime] = useSelector(state=>state.algorithm.updateModelConfig[unifiedModelName]);
 
     return (
@@ -49,7 +48,7 @@ const ModelConfigManagement = ({mainCategory, algorithmMainCategory, algorithmSu
             </div>
             <div className={classes.configName}>
                 <Typography variant="h6">
-                    {modelConfigName}
+                    config.yml
                 </Typography>
             </div>
             <div className={classes.updateTime}>
@@ -64,7 +63,6 @@ const ModelConfigManagement = ({mainCategory, algorithmMainCategory, algorithmSu
                     algorithmMainCategory={algorithmMainCategory}
                     algorithmSubCategory={algorithmSubCategory}
                     fileType={MODEL_CONFIG}
-                    setName={setModelConfigName}
                 />
                 <DownloadComponent
                     mainCategory={mainCategory}

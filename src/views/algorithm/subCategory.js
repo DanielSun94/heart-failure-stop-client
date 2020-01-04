@@ -6,6 +6,7 @@ import {
     colors
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
+import {useSelector} from "react-redux";
 
 
 const useStyles = makeStyles(() => ({
@@ -24,11 +25,20 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const SubCategory = ({selectedAlgorithmSubCategory, algorithmList, user, setAlgorithmSubCategory}) => {
+const SubCategory = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory,
+                         algorithmList, setAlgorithmSubCategory, block}) => {
     const classes = useStyles();
 
+    const currentUser = useSelector(state=>state.session.user.userName);
+    const modelCreateUserMap = useSelector(state=>state.algorithm.modelCreateUser);
     const handleListItemClick = (event, name) => {
         setAlgorithmSubCategory(name);
+    };
+
+    const blockItem = (item)=>{
+        const unifiedName = selectedMainCategory+"_"+selectedAlgorithmMainCategory+"_"+item[1];
+        const itemCreateUser = modelCreateUserMap[unifiedName];
+        return itemCreateUser===currentUser
     };
 
     if(!(algorithmList && algorithmList.length > 0)){
@@ -54,6 +64,7 @@ const SubCategory = ({selectedAlgorithmSubCategory, algorithmList, user, setAlgo
             {algorithmList.map(item=>
                 <ListItem
                     button
+                    disabled={block||(!blockItem(item))}
                     className={classes.listItem}
                     selected={item[1] === selectedAlgorithmSubCategory}
                     onClick={event => handleListItemClick(event, item[1])}

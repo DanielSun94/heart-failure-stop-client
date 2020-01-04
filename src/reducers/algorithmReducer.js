@@ -16,7 +16,10 @@ import {
     RESET,
     GET_MODEL_INFO_FAILED,
     GET_MODEL_INFO_REQUEST,
-    GET_MODEL_INFO_SUCCESS
+    GET_MODEL_INFO_SUCCESS,
+    CREATE_NEW_MODEL_FAILED,
+    CREATE_NEW_MODEL_REQUEST,
+    CREATE_NEW_MODEL_SUCCESS
 } from "../actions/algorithmManagementAction"
 
 const initialState = {
@@ -29,7 +32,8 @@ const initialState = {
     updatePreprocess:{},
     updateAccessControl:{},
     updatePlatForm:{},
-    modelCreateUser: {}
+    modelCreateUser: {},
+    createStatus: 'complete'
 };
 
 const algorithmReducer = (state = initialState, action) => {
@@ -121,6 +125,15 @@ const algorithmReducer = (state = initialState, action) => {
         }
         case GET_MODEL_INFO_FAILED: {
             return {...state};
+        }
+        case CREATE_NEW_MODEL_SUCCESS: {
+            return {...state, createStatus:"complete"};
+        }
+        case CREATE_NEW_MODEL_REQUEST: {
+            return {...state, createStatus: 'inProgress'};
+        }
+        case CREATE_NEW_MODEL_FAILED: {
+            return {...state, createStatus: 'failed'};
         }
         // eslint-disable-next-line no-fallthrough
         default: {

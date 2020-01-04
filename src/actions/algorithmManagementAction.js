@@ -1,6 +1,7 @@
 import ParaName from '../utils/ParaName';
 import RouteName from '../utils/RouteName';
 import {queryParamsTrans} from "../utils/queryUtilFunction";
+import fetch from "cross-fetch";
 
 export const RESET = "RESET";
 export const SUCCESS = "SUCCESS";
@@ -8,6 +9,7 @@ export const FAILED = "FAILED";
 export const IN_PROGRESS = "IN_PROGRESS";
 export const NOT_UPDATE = "NOT_UPDATE";
 export const FILE_NAME_ERROR = "FILE_NAME_ERROR";
+export const NOT_UPLOAD = "NOT_UPLOAD";
 
 export const MODEL_FILE = "MODEL_FILE";
 export const MODEL_CONFIG = "MODEL_CONFIG";
@@ -34,6 +36,64 @@ export const MODEL_DELETE_FAILED = "MODEL_DELETE_FAILED";
 export const GET_MODEL_INFO_REQUEST = "GET_MODEL_INFO_REQUEST";
 export const GET_MODEL_INFO_SUCCESS = "GET_MODEL_INFO_SUCCESS";
 export const GET_MODEL_INFO_FAILED = "GET_MODEL_INFO_FAILED";
+
+export const CREATE_NEW_MODEL_REQUEST = "CREATE_NEW_MODEL_REQUEST";
+export const CREATE_NEW_MODEL_SUCCESS = "CREATE_NEW_MODEL_SUCCESS";
+export const CREATE_NEW_MODEL_FAILED = "CREATE_NEW_MODEL_FAILED";
+
+function createNewModelRequest() {
+    return ({type: CREATE_NEW_MODEL_REQUEST})
+}
+
+
+function createNewModelSuccess() {
+    return ({
+        type: CREATE_NEW_MODEL_SUCCESS,
+    })
+}
+
+function createNewModelFailed() {
+    return {type: CREATE_NEW_MODEL_FAILED,}
+}
+
+export function createNewModel(modelNameMap, modelFileMap, accessControl){
+    return function(dispatch, getState) {
+
+        dispatch(createNewModelRequest());
+
+        let token = getState().session.authenticToken;
+        const currentUser = getState().session.user.userName;
+        let header = {
+            'Authorization': token,
+        };
+        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.CREATE_NEW_MODEL;
+
+        let formData = new FormData();
+        formData.append('modelNameChinese', modelNameMap['modelChineseName']);
+        formData.append('modelNameEnglish', modelNameMap['modelEnglishName']);
+        formData.append('platform', modelNameMap['platform']);
+        formData.append('accessControl', accessControl);
+        formData.append('mainCategory', modelNameMap['modelCategory']);
+        formData.append('modelFunctionChinese', modelNameMap['modelChineseFunction']);
+        formData.append('modelFunctionEnglish', modelNameMap['modelEnglishFunction']);
+        formData.append('modelFile', modelFileMap['modelFile']);
+        formData.append('modelConfig', modelFileMap['modelConfig']);
+        formData.append('modelPreprocess', modelFileMap['modelPreprocess']);
+        formData.append('modelDoc', modelFileMap['modelDoc']);
+        formData.append('userName', currentUser);
+
+        return fetch(url, {method: ParaName.POST, headers: header, body: formData})
+            .then(res => res.json(),
+                error => {console.log(error); dispatch(createNewModelFailed())})
+            .then((res) => {
+                dispatch(createNewModelSuccess());
+                return res
+            })
+            // 重新初始化所有模型列表信息
+            .then((res)=>dispatch(reset()))
+            .then(()=>dispatch(fetchModelListPosts()))
+    }
+}
 
 function getModelInfoRequest() {
     return ({type: GET_MODEL_INFO_REQUEST})
