@@ -144,13 +144,13 @@ const AlgorithmManagement = () => {
     // 这样就不用重新打开界面才能看到新载入的数据了
     useEffect(()=>{
         dispatch(fetchModelListPosts())
-    }, []);
+    }, [dispatch]);
 
     const algorithmList = useSelector(state=>state.algorithm.algorithmList);
     const algorithmMap = algorithmTransfer(algorithmList);
 
     // create or upload
-    const [pageType, setPageType] = useState("upload");
+    const [pageType, setPageType] = useState("update");
     const [blockAlgorithmChange, setBlockAlgorithmChange] = useState(false);
     const [selectedMainCategory, setMainCategory] = useState('NotSelected');
     const [selectedAlgorithmMainCategory, setAlgorithmMainCategory] = useState('NotSelected');

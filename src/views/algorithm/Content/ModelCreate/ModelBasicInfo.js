@@ -48,13 +48,41 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const modelCategoryNameMap = (modelCategory, mapType)=>{
+    if(mapType==="ChineseToEnglish"){
+        let modelCategoryEnglish;
+        switch (modelCategory) {
+            case '演变过程': modelCategoryEnglish="progressionAnalysis";break;
+            case '风险分析': modelCategoryEnglish="riskAssessment";break;
+            case '生存分析': modelCategoryEnglish="survivalAnalysis";break;
+            case '干预推荐': modelCategoryEnglish="treatmentRecommendation";break;
+            case '干预比较': modelCategoryEnglish="treatmentComparison";break;
+            case '数据插补': modelCategoryEnglish="dataImputation";break;
+            default: modelCategoryEnglish="progressionAnalysis";break;
+        }
+        return modelCategoryEnglish;
+    }
+    else{
+        let modelCategoryChinese;
+        switch (modelCategory) {
+            case 'progressionAnalysis': modelCategoryChinese="演变过程";break;
+            case 'riskAssessment': modelCategoryChinese="风险分析";break;
+            case 'survivalAnalysis': modelCategoryChinese="生存分析";break;
+            case 'treatmentRecommendation': modelCategoryChinese="干预推荐";break;
+            case 'treatmentComparison': modelCategoryChinese="干预比较";break;
+            case 'dataImputation': modelCategoryChinese="数据插补";break;
+            default: modelCategoryChinese="progressionAnalysis";break;
+        }
+        return modelCategoryChinese;
+    }
+};
 
 const ModelBasicInfo = ({jumpNext, setModelNameMap, modelNameMap})=>{
     const classes = useStyles();
     const algorithmList = useSelector(state=>state.algorithm.algorithmList);
 
     const [platform, setPlatform] = useState(modelNameMap['platform']);
-    const [modelCategory, setModelCategory] = useState(modelNameMap['modelCategory']);
+    const [modelCategory, setModelCategory] = useState(modelCategoryNameMap(modelNameMap['modelCategory']));
     const [modelChineseName, setModelChineseName] = useState(modelNameMap['modelChineseName']);
     const [modelEnglishName, setModelEnglishName] = useState(modelNameMap['modelEnglishName']);
     const [modelEnglishFunction, setModelEnglishFunction] = useState(modelNameMap['modelEnglishFunction']);
@@ -80,6 +108,7 @@ const ModelBasicInfo = ({jumpNext, setModelNameMap, modelNameMap})=>{
             <div className={classes.itemGroup}>
                 <ModelCategory
                     setModelEnglishCategory={setModelCategory}
+                    modelEnglishCategory={modelCategory}
                 />
                 <AlgorithmChineseName
                     algorithmChineseName={modelChineseName}
@@ -162,7 +191,7 @@ const inputValidCheck = (modelCategory, modelChineseName, modelEnglishName, mode
     return valid;
 };
 
-const ModelCategory = ({setModelEnglishCategory})=>{
+const ModelCategory = ({setModelEnglishCategory, modelEnglishCategory})=>{
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const platformList = ['演变过程', "风险分析", '生存分析', '干预推荐', '干预比较', '数据插补'];
@@ -175,17 +204,7 @@ const ModelCategory = ({setModelEnglishCategory})=>{
     };
     const handleChange = event => {
         const category = event.target.value;
-        let modelCategoryEnglish;
-        switch (category) {
-            case '演变过程': modelCategoryEnglish="progressionAnalysis";break;
-            case '风险分析': modelCategoryEnglish="riskAssessment";break;
-            case '生存分析': modelCategoryEnglish="survivalAnalysis";break;
-            case '干预推荐': modelCategoryEnglish="treatmentRecommendation";break;
-            case '干预比较': modelCategoryEnglish="treatmentComparison";break;
-            case '数据插补': modelCategoryEnglish="dataImputation";break;
-            default: modelCategoryEnglish="progressionAnalysis";break;
-        }
-        setModelEnglishCategory(modelCategoryEnglish);
+        setModelEnglishCategory(modelCategoryNameMap(category, "ChineseToEnglish"));
     };
 
     return (
@@ -195,7 +214,8 @@ const ModelCategory = ({setModelEnglishCategory})=>{
             </Typography>
             <div className={classes.itemContent}>
                 <FormControl className={classes.itemContentDetail}>
-                    <Select open={open} onClose={handleClose} onOpen={handleOpen} onChange={handleChange}>
+                    <Select open={open} onClose={handleClose} onOpen={handleOpen} onChange={handleChange}
+                            value={modelCategoryNameMap(modelEnglishCategory, "EnglishToChinese")}>
                         {
                             platformList.map(item=>
                                 <MenuItem key={item} value={item}>{item}</MenuItem>

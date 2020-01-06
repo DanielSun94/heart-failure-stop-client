@@ -46,10 +46,8 @@ const HintDialog = ({fileType}) => {
     return (
         <Tooltip title="帮助">
             <div>
-                <IconButton color="primary" component="span">
-                    <HelpOutlineIcon
-                        onClick={handleClickOpen}
-                    />
+                <IconButton color="primary" component="span" onClick={handleClickOpen}>
+                    <HelpOutlineIcon/>
                 </IconButton>
                 <Dialog
                     open={open}

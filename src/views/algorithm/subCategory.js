@@ -64,6 +64,7 @@ const SubCategory = ({selectedMainCategory, selectedAlgorithmMainCategory, selec
             {algorithmList.map(item=>
                 <ListItem
                     button
+                    key={item[1]}
                     disabled={block||(!blockItem(item))}
                     className={classes.listItem}
                     selected={item[1] === selectedAlgorithmSubCategory}

@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
-import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -15,7 +14,6 @@ const useStyles = makeStyles(() => ({
 const Topbar = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
-  const correspondingPage = useSelector(state => state.frontPage.frontPage)
 
   return (
     <AppBar
@@ -36,7 +34,7 @@ const Topbar = props => {
             color="inherit"
             variant="h3"
           >
-            Heart Failure Stop 分析平台 - {correspondingPage}
+            Heart Failure Stop 分析平台
           </Typography>
       </Toolbar>
     </AppBar>

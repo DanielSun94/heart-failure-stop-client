@@ -67,7 +67,7 @@ const NavBar = () => {
 
   //初始状态下默认打开分析界面
   useEffect(()=>{
-    history.push(RouteName.MAIN_PAGE+RouteName.ALGORITHM_MANAGEMENT)
+    history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS)
   }, []);
 
   const handleListItemClick = (event, index) => {

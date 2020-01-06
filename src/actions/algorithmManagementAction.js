@@ -90,7 +90,7 @@ export function createNewModel(modelNameMap, modelFileMap, accessControl){
                 return res
             })
             // 重新初始化所有模型列表信息
-            .then((res)=>dispatch(reset()))
+            .then(()=>dispatch(reset()))
             .then(()=>dispatch(fetchModelListPosts()))
     }
 }

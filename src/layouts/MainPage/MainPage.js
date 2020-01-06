@@ -8,7 +8,7 @@ import {
   Route} from 'react-router-dom';
 import AccountManagement from '../../views/account/AccountManagement'
 import AlgorithmManagement from '../../views/algorithm/AlgorithmManagement'
-import DataAnalysis from '../../views/analysis/DataAnalysis'
+import Analysis from '../../views/analysis/Analysis'
 import DataOutput from '../../views/output/DataOutput'
 
 const useStyles = makeStyles(() => ({
@@ -61,7 +61,7 @@ const MainPage= () => {
       <main className={classes.content}>
         <Switch>
           <Route path={RouteName.MAIN_PAGE+RouteName.ANALYSIS}>
-            <DataAnalysis />
+            <Analysis />
           </Route>
           <Route path={RouteName.MAIN_PAGE+RouteName.DATA_OUTPUT}>
             <DataOutput />

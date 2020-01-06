@@ -30,6 +30,17 @@ const useStyles = makeStyles((theme) => ({
         height: 600,
         marginBottom: theme.spacing(2),
     },
+    waitDialog: {
+        display:"flex",
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    exitDiv: {
+        width: "32%",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+    }
 }));
 
 
@@ -49,6 +60,7 @@ const CreateNewModel = ({changeToUpdatePage, setBlockAlgorithmChange})=>{
 
     const [confirmDialog, setConfirmDialog]=useState(false);
     const [waitDialog, setWaitDialog]=useState(false);
+    const [exitDialog, setExitDialog]=useState(false);
 
     const submit = () =>{
         // submit 中需要完成1.向后台提交创建命令，2.接触对Main Category和Sub category的锁定
@@ -108,6 +120,11 @@ const CreateNewModel = ({changeToUpdatePage, setBlockAlgorithmChange})=>{
                     </StepContent>
                 </Step>
             </Stepper>
+            <div className={classes.exitDiv}>
+                <Button onClick={()=>{setExitDialog(true)}} color="primary" autoFocus>
+                    退出设置
+                </Button>
+            </div>
            <ConfirmDialog
                confirmDialog={confirmDialog}
                setConfirmDialog={setConfirmDialog}
@@ -122,6 +139,11 @@ const CreateNewModel = ({changeToUpdatePage, setBlockAlgorithmChange})=>{
                changeToUpdatePage={changeToUpdatePage}
                setWaitDialog={setWaitDialog}
            />
+            <ExitDialog
+                exitDialog={exitDialog}
+                setExitDialog={setExitDialog}
+                changeToUpdatePage={changeToUpdatePage}
+            />
         </div>
     );
 };
@@ -162,8 +184,32 @@ const ConfirmDialog = ({confirmDialog, setConfirmDialog, setWaitDialog, modelNam
     )
 };
 
+const ExitDialog = ({changeToUpdatePage, exitDialog, setExitDialog}) => {
+    return(
+        <Dialog
+            open={exitDialog}
+            fullScreen={false}
+            onClose={()=>setExitDialog(false)}
+        >
+            <DialogTitle>{"退出确认"}</DialogTitle>
+            <DialogContent>
+                注意，退出后会丢失当前界面中未保存的信息
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={()=>{setExitDialog(false); changeToUpdatePage()}} color="primary" autoFocus>
+                    确认
+                </Button>
+                <Button onClick={()=>{setExitDialog(false)}} color="primary" autoFocus>
+                    取消
+                </Button>
+            </DialogActions>
+        </Dialog>
+    )
+};
+
 const WaitDialog = ({waitDialog, setWaitDialog, changeToUpdatePage}) => {
     const updateStatus = useSelector(state=>state.algorithm.createStatus);
+    const classes = useStyles();
 
     let content;
     if(updateStatus==="complete"){
@@ -197,15 +243,14 @@ const WaitDialog = ({waitDialog, setWaitDialog, changeToUpdatePage}) => {
 
     return(
         <Dialog
+            className={classes.waitDialog}
             open={waitDialog}
             fullScreen={false}
             onClose={()=>setWaitDialog(false)}
         >
             <DialogTitle>{"上传等待"}</DialogTitle>
             <DialogContent>
-                <DialogContentText>
                     {content}
-                </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={()=>{setWaitDialog(false); changeToUpdatePage()}} color="primary" autoFocus>

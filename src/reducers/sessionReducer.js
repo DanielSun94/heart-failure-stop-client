@@ -27,7 +27,7 @@ const sessionReducer = (state = initialState, action) => {
     }
 
     case SESSION_LOGIN_SUCCESS: {
-      let token = action.content.tokenType+' '+action.content.accessToken
+      let token = action.content.tokenType+' '+action.content.accessToken;
       return {...state, loggedIn: true, authenticToken: token}
     }
 
