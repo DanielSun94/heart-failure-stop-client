@@ -1,74 +1,138 @@
 import {
-    UNIFIED_PATIENT_ID_REQUEST_POSTS,
-    UNIFIED_PATIENT_ID_RECEIVE_POSTS_SUCCESS,
-    UNIFIED_PATIENT_ID_REQUEST_POSTS_UNKOWN_ERROR,
-    UNIFIED_PATIENT_ID_NOT_FOUND,
     CHANGE_LOCAL_PATIENT_ID,
-    PATIENT_BASIC_INFO_RECEIVE_FAILED_POSTS,
-    PATIENT_BASIC_INFO_REQUEST_POSTS,
-    PATIENT_BASIC_INFO_RECEIVE_SUCCESS_POSTS} 
-    from '../../actions/individualAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction';
+    UNIFIED_ID_AND_BASIC_INFO_INITIALIZE,
+    PATIENT_BASIC_INFO_RECEIVE_FAILED_RESULT,
+    PATIENT_BASIC_INFO_RECEIVE_SUCCESS_RESULT,
+    PATIENT_BASIC_INFO_REQUEST_POST,
+    UNIFIED_PATIENT_ID_NOT_FOUND,
+    UNIFIED_PATIENT_ID_RECEIVE_FAILED_RESULT,
+    UNIFIED_PATIENT_ID_RECEIVE_SUCCESS_RESULT,
+    UNIFIED_PATIENT_ID_REQUEST_POST,
+    UNIFIED_ID_AND_BASIC_INFO_DELETE
+} from '../../actions/individualAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction';
 
-export const ERROR_UNKNOWN = 'errorUnknown';
-export const ERROR_NOT_FOUND = 'errorNotFound';
-export const ERROR_NO_ERROR = 'errorNoError';
+export const FAILED_ERROR = 'failedError';
+export const FAILED_NOT_FOUND = 'failedNotFound';
+export const IS_FETCHING = 'isFetching';
+export const SUCCESS = 'complete';
+export const NO_ACTION = 'noAction';
 
-const initState = {
-    localPatientID: "S112395129",
-    unifiedPatientID: "",
-    errorType: ERROR_NO_ERROR,
-    patientBasicInfo:{
-        errorType: ERROR_NO_ERROR,
-        patientName: "",
-        sex: "",
-        ethnicGroup: "",
-        birthday: ""
-    }
-};
+const initState = {};
 
 const unifiedPatientIDAndPatientBasicInfoReducer = (state=initState, action) => {
     switch (action.type){
-        case UNIFIED_PATIENT_ID_REQUEST_POSTS: {
-            console.log('fetching unified patient id');
-            return {...state, errorType: ERROR_NO_ERROR};
-        }
-        case UNIFIED_PATIENT_ID_RECEIVE_POSTS_SUCCESS: {
-            console.log('fetch unified patient success');
-            return {...state, unifiedPatientID: action.unifiedPatientID};
-        }
-        case UNIFIED_PATIENT_ID_REQUEST_POSTS_UNKOWN_ERROR: {
-            console.log('known error, fetch unified patient id failed');
-            return {...state, unifiedPatientID: "", errorType: ERROR_UNKNOWN};
-        }
-        case UNIFIED_PATIENT_ID_NOT_FOUND: {
-            console.log('no valid unified patient id found');
-            return {...state, unifiedPatientID: "", errorType: ERROR_NOT_FOUND};
-        }
+        case UNIFIED_ID_AND_BASIC_INFO_INITIALIZE: return initialize(state, action.queryID);
 
-        case CHANGE_LOCAL_PATIENT_ID: return (
-            {...state, errorType: ERROR_NO_ERROR, localPatientID: action.localPatientID});
+        case UNIFIED_ID_AND_BASIC_INFO_DELETE: return panelDelete(state, action.queryID);
 
-        case PATIENT_BASIC_INFO_RECEIVE_SUCCESS_POSTS: {
-            console.log('get patient basic info succeed');
-            return {...state, patientBasicInfo: 
-                {...state.patientBasicInfo, 
-                    patientName: action.res.patientName,
-                    sex: action.res.sex,
-                    ethnicGroup: action.res.ethnicGroup,
-                    birthday: action.res.birthday,
-                }};
+        case UNIFIED_PATIENT_ID_REQUEST_POST: return unifiedPatientIDRequest(state, action.queryID);
+
+        case UNIFIED_PATIENT_ID_RECEIVE_SUCCESS_RESULT:
+            return unifiedPatientIDReceiveSuccess(state, action.unifiedPatientID, action.queryID);
+
+        case UNIFIED_PATIENT_ID_RECEIVE_FAILED_RESULT:
+            return unifiedPatientIDReceiveFailed(state, action.queryID);
+
+        case UNIFIED_PATIENT_ID_NOT_FOUND: return unifiedPatientIDNotFound(state, action.queryID);
+
+        case CHANGE_LOCAL_PATIENT_ID: return changeLocalPatientID(state, action.localPatientID, action.queryID);
+
+        case PATIENT_BASIC_INFO_RECEIVE_SUCCESS_RESULT: {
+            return patientBasicInfoReceiveSuccess(state, action.res, action.queryID);
         }
-        case PATIENT_BASIC_INFO_RECEIVE_FAILED_POSTS: {
-            console.log('unknown error, get patient basic info failed');
-            return {...state, patientBasicInfo: {errorType: ERROR_UNKNOWN}};
+        case PATIENT_BASIC_INFO_RECEIVE_FAILED_RESULT: {
+            return patientBasicInfoReceiveFailed(state, action.queryID);
         }
-        case PATIENT_BASIC_INFO_REQUEST_POSTS:  {
-            console.log('get patient basic info');
-            return {...state, patientBasicInfo: {errorType: ERROR_NO_ERROR}};
-        }
-        default: return state;
+        case PATIENT_BASIC_INFO_REQUEST_POST:
+            return patientBasicInfoRequest(state, action.queryID);
+
+        default: return {...state};
     }
 };
+
+function panelDelete(state, queryID){
+    delete state[queryID];
+    return {...state}
+}
+
+function initialize(state, queryID){
+    state[queryID] = {
+        localPatientID: "S112395129",
+        unifiedPatientID: "",
+        dataStatus: NO_ACTION,
+        patientBasicInfo:{
+            dataStatus: NO_ACTION,
+            patientName: "",
+            sex: "",
+            ethnicGroup: "",
+            birthday: ""
+        }
+    };
+    return {...state}
+}
+
+function changeLocalPatientID(state, queryID, localPatientID){
+    let queryState = state[queryID];
+    state[queryID] = {...queryState, localPatientID: localPatientID};
+    return {...state}
+}
+
+
+function unifiedPatientIDRequest(state, queryID){
+    let queryState = state[queryID];
+    state[queryID] = {...queryState, dataStatus: IS_FETCHING};
+    return {...state}
+}
+
+function unifiedPatientIDReceiveSuccess(state, queryID, unifiedPatientID){
+    let queryState = state[queryID];
+    state[queryID] = {...queryState, unifiedPatientID: unifiedPatientID, dataStatus: SUCCESS};
+    return {...state}
+}
+
+function unifiedPatientIDReceiveFailed(state, unifiedPatientID, queryID){
+    let queryState = state[queryID];
+    state[queryID] = {...queryState, dataStatus: FAILED_ERROR};
+    return {...state}
+}
+
+function unifiedPatientIDNotFound(state, queryID){
+    let queryState = state[queryID];
+    state[queryID] = {...queryState, dataStatus: FAILED_NOT_FOUND};
+    return {...state}
+}
+
+function patientBasicInfoRequest(state, queryID){
+    let queryState = state[queryID];
+    let basicInfoState = queryState['patientBasicInfo'];
+    basicInfoState['dataStatus']= IS_FETCHING;
+    queryState = {...queryState, patientBasicInfo: {...basicInfoState}};
+    state[queryID] = queryState;
+    return {...state}
+}
+
+function patientBasicInfoReceiveSuccess(state, queryID, res){
+    let queryState = state[queryID];
+    let basicInfoState = {
+        dataStatus: SUCCESS,
+        patientName: res.patientName,
+        sex: res.sex,
+        ethnicGroup: res.ethnicGroup,
+        birthday: res.birthday,
+    };
+    queryState = {...queryState, patientBasicInfo: {...basicInfoState}};
+    state[queryID] = queryState;
+    return {...state}
+}
+
+function patientBasicInfoReceiveFailed(state, queryID){
+    let queryState = state[queryID];
+    let basicInfoState = queryState['patientBasicInfo'];
+    basicInfoState['dataStatus']= FAILED_ERROR;
+    queryState = {...queryState, patientBasicInfo: {...basicInfoState}};
+    state[queryID] = queryState;
+    return {...state}
+}
 
 export default unifiedPatientIDAndPatientBasicInfoReducer
     

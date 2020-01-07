@@ -3,49 +3,49 @@ import {queryParamsTrans} from '../../utils/queryUtilFunction';
 import NormalizedName from '../../utils/ParaName';
 import RouteName from '../../utils/RouteName';
 
-export const ORDER_REQUEST = 'ORDER_REQUEST';
-export const ORDER_RECEIVE_SUCCESS_POSTS = 'ORDER_RECEIVE_SUCCESS_POSTS';
-export const ORDER_RECEIVE_FAILED_POSTS = 'ORDER_RECEIVE_FAILED_POSTS';
+export const ORDER_INITIALIZE = "ORDER_INITIALIZE";
+export const ORDER_DELETE = "ORDER_DELETE";
+export const ORDER_REQUEST_POST = 'ORDER_REQUEST_POST';
+export const ORDER_RECEIVE_SUCCESS_RESULT = 'ORDER_RECEIVE_SUCCESS_RESULT';
+export const ORDER_RECEIVE_FAILED_RESULT = 'ORDER_RECEIVE_FAILED_RESULT';
 
-export function requestPosts() {
-    return ({type: ORDER_REQUEST})
+function orderInitialize(queryID) {
+    return ({type: ORDER_INITIALIZE, queryID: queryID})
+}
+
+function orderDelete(queryID) {
+    return ({type: ORDER_DELETE, queryID: queryID})
+}
+
+function orderRequestPost(queryID) {
+    return ({type: ORDER_REQUEST_POST, queryID: queryID})
 }
 
 
-export function receiveSuccessResult(res) {
+function orderReceiveSuccessResult(res, queryID) {
   return ({
-      type: ORDER_RECEIVE_SUCCESS_POSTS,
-      content: res
+      type: ORDER_RECEIVE_SUCCESS_RESULT,
+      content: res,
+      queryID: queryID
     })
 }
 
 
-export function receiveFailedResult() {
-  return {type: ORDER_RECEIVE_FAILED_POSTS,}
+function orderReceiveFailedResult(queryID) {
+  return {type: ORDER_RECEIVE_FAILED_RESULT, queryID: queryID}
 }
 
-export function fetchPosts(params) {
+export function orderFetchPost(params, queryID) {
 
     return function(dispatch, getState) {
-      dispatch(requestPosts());
+      dispatch(orderRequestPost(queryID));
       
-      let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_ORDER + queryParamsTrans(params);
+      let url = RouteName.B_INDIVIDUAL_ANALYSIS_DATA_ROOT + RouteName.B_INDIVIDUAL_ANALYSIS_ORDER + queryParamsTrans(params);
       let token = getState().session.authenticToken;
       let header = {'Authorization': token};
       return fetch(url, {method: NormalizedName.GET, headers: header})
             .then(res => res.json(),
-                  error => {console.log(error); dispatch(receiveFailedResult())})
-            .then(
-              res => {
-                if(res.status && !(res.status === '200' || res.status === 200)){
-                  dispatch(receiveFailedResult());
-                  console.log('Unknown: Error, get order info failed')
-                }
-                else{
-                  dispatch(receiveSuccessResult(res));
-                  console.log('get order info succeed')
-                }
-              }
-            )
+                  error => {console.log(error); dispatch(orderReceiveFailedResult(queryID))})
+            .then(res => {dispatch(orderReceiveSuccessResult(res, queryID))})
   }
 }

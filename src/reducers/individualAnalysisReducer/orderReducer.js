@@ -1,32 +1,56 @@
 import {
-    ORDER_REQUEST,
-    ORDER_RECEIVE_SUCCESS_POSTS,
-    ORDER_RECEIVE_FAILED_POSTS} 
+    ORDER_INITIALIZE,
+    ORDER_REQUEST_POST,
+    ORDER_RECEIVE_SUCCESS_RESULT,
+    ORDER_DELETE,
+    ORDER_RECEIVE_FAILED_RESULT}
     from '../../actions/individualAnalysisAction/orderAction';
 
 
-const initStateInfo = {
-    isDataFetching: false,
-    isDataValid: false,
-    content: []
-};
+const initStateInfo = {};
 
 const orderReducer = (state=initStateInfo, action) => {
     switch (action.type){
-        case ORDER_REQUEST: return (
-            {...state, isDataFetching: true,
-            isDataValid: false});
-        case ORDER_RECEIVE_SUCCESS_POSTS: return (
-            {...state, isDataFetching: false,
-            isDataValid: true,
-            content: action.content}
-            );
-        case ORDER_RECEIVE_FAILED_POSTS: return (
-            {...state, isDataFetching: false,
-            isDataValid: false}
-            );
-        default: return state;
+        case ORDER_INITIALIZE: return orderInitialize(state, action.queryID);
+        case ORDER_DELETE: return orderDelete(state, action.queryID);
+        case ORDER_REQUEST_POST: return orderRequestPost(state, action.queryID);
+        case ORDER_RECEIVE_SUCCESS_RESULT: return orderReceiveSuccessResult(state, action.content, action.queryID);
+        case ORDER_RECEIVE_FAILED_RESULT: return orderReceiveFailedResult(state, action.queryID);
+        default: return {...state};
     }
 };
+
+function orderDelete(state, queryID){
+    delete state[queryID]
+    return {...state}
+}
+
+function orderInitialize(state, queryID){
+    state[queryID] = ({
+        isFetchingData: false,
+        isDataValid: false,
+        content: []
+    });
+    return {...state}
+}
+
+function orderRequestPost(state, queryID){
+    state[queryID] = {...state[queryID], isFetchingData: true};
+    return {...state}
+}
+
+function orderReceiveSuccessResult(state, content, queryID){
+    state[queryID] = ({
+        isFetchingData: false,
+        isDataValid: true,
+        content: content
+    });
+    return {...state}
+}
+
+function orderReceiveFailedResult(state, queryID){
+    state[queryID] = {...state[queryID], isFetchingData: false, isDataValid: false};
+    return {...state}
+}
 
 export default orderReducer;

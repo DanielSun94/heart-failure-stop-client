@@ -5,167 +5,148 @@ import RouteName from '../../utils/RouteName';
 import {pinyinSort} from '../../utils/queryUtilFunction'
 import pinyin from 'pinyin'
 
-export const LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POSTS = 'LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POSTS';
-export const LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_SUCCESS_POSTS = 'LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_SUCCESS_POSTS';
-export const LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_FAILED_POSTS = 'LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_FAILED_POSTS';
-export const LAB_TEST_RESULT_FULL_TRACE_REQUEST_POSTS = 'LAB_TEST_RESULT_FULL_TRACE_REQUEST_POSTS';
-export const LAB_TEST_RESULT_FULL_TRACE_RECEIVE_SUCCESS_POSTS = 'LAB_TEST_RESULT_FULL_TRACE_RECEIVE_SUCCESS_POSTS';
-export const LAB_TEST_RESULT_FULL_TRACE_RECEIVE_FAILED_POSTS = 'LAB_TEST_RESULT_FULL_TRACE_RECEIVE_FAILED_POSTS';
-export const LAB_TEST_LIST_POSTS = 'LAB_TEST_LIST_POSTS';
-export const LAB_TEST_LIST_RECEIVE_SUCCESS_POSTS = 'LAB_TEST_LIST_RECEIVE_SUCCESS_POSTS';
-export const LAB_TEST_LIST_RECEIVE_FAILED_POSTS = 'LAB_TEST_LIST_RECEIVE_FAILED_POSTS';
-export const LAB_TEST_RESET = 'LAB_TEST_RESET';
+export const LAB_TEST_INITIALIZE = 'LAB_TEST_INITIALIZE';
+export const LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POST = 'LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POST';
+export const LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_SUCCESS_RESULT = 'LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_SUCCESS_RESULT';
+export const LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_FAILED_RESULT = 'LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_FAILED_RESULT';
+export const LAB_TEST_RESULT_FULL_TRACE_REQUEST_POST = 'LAB_TEST_RESULT_FULL_TRACE_REQUEST_POST';
+export const LAB_TEST_RESULT_FULL_TRACE_RECEIVE_SUCCESS_RESULT = 'LAB_TEST_RESULT_FULL_TRACE_RECEIVE_SUCCESS_RESULT';
+export const LAB_TEST_RESULT_FULL_TRACE_RECEIVE_FAILED_RESULT = 'LAB_TEST_RESULT_FULL_TRACE_RECEIVE_FAILED_RESULT';
+export const LAB_TEST_LIST_REQUEST_POST = 'LAB_TEST_LIST_REQUEST_POST';
+export const LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT = 'LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT';
+export const LAB_TEST_LIST_RECEIVE_FAILED_RESULT = 'LAB_TEST_LIST_RECEIVE_FAILED_RESULT';
 
-export function requestSingleVisitPosts() {
+export function labTestInitialize(queryID) {
     return {
-      type: LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POSTS
+        type: LAB_TEST_INITIALIZE,
+        queryID: queryID
+    }
+}
+
+function labTestSingleVisitRequestPost(queryID) {
+    return {
+        type: LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POST,
+        queryID: queryID
     }
 }
 
 
-export function receiveSingleVisitSuccessResult(labTestName, labTestTrace) {
-  return {
-      type: LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_SUCCESS_POSTS,
-      labTestName: labTestName,
-      labTestTrace: labTestTrace
+function labTestSingleVisitReceiveSuccessResult(labTestName, labTestTrace, queryID) {
+    return {
+        type: LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_SUCCESS_RESULT,
+        labTestName: labTestName,
+        labTestTrace: labTestTrace,
+        queryID: queryID
     }
 }
 
-export function receiveSingleVisitFailedResult() {
-  return {
-    type: LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_FAILED_POSTS
-  }
+function labTestSingleVisitReceiveFailedResult(queryID) {
+    return {
+        type: LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_FAILED_RESULT,
+        queryID: queryID
+    }
 }
 
-export function requestFullTracePosts() {
-  return {
-    type: LAB_TEST_RESULT_FULL_TRACE_REQUEST_POSTS
-  }
-}
-
-
-export function receiveFullTraceSuccessResult(labTestName, labTestTrace) {
-return {
-    type: LAB_TEST_RESULT_FULL_TRACE_RECEIVE_SUCCESS_POSTS,
-    labTestName: labTestName,
-    labTestTrace: labTestTrace
-  }
-}
-
-export function receiveFullTraceFailedResult() {
-  return {
-    type: LAB_TEST_RESULT_FULL_TRACE_RECEIVE_FAILED_POSTS
-  }
-}
-
-export function requestListPosts() {
-  return {
-    type: LAB_TEST_LIST_POSTS
-  }
+function labTestFullTraceRequestPost(queryID) {
+    return {
+        type: LAB_TEST_RESULT_FULL_TRACE_REQUEST_POST,
+        queryID: queryID
+    }
 }
 
 
-export function receiveListSuccessResult(res) {
-return {
-    type: LAB_TEST_LIST_RECEIVE_SUCCESS_POSTS,
-    labTestList: res
-  }
+function labTestFullTraceReceiveSuccessResult(labTestName, labTestTrace, queryID) {
+    return {
+        type: LAB_TEST_RESULT_FULL_TRACE_RECEIVE_SUCCESS_RESULT,
+        labTestName: labTestName,
+        labTestTrace: labTestTrace,
+        queryID: queryID
+    }
 }
 
-export function receiveListFailedResult() {
-  return {
-    type: LAB_TEST_LIST_RECEIVE_FAILED_POSTS
-  }
+function labTestFullTraceReceiveFailedResult(queryID) {
+    return {
+        type: LAB_TEST_RESULT_FULL_TRACE_RECEIVE_FAILED_RESULT,
+        queryID: queryID
+    }
 }
 
-export function reset() {
-  return {
-    type: LAB_TEST_RESET
-  }
+function labTestListRequestPost(queryID) {
+    return {
+        type: LAB_TEST_LIST_REQUEST_POST,
+        queryID: queryID
+    }
 }
 
-export function fetchSingleVisitLabTestResult(params) {
-  
+
+function labTestListReceiveSuccessResult(res) {
+    return {
+        type: LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT,
+        labTestList: res,
+    }
+}
+
+function labTestListReceiveFailedResult() {
+    return {
+        type: LAB_TEST_LIST_RECEIVE_FAILED_RESULT,
+    }
+}
+
+export function labTestFetchSingleVisitLabTestResult(params, queryID) {
+    // LabTest 一次只Fetch一个特定LabTest项的所有检查记录
     return function(dispatch, getState) {
-        dispatch(requestSingleVisitPosts());
-        let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_LAB_TEST_SINGLE_VISIT_ONE_ITEM + queryParamsTrans(params);
+        dispatch(labTestSingleVisitRequestPost(queryID));
+        let url = RouteName.B_INDIVIDUAL_ANALYSIS_DATA_ROOT + RouteName.B_INDIVIDUAL_ANALYSIS_LAB_TEST_SINGLE_VISIT_ONE_ITEM + queryParamsTrans(params);
         let token = getState().session.authenticToken;
         let header = {'Authorization': token};
 
         return fetch(url, {method: ParaName.GET, headers: header})
-        .then(res => res.json(),
-              error => {console.log(error); dispatch(receiveSingleVisitFailedResult())})
-        .then(
-          res => {
-            if(res.status && !(res.status === '200' || res.status === 200)){
-              console.log('get lab test info successed')
-            }
-            else{
-              dispatch(receiveSingleVisitSuccessResult(params.itemName, res));
-              console.log('get lab test info successed')
-            }
-          }
-        )
-  }
+            .then(res => res.json(),
+                error => {console.log(error); dispatch(labTestSingleVisitReceiveFailedResult(queryID))})
+            .then(res => {dispatch(labTestSingleVisitReceiveSuccessResult(params.itemName, res, queryID))})
+    }
 }
 
-export function fetchFullTraceLabTestResult(params) {
-  
-  return function(dispatch, getState) {
-      dispatch(requestFullTracePosts());
-      let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_LAB_TEST_ONE_ITEM_FULL_TRACE + queryParamsTrans(params);
-      let token = getState().session.authenticToken;
-      let header = {'Authorization': token};
+export function labTestFetchFullTraceLabTestResult(params, queryID) {
+    // LabTest 一次只Fetch一个特定LabTest项的所有检查记录
+    return function(dispatch, getState) {
+        dispatch(labTestFullTraceRequestPost(queryID));
+        let url = RouteName.B_INDIVIDUAL_ANALYSIS_DATA_ROOT + RouteName.B_INDIVIDUAL_ANALYSIS_LAB_TEST_ONE_ITEM_FULL_TRACE + queryParamsTrans(params);
+        let token = getState().session.authenticToken;
+        let header = {'Authorization': token};
 
-      return fetch(url, {method: ParaName.GET, headers: header})
-      .then(res => res.json(),
-            error => {console.log(error); dispatch(receiveFullTraceFailedResult())})
-      .then(
-        res => {
-          if(res.status && !(res.status === '200' || res.status === 200)){
-            console.log('get lab test info successed')
-          }
-          else{
-            dispatch(receiveFullTraceSuccessResult(params.itemName, res));
-            console.log('get lab test info successed')
-          }
-        }
-      )
-}
+        return fetch(url, {method: ParaName.GET, headers: header})
+            .then(res => res.json(),
+                error => {console.log(error); dispatch(labTestFullTraceReceiveFailedResult(queryID))})
+            .then(res => {dispatch(labTestFullTraceReceiveSuccessResult(params.itemName, res, queryID))})
+    }
 }
 
 export function fetchLabTestList() {
-  
-  return function(dispatch, getState) {
-      dispatch(requestListPosts());
-      let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_LAB_TEST_LIST;
-      let token = getState().session.authenticToken;
-      let header = {'Authorization': token};
-      
-      
-      return fetch(url, {method: ParaName.GET, headers: header})
-      .then(res => res.json(),
-            error => {console.log(error); dispatch(receiveFullTraceFailedResult())})
-      .then(
-        res => {
-          if(res.status && !(res.status === '200' || res.status === 200)){
-            console.log('get lab test list successed')
-          }
-          else{
-            pinyinSort(res);
-            let itemListWithPinyin = [];
-            for(let item of res){
-              const firstLetterList = pinyin(item, {style: pinyin.STYLE_FIRST_LETTER});
-              let firstLetterStr = "";
-              for(let strList of firstLetterList)
-                firstLetterStr += strList[0];
-              firstLetterStr = firstLetterStr.toLowerCase();
-              itemListWithPinyin.push([item, firstLetterStr])
-            }
-            dispatch(receiveListSuccessResult(itemListWithPinyin));
-            console.log('get lab test list successed')
-          }
-        }
-      )
-  }
+    // LabTestList全局统一，无需queryID标识
+    return function(dispatch, getState) {
+        dispatch(labTestListRequestPost());
+        let url = RouteName.B_INDIVIDUAL_ANALYSIS_DATA_ROOT + RouteName.B_INDIVIDUAL_ANALYSIS_LAB_TEST_LIST;
+        let token = getState().session.authenticToken;
+        let header = {'Authorization': token};
+
+        return fetch(url, {method: ParaName.GET, headers: header})
+            .then(res => res.json(),
+                error => {console.log(error); dispatch(labTestListReceiveSuccessResult())})
+            .then(
+                res => {
+                    pinyinSort(res);
+                    let itemListWithPinyin = [];
+                    for(let item of res){
+                        const firstLetterList = pinyin(item, {style: pinyin.STYLE_FIRST_LETTER});
+                        let firstLetterStr = "";
+                        for(let strList of firstLetterList)
+                            firstLetterStr += strList[0];
+                        firstLetterStr = firstLetterStr.toLowerCase();
+                        itemListWithPinyin.push([item, firstLetterStr])
+                    }
+                    dispatch(labTestListReceiveFailedResult(itemListWithPinyin));
+                }
+            )
+    }
 }

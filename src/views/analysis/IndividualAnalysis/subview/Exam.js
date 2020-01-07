@@ -93,33 +93,33 @@ const useStyles = makeStyles((theme) => ({
 
 const Exam = () => {
     // 获取数据
-    const dispatch = useDispatch()
-    const currentVisit = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisit)
-    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID)
-    const visitIndentifier = {...currentVisit, unifiedPatientID: unifiedPatientID}
-    const [selectedExam, setSelectedExam] = useState('')
+    const dispatch = useDispatch();
+    const currentVisit = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisit);
+    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID);
+    const visitIdentifier = {...currentVisit, unifiedPatientID: unifiedPatientID};
+    const [selectedExam, setSelectedExam] = useState('');
     useEffect(()=>{
         if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
-            dispatch(fetchPosts(visitIndentifier))          
+            dispatch(fetchPosts(visitIdentifier));
             setSelectedExam("")  
         }
     },  [currentVisit]);
 
-    const classes = useStyles()
+    const classes = useStyles();
 
     // 重新整理数据
-    const data = useSelector(state => state.dashboard.trajectoryAnalysis.exam.content)
-    const isDataFetching = useSelector(state => state.dashboard.trajectoryAnalysis.exam.isDataFetching)
-    const [dataList, nameMap] = dataReconstruct(data)
+    const data = useSelector(state => state.dashboard.trajectoryAnalysis.exam.content);
+    const isDataFetching = useSelector(state => state.dashboard.trajectoryAnalysis.exam.isDataFetching);
+    const [dataList, nameMap] = dataReconstruct(data);
     const examList = Object.entries(nameMap);
 
     examList.sort(function(a, b) {
       return a[1]-b[1];
-    })
+    });
 
     const examOnChange = (event, value)=>{
         setSelectedExam(value[0])
-    }
+    };
     
     return  (
         <Fragment>
@@ -179,6 +179,6 @@ const Exam = () => {
         </Hidden>
         </Fragment>
     );
-}
+};
 
 export default Exam;

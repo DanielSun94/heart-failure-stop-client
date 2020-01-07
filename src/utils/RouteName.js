@@ -24,19 +24,19 @@ class RouteName{
 
     // Trajectory Analysis Data Route
     // b means backend
-    static B_TRAJECTORY_ANALYSIS_DATA_ROOT = "/backend/data/trajectoryAnalysis";
-    static B_TRAJECTORY_ANALYSIS_UNIFIED_PATIENT_ID = "/unifiedPatientID";
-    static B_TRAJECTORY_ANALYSIS_BASIC_INFO ="/basicInfo";
-    static B_TRAJECTORY_ANALYSIS_TRAJECTORY ="/trajectory";
-    static B_TRAJECTORY_ANALYSIS_VISIT_DETAILED_INFO ="/visitDetailedInfo";
-    static B_TRAJECTORY_ANALYSIS_VISIT_BRIEF_INFO ="/visitBriefInfo";
-    static B_TRAJECTORY_ANALYSIS_LAB_TEST_LIST ="/labTestNameList";
-    static B_TRAJECTORY_ANALYSIS_LAB_TEST_SINGLE_VISIT_FULL_INFO ="/labTestSingleVisit";
-    static B_TRAJECTORY_ANALYSIS_LAB_TEST_SINGLE_VISIT_ONE_ITEM ="/labTestSingleItemInOneVisit";
-    static B_TRAJECTORY_ANALYSIS_LAB_TEST_ONE_ITEM_FULL_TRACE ="/labTestSingleItemTrace";
-    static B_TRAJECTORY_ANALYSIS_ORDER ="/order";
-    static B_TRAJECTORY_ANALYSIS_VITAL_SIGN ="/vitalSign";
-    static B_TRAJECTORY_ANALYSIS_EXAM ="/exam";
+    static B_INDIVIDUAL_ANALYSIS_DATA_ROOT = "/backend/data/individualAnalysis";
+    static B_INDIVIDUAL_ANALYSIS_UNIFIED_PATIENT_ID = "/unifiedPatientID";
+    static B_INDIVIDUAL_ANALYSIS_BASIC_INFO ="/basicInfo";
+    static B_INDIVIDUAL_ANALYSIS_TRAJECTORY ="/trajectory";
+    static B_INDIVIDUAL_ANALYSIS_VISIT_DETAILED_INFO ="/visitDetailedInfo";
+    static B_INDIVIDUAL_ANALYSIS_VISIT_BRIEF_INFO ="/visitBriefInfo";
+    static B_INDIVIDUAL_ANALYSIS_LAB_TEST_LIST ="/labTestNameList";
+    static B_INDIVIDUAL_ANALYSIS_LAB_TEST_SINGLE_VISIT_FULL_INFO ="/labTestSingleVisit";
+    static B_INDIVIDUAL_ANALYSIS_LAB_TEST_SINGLE_VISIT_ONE_ITEM ="/labTestSingleItemInOneVisit";
+    static B_INDIVIDUAL_ANALYSIS_LAB_TEST_ONE_ITEM_FULL_TRACE ="/labTestSingleItemTrace";
+    static B_INDIVIDUAL_ANALYSIS_ORDER ="/order";
+    static B_INDIVIDUAL_ANALYSIS_VITAL_SIGN ="/vitalSign";
+    static B_INDIVIDUAL_ANALYSIS_EXAM ="/exam";
 
     // run machine learning model
     static B_MACHINE_LEARNING = "/backend/machineLearning";

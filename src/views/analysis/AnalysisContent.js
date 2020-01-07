@@ -1,7 +1,10 @@
 import React from 'react';
 import {makeStyles} from "@material-ui/styles";
 import {Tabs, Tab, AppBar} from "@material-ui/core";
-import IndividualAnalysis from "./IndividualAnalysis/TrajectoryAnalysis";
+import IndividualAnalysis from "./IndividualAnalysis/IndividualAnalysis";
+import GroupAnalysis from "./GroupAnalysis/GroupAnalysis";
+import {useSelector} from "react-redux";
+import ParaName from "../../utils/ParaName";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -15,35 +18,26 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const AnalysisContent = () => {
+const AnalysisContent = ({selectedQueryID}) => {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+    const metaInfo = useSelector(state=>state.individual.metaInfo.metaInfoMap)[selectedQueryID];
+    if(!metaInfo)
+        return null;
+
+    const queryType = metaInfo['queryType'];
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" color="default">
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    variant="scrollable"
-                    scrollButtons="auto"
-                    aria-label="scrollable auto tabs example"
-                    style={{backgroundColor:"white", boxShadow: 0}}
-                >
-                    <Tab label="查询1"  />
-                    <Tab label="查询2"  />
-                    <Tab label="查询3"/>
-                    <Tab label="查询4"/>
-                </Tabs>
-            </AppBar>
             {
-                // <IndividualAnalysis/>
+                queryType === ParaName.GROUP_ANALYSIS ?
+                    <GroupAnalysis
+                        selectedQueryID={selectedQueryID}
+                    />
+                    : <div>个体分析</div>
+                    //<IndividualAnalysis
+                // selectedQueryID={selectedQueryID}
+                // />
             }
         </div>
     )

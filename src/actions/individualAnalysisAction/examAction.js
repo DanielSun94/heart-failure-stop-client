@@ -3,37 +3,49 @@ import {queryParamsTrans} from '../../utils/queryUtilFunction';
 import NormalizedName from '../../utils/ParaName';
 import RouteName from '../../utils/RouteName';
 
-export const EXAM_REQUEST_POSTS = 'EXAM_REQUEST_POSTS';
-export const EXAM_RECEIVE_SUCCESS_POSTS = 'EXAM_RECEIVE_SUCCESS_POSTS';
-export const EXAM_RECEIVE_FAILED_POSTS = 'EXAM_RECEIVE_FAILED_POSTS';
+export const EXAM_INITIALIZE = "EXAM_INITIALIZE";
+export const EXAM_DELETE = "EXAM_INITIALIZE";
+export const EXAM_REQUEST_POST = 'EXAM_REQUEST_POST';
+export const EXAM_RECEIVE_SUCCESS_RESULT = 'EXAM_RECEIVE_SUCCESS_RESULT';
+export const EXAM_RECEIVE_FAILED_RESULT = 'EXAM_RECEIVE_FAILED_RESULT';
 
-export function requestPosts() {
-    return ({type: EXAM_REQUEST_POSTS})
+function examRequestPost(queryID) {
+    return ({type: EXAM_REQUEST_POST, queryID: queryID})
+}
+
+function examDelete(queryID) {
+    return ({type: EXAM_DELETE, queryID: queryID})
 }
 
 
-export function receiveSuccessResult(res) {
-  return ({
-      type: EXAM_RECEIVE_SUCCESS_POSTS,
-      content: res
+export function examInitialize(queryID) {
+    return ({type: EXAM_INITIALIZE, queryID: queryID})
+}
+
+
+function examReceiveSuccessResult(res, queryID) {
+    return ({
+        type: EXAM_RECEIVE_SUCCESS_RESULT,
+        queryID: queryID,
+        content: res
     })
 }
 
 
-export function receiveFailedResult() {
-  return {type: EXAM_RECEIVE_FAILED_POSTS,}
+function examReceiveFailedResult(queryID) {
+    return {type: EXAM_RECEIVE_FAILED_RESULT, queryID: queryID}
 }
 
-export function fetchPosts(params) {
-  return function(dispatch, getState) {
-      dispatch(requestPosts());
-      let url = RouteName.B_TRAJECTORY_ANALYSIS_DATA_ROOT + RouteName.B_TRAJECTORY_ANALYSIS_EXAM + queryParamsTrans(params);
-      let token = getState().session.authenticToken;
-      let header = {'Authorization': token};
-      return fetch(url, {method: NormalizedName.GET, headers: header})
-      .then(res => res.json(),
-          error => {console.log(error); dispatch(receiveFailedResult())})
-      .then(res => dispatch(receiveSuccessResult(res)));
+export function examFetchPosts(params, queryID) {
+    // Exam是一次Fetch当前入院的所有Exam记录
+    return function(dispatch, getState) {
+        dispatch(examRequestPost(queryID));
+        let url = RouteName.B_INDIVIDUAL_ANALYSIS_DATA_ROOT + RouteName.B_INDIVIDUAL_ANALYSIS_EXAM + queryParamsTrans(params);
+        let token = getState().session.authenticToken;
+        let header = {'Authorization': token};
+        return fetch(url, {method: NormalizedName.GET, headers: header})
+            .then(res => res.json(),
+                error => {console.log(error); dispatch(examReceiveFailedResult(queryID))})
+            .then(res => dispatch(examReceiveSuccessResult(res, queryID)));
+    }
 }
-}
-  

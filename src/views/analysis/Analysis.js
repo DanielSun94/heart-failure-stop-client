@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import AnalysisContent from "./AnalysisContent";
 import AnalysisManagement from "./AnalysisManagement/AnalysisManagement";
 import {makeStyles} from "@material-ui/styles";
@@ -32,14 +32,20 @@ const useStyles = makeStyles(() => ({
 const Analysis = () => {
     const classes = useStyles();
     const {nextID, metaInfoMap} = useSelector(state=>state.individual.metaInfo);
+    const [selectedQueryID, setSelectedQueryID] = useState(null);
 
     return (
         <div className={classes.root}>
             <div className={classes.management}>
-                <AnalysisManagement queryIndex={nextID}/>
+                <AnalysisManagement
+                    selectedQueryID={selectedQueryID}
+                    setSelectedQueryID={setSelectedQueryID}
+                />
             </div>
             <div className={classes.content}>
-                <AnalysisContent/>
+                <AnalysisContent
+                    selectedQueryID={selectedQueryID}
+                />
             </div>
         </div>
     )

@@ -1,6 +1,19 @@
 import {CREATE_NEW_QUERY, DELETE_QUERY, EDIT_QUERY_NAME} from "../../actions/individualAnalysisAction/metaInfoAction";
+import ParaName from "../../utils/ParaName";
 
-const initStateInfo = {nextID: 1, metaInfoMap: {}};
+// metaInfoMap结构
+// {id: {queryType: (individual/group), queryName: (xxx), context: {xxx}}}
+const initStateInfo = {nextID: 1, metaInfoMap: {
+        1:{queryType: ParaName.GROUP_ANALYSIS, queryName: 'one', affiliated: null, context: {}},
+        2:{queryType: ParaName.GROUP_ANALYSIS, queryName: 'two', affiliated: 1, context: {}},
+        7:{queryType: ParaName.GROUP_ANALYSIS, queryName: 'seven', affiliated: 2, context: {}},
+        10:{queryType: ParaName.GROUP_ANALYSIS, queryName: 'ten', affiliated: 7, context: {}},
+        9:{queryType: ParaName.GROUP_ANALYSIS, queryName: 'nine', affiliated: 1, context: {}},
+        8:{queryType: ParaName.GROUP_ANALYSIS, queryName: 'eight', affiliated: null, context: {}},
+        3:{queryType: ParaName.INDIVIDUAL_ANALYSIS, queryName: 'three', context: '3'},
+        4:{queryType: ParaName.INDIVIDUAL_ANALYSIS, queryName: 'four', context: '4'},
+        6:{queryType: ParaName.INDIVIDUAL_ANALYSIS, queryName: 'five', context: '6'}
+    }};
 
 // 目前暂未实现
 // 用于维护每个Tab页的信息（是个体分析还是群体分析，这些分析（如果重命名了），叫什么名字
@@ -12,12 +25,11 @@ const metaInfoReducer = (state=initStateInfo, action) => {
     switch (action.type) {
         case CREATE_NEW_QUERY: {
             const nextID = state.nextID;
-            const currentID = action.id;
             const newQueryMetaInfo = action.metaInfo;
 
             let metaInfoMap = {...state.metaInfoMap};
-            metaInfoMap[currentID] = newQueryMetaInfo;
-            return {...state, nextID: nextID, metaInfoMap: metaInfoMap}
+            metaInfoMap[nextID] = newQueryMetaInfo;
+            return {...state, nextID: nextID+1, metaInfoMap: metaInfoMap}
         }
         case DELETE_QUERY: {
             const metaInfoMap = {...state.metaInfoMap};

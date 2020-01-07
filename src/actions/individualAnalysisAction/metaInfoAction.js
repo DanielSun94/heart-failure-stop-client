@@ -2,8 +2,8 @@ export const CREATE_NEW_QUERY = 'CREATE_NEW_QUERY';
 export const EDIT_QUERY_NAME = 'EDIT_QUERY_NAME';
 export const DELETE_QUERY = 'DELETE_QUERY';
 
-export function createNewQuery(id, metaInfo) {
-    return ({type: CREATE_NEW_QUERY, id: id, metaInfo: metaInfo})
+export function createNewQuery(metaInfo) {
+    return ({type: CREATE_NEW_QUERY, metaInfo: metaInfo})
 }
 
 export function editQueryName(id, name) {
