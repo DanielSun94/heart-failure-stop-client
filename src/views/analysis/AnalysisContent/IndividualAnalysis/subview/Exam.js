@@ -51,21 +51,26 @@ const Exam = ({queryID}) => {
     const currentVisit = useSelector(state=>state.individual.trajectory[queryID].currentVisit);
     const unifiedPatientID = useSelector(state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].unifiedPatientID);
     const visitIdentifier = {...currentVisit, unifiedPatientID: unifiedPatientID};
-
-    useEffect(()=>{
-        if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
-            dispatch(examFetchPosts(visitIdentifier, queryID));
-        }
-
-    },  [queryID, visitIdentifier.visitNo, visitIdentifier.hospitalCode, visitIdentifier.hospitalName,
-        visitIdentifier.visitType, visitIdentifier.visitID, visitIdentifier.unifiedPatientID]);
-
-
-
-    // 重新整理数据
     const selectedExam = useSelector(state => state.individual.exam[queryID].selectedExam);
     const data = useSelector(state => state.individual.exam[queryID].content);
     const isDataFetching = useSelector(state => state.individual.exam[queryID].isFetchingData);
+    const correspondingUnifiedPatientID = useSelector(state => state.individual.exam[queryID].correspondingUnifiedPatientID);
+    const correspondingHospitalCode = useSelector(state => state.individual.exam[queryID].correspondingHospitalCode);
+    const correspondingVisitID = useSelector(state => state.individual.exam[queryID].correspondingVisitID);
+    const correspondingVisitType = useSelector(state => state.individual.exam[queryID].correspondingVisitType);
+
+    const isVisitChanged = !(unifiedPatientID===correspondingUnifiedPatientID && correspondingHospitalCode===currentVisit.hospitalCode &&
+        correspondingVisitID===currentVisit.visitID && correspondingVisitType===currentVisit.visitType);
+
+    useEffect(()=>{
+        // 由于Tab页的切换（queryID变化）和新查询都可能触发
+        if(isVisitChanged){
+            dispatch(examFetchPosts(visitIdentifier, queryID));
+        }
+    }, [queryID, visitIdentifier.hospitalCode, visitIdentifier.visitType, visitIdentifier.visitID, unifiedPatientID]);
+
+
+    // 重新整理数据
     const [dataList, nameMap] = dataReconstruct(data);
     const examList = Object.entries(nameMap);
 
@@ -74,11 +79,11 @@ const Exam = ({queryID}) => {
     });
 
     const examOnChange = (event, value)=>{
-        dispatch(setNewSelectedExam(value[0]));
+        dispatch(setNewSelectedExam(value[0], queryID));
     };
 
     const setSelectedExam = (value)=>{
-        dispatch(setNewSelectedExam(value));
+        dispatch(setNewSelectedExam(value, queryID));
     };
 
     return  (

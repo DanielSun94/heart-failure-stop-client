@@ -25,11 +25,12 @@ function trajectoryRequestPost(queryID) {
 }
 
 
-function trajectoryReceiveSuccessResult(res, queryID) {
+function trajectoryReceiveSuccessResult(res, unifiedPatientID, queryID) {
     return ({
         type: TRAJECTORY_RECEIVE_SUCCESS_RESULT,
         content: res,
-        queryID: queryID
+        queryID: queryID,
+        unifiedPatientID: unifiedPatientID
     })
 }
 
@@ -65,7 +66,7 @@ export function getValidVisitAndSetDefaultVisit(params, queryID){
                             continue;
                         res[index][ParaName.VISIT_NO] = index
                     }
-                    dispatch(trajectoryReceiveSuccessResult(res, queryID));
+                    dispatch(trajectoryReceiveSuccessResult(res, params.unifiedPatientID, queryID));
                 }
             )
             .then(()=>{

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, Fragment} from 'react';
+import React, {useEffect, Fragment} from 'react';
 import ParaName from '../../../../../utils/ParaName';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -7,7 +7,8 @@ import {
     fetchLabTestList,
     labTestFilterStr,
     labTestSetSelectedLabTest,
-    labTestShowingSingle
+    labTestShowingSingle,
+    labTestReset
 } from '../../../../../actions/individualAnalysisAction/labtestResultAction'
 import {
     Card,
@@ -86,11 +87,6 @@ const LabtestResult = ({queryID}) => {
     const dispatch = useDispatch();
     const classes = useStyles();
 
-    // 初始化，载入LabTestList
-    useEffect(()=>{
-        dispatch(fetchLabTestList(queryID))
-    }, [queryID]);
-
     const labTestList = useSelector(state => state.individual.labtestResult.labTestNameList[queryID].labTestNameList);
     const currentVisit = useSelector(state=>state.individual.trajectory[queryID].currentVisit);
     const unifiedPatientID = useSelector(state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].unifiedPatientID);
@@ -109,12 +105,58 @@ const LabtestResult = ({queryID}) => {
     const setShowSingleVisit = (value) =>dispatch(labTestShowingSingle(value, queryID));
     const setFilterStr = (value) =>dispatch(labTestFilterStr(value, queryID));
 
+    const correspondingUnifiedPatientID = useSelector(state => state.individual.labtestResult['correspondingVisit'][queryID].correspondingUnifiedPatientID);
+    const correspondingHospitalCode = useSelector(state => state.individual.labtestResult['correspondingVisit'][queryID].correspondingHospitalCode);
+    const correspondingVisitID = useSelector(state => state.individual.labtestResult['correspondingVisit'][queryID].correspondingVisitID);
+    const correspondingVisitType = useSelector(state => state.individual.labtestResult['correspondingVisit'][queryID].correspondingVisitType);
 
-    // 当Labtest或者其余信息改变时获取相关信息
+    const isVisitChanged = !(correspondingHospitalCode===currentVisit.hospitalCode &&
+        correspondingVisitID===currentVisit.visitID && correspondingVisitType===currentVisit.visitType);
+    const isPatientChanged = !(unifiedPatientID===correspondingUnifiedPatientID);
+
+    // 初始化，载入LabTestList
     useEffect(()=>{
-        fetchLabTest(dispatch, currentVisit, unifiedPatientID, selectedLabtest, showSingleVisit, queryID)
-    }, [unifiedPatientID, currentVisit.hospitalCode, currentVisit.visitType, currentVisit.visitID,
-        selectedLabtest, showSingleVisit, queryID]);
+        if(labTestList.length===0)
+            dispatch(fetchLabTestList(queryID))
+    }, [queryID]);
+
+    useEffect(()=>{
+        // LabTest和其它三项逻辑有些不同，其它三项都是VisitChange后重新获取数据，LabTest则是重置数据
+        const params = {
+            unifiedPatientID: unifiedPatientID,
+            hospitalCode: currentVisit.hospitalCode,
+            visitType: currentVisit.visitType,
+            visitID: currentVisit.visitID
+        };
+
+        const singleParam = {...currentVisit, unifiedPatientID: unifiedPatientID, itemName: selectedLabtest};
+        const traceParam = {unifiedPatientID: unifiedPatientID, itemName: selectedLabtest};
+
+        if(isPatientChanged||isVisitChanged) {
+            if (isPatientChanged) {
+                dispatch(labTestReset(params, 'patient', queryID));
+                if((!showSingleVisit) && selectedLabtest!==""){
+                    dispatch(labTestFetchFullTraceLabTestResult(traceParam, queryID))
+                }
+            } else if (isVisitChanged) {
+                dispatch(labTestReset(params, 'visit', queryID));
+                if((!showSingleVisit) && selectedLabtest!=="" && (!fullTraceLabTest[selectedLabtest])){
+                    dispatch(labTestFetchFullTraceLabTestResult(traceParam, queryID))
+                }
+            }
+            if (showSingleVisit && selectedLabtest !== "") {
+                dispatch(labTestFetchSingleVisitLabTestResult(singleParam, queryID))
+            }
+        }
+        else{
+            if(showSingleVisit && selectedLabtest!=="" && (!singleVisitLabTestTrace[selectedLabtest])){
+                dispatch(labTestFetchSingleVisitLabTestResult(singleParam, queryID))
+            }
+            if((!showSingleVisit) && selectedLabtest!=="" && (!fullTraceLabTest[selectedLabtest])){
+                dispatch(labTestFetchFullTraceLabTestResult(traceParam, queryID))
+            }
+        }
+    }, [unifiedPatientID, currentVisit, selectedLabtest, showSingleVisit, queryID]);
 
     return  (
         <Fragment>
@@ -196,16 +238,5 @@ const LabtestResult = ({queryID}) => {
     );
 };
 
-const fetchLabTest = (dispatch, currentVisit, unifiedPatientID, selectedLabtest, showSingleVisit, queryID)=>{
-    const singleParam = {...currentVisit, unifiedPatientID: unifiedPatientID, itemName: selectedLabtest};
-    if(showSingleVisit && selectedLabtest!==""){
-        dispatch(labTestFetchSingleVisitLabTestResult(singleParam, queryID))
-    }
-
-    const traceParam = {unifiedPatientID: unifiedPatientID, itemName: selectedLabtest};
-    if(!showSingleVisit && selectedLabtest!==""){
-        dispatch(labTestFetchFullTraceLabTestResult(traceParam, queryID))
-    }
-};
 
 export default LabtestResult;

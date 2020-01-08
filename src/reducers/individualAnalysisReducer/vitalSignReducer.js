@@ -17,7 +17,7 @@ const vitalSignReducer = (state=initStateInfo, action) => {
         case VITAL_SIGN_INITIALIZE: return vitalSignInitialize(state, action.queryID);
         case VITAL_SIGN_DELETE: return vitalSignDelete(state, action.queryID);
         case VITAL_SIGN_REQUEST_POST: return vitalSignRequestPost(state, action.queryID);
-        case VITAL_SIGN_RECEIVE_SUCCESS_RESULT: return vitalSignReceiveSuccessResult(state, action.content, action.queryID);
+        case VITAL_SIGN_RECEIVE_SUCCESS_RESULT: return vitalSignReceiveSuccessResult(state, action.content, action.params, action.queryID);
         case VITAL_SIGN_RECEIVE_FAILED_RESULT: return vitalSignReceiveFailedResult(state, action.queryID);
         default: return {...state};
     }
@@ -34,7 +34,11 @@ function vitalSignInitialize(state, queryID){
             isFetchingData: false,
             isDataValid: false,
             content: [],
-            selectedVitalSign: ""
+            selectedVitalSign: "",
+            correspondingUnifiedPatientID: "",
+            correspondingHospitalCode: "",
+            correspondingVisitID: "",
+            correspondingVisitType: "",
         });
     return {...state}
 }
@@ -51,11 +55,16 @@ function vitalSignRequestPost(state, queryID){
     return {...state}
 }
 
-function vitalSignReceiveSuccessResult(state, content, queryID){
+function vitalSignReceiveSuccessResult(state, content, params, queryID){
     state[queryID] = ({
+        ...state[queryID],
         isFetchingData: false,
         isDataValid: true,
-        content: content
+        content: content,
+        correspondingUnifiedPatientID: params.unifiedPatientID,
+        correspondingHospitalCode: params.hospitalCode,
+        correspondingVisitID: params.visitID,
+        correspondingVisitType: params.visitType,
     });
     return {...state}
 }

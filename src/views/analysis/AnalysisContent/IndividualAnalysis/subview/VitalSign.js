@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import useStyles from "./sharedLayout";
+import {setNewSelectedOrder} from "../../../../../actions/individualAnalysisAction/orderAction";
 
 
 const dataReconstruct = (data) => {
@@ -44,9 +45,20 @@ const dataReconstruct = (data) => {
 const VitalSign = ({queryID}) => {
     // 获取数据
     const dispatch = useDispatch();
+    const classes = useStyles();
 
+    const data = useSelector(state => state.individual.vitalSign[queryID].content);
+    const isDataFetching = useSelector(state => state.individual.vitalSign[queryID].isFetchingData);
     const currentVisit = useSelector(state=>state.individual.trajectory[queryID].currentVisit);
     const unifiedPatientID = useSelector(state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].unifiedPatientID);
+    const correspondingUnifiedPatientID = useSelector(state => state.individual.vitalSign[queryID].correspondingUnifiedPatientID);
+    const correspondingHospitalCode = useSelector(state => state.individual.vitalSign[queryID].correspondingHospitalCode);
+    const correspondingVisitID = useSelector(state => state.individual.vitalSign[queryID].correspondingVisitID);
+    const correspondingVisitType = useSelector(state => state.individual.vitalSign[queryID].correspondingVisitType);
+
+    const isVisitChanged = !(unifiedPatientID===correspondingUnifiedPatientID && correspondingHospitalCode===currentVisit.hospitalCode &&
+        correspondingVisitID===currentVisit.visitID && correspondingVisitType===currentVisit.visitType);
+
     const visitIdentifier = {...currentVisit, unifiedPatientID: unifiedPatientID};
 
     const selectedVitalSign = useSelector(state => state.individual.vitalSign[queryID].selectedVitalSign);
@@ -54,22 +66,17 @@ const VitalSign = ({queryID}) => {
     const setSelectedVitalSign = (value)=> {dispatch(setNewVitalSign(value, queryID))};
 
     useEffect(()=>{
-        if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
+        // 由于Tab页的切换（queryID变化）和新查询都可能触发
+        if(isVisitChanged){
             dispatch(vitalSignFetchPost(visitIdentifier, queryID));
-            setSelectedVitalSign("")
         }
-    }, [queryID, visitIdentifier.visitNo, visitIdentifier.hospitalCode, visitIdentifier.hospitalName,
-        visitIdentifier.visitType, visitIdentifier.visitID, visitIdentifier.unifiedPatientID]);
+    }, [queryID, visitIdentifier.hospitalCode, visitIdentifier.visitType, visitIdentifier.visitID, unifiedPatientID]);
 
-    const classes = useStyles();
+
 
     // 重新整理数据
-    const data = useSelector(state => state.individual.vitalSign[queryID].content);
-    const isDataFetching = useSelector(state => state.individual.vitalSign[queryID].isFetchingData);
     const [dataMap, nameList] = dataReconstruct(data);
-    const vitalSignOnChange = (event, value)=>{
-        setSelectedVitalSign(value)
-    };
+    const vitalSignOnChange = (event, value)=>{dispatch(setSelectedVitalSign(value))};
 
     return  (
         <Fragment>

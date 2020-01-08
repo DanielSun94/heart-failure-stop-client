@@ -44,7 +44,9 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = ({queryID}) => {
     const hospitalCode = '1';
 
     // query part
-    const handlePatientQuery = (event) => dispatch(fetchUnifiedPatientID(event, hospitalCode, queryID));
+    const handlePatientQuery = (event) => {
+        dispatch(fetchUnifiedPatientID(event, hospitalCode, queryID))
+    };
     const handleLocalPatientIDChange = (event) => dispatch(changeLocalPatientID(event.target.value, queryID));
     const localPatientID = useSelector(
         state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].localPatientID);
@@ -74,7 +76,7 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = ({queryID}) => {
     useEffect(()=>{
         if (unifiedPatientID!=="")
             dispatch(fetchPatientBasicInfo({unifiedPatientID: unifiedPatientID}, queryID))
-    }, [dispatch, queryID, unifiedPatientID]);
+    }, [queryID, unifiedPatientID]);
 
     const patientBasicInfoDict = useSelector(state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].patientBasicInfo);
     const errorFlag = useSelector(

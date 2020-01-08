@@ -16,7 +16,7 @@ const orderReducer = (state=initStateInfo, action) => {
         case ORDER_INITIALIZE: return orderInitialize(state, action.queryID);
         case ORDER_DELETE: return orderDelete(state, action.queryID);
         case ORDER_REQUEST_POST: return orderRequestPost(state, action.queryID);
-        case ORDER_RECEIVE_SUCCESS_RESULT: return orderReceiveSuccessResult(state, action.content, action.queryID);
+        case ORDER_RECEIVE_SUCCESS_RESULT: return orderReceiveSuccessResult(state, action.content, action.params, action.queryID);
         case ORDER_RECEIVE_FAILED_RESULT: return orderReceiveFailedResult(state, action.queryID);
         default: return {...state};
     }
@@ -38,7 +38,11 @@ function orderInitialize(state, queryID){
             isFetchingData: false,
             isDataValid: false,
             content: [],
-            selectedOrder: ""
+            selectedOrder: "",
+            correspondingUnifiedPatientID: "",
+            correspondingHospitalCode: "",
+            correspondingVisitID: "",
+            correspondingVisitType: "",
         });
     return {...state}
 }
@@ -48,11 +52,16 @@ function orderRequestPost(state, queryID){
     return {...state}
 }
 
-function orderReceiveSuccessResult(state, content, queryID){
+function orderReceiveSuccessResult(state, content, params, queryID){
     state[queryID] = ({
+        ...state[queryID],
         isFetchingData: false,
         isDataValid: true,
-        content: content
+        content: content,
+        correspondingUnifiedPatientID: params.unifiedPatientID,
+        correspondingHospitalCode: params.hospitalCode,
+        correspondingVisitID: params.visitID,
+        correspondingVisitType: params.visitType,
     });
     return {...state}
 }

@@ -29,7 +29,7 @@ const trajectoryReducer = (state=initStateInfo, action) => {
 
         case TRAJECTORY_REQUEST_POST: return trajectoryRequestPost(state, action.queryID);
 
-        case TRAJECTORY_RECEIVE_SUCCESS_RESULT: return trajectoryReceiveSuccessResult(state, action.content, action.queryID);
+        case TRAJECTORY_RECEIVE_SUCCESS_RESULT: return trajectoryReceiveSuccessResult(state, action.content, action.unifiedPatientID, action.queryID);
 
         case TRAJECTORY_RECEIVE_FAILED_RESULT: return trajectoryReceiveFailedResult(state, action.queryID);
 
@@ -92,13 +92,15 @@ function trajectoryRequestPost(state, queryID){
     return {...state}
 }
 
-function trajectoryReceiveSuccessResult(state, visitList, queryID){
+function trajectoryReceiveSuccessResult(state, visitList, unifiedPatientID, queryID){
     if ((!visitList) || visitList === 0){
-        state[queryID] = {...state[queryID], visitListDataStatus: FAILED_NO_DATA};
+        state[queryID] = {...state[queryID], visitListDataStatus: FAILED_NO_DATA,
+            correspondingUnifiedPatientID: unifiedPatientID};
         return {...state}
     }
 
-    state[queryID] = {...state[queryID], visitListDataStatus: SUCCESS, visitList:visitList};
+    state[queryID] = {...state[queryID], visitListDataStatus: SUCCESS, visitList:visitList,
+        correspondingUnifiedPatientID: unifiedPatientID};
     return {...state}
 }
 
@@ -133,7 +135,7 @@ function trajectoryInitialize(state, queryID){
             visitList: [],
             currentVisitInfoDataStatus: NO_ACTION,
             visitListDataStatus: NO_ACTION,
-            cache: {}
+            correspondingUnifiedPatientID: ""
         };
     return {...state}
 }

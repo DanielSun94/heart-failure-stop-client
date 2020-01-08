@@ -11,7 +11,7 @@ export const EXAM_RECEIVE_SUCCESS_RESULT = 'EXAM_RECEIVE_SUCCESS_RESULT';
 export const EXAM_RECEIVE_FAILED_RESULT = 'EXAM_RECEIVE_FAILED_RESULT';
 
 export function setNewSelectedExam(newSelectedExam, queryID) {
-    return ({type: EXAM_REQUEST_POST, queryID: queryID, newSelectedExam: newSelectedExam})
+    return ({type: EXAM_SELECTED_EXAM, queryID: queryID, newSelectedExam: newSelectedExam})
 }
 
 function examRequestPost(queryID) {
@@ -28,11 +28,12 @@ export function examInitialize(queryID) {
 }
 
 
-function examReceiveSuccessResult(res, queryID) {
+function examReceiveSuccessResult(res, params, queryID) {
     return ({
         type: EXAM_RECEIVE_SUCCESS_RESULT,
         queryID: queryID,
-        content: res
+        content: res,
+        params: params
     })
 }
 
@@ -51,6 +52,6 @@ export function examFetchPosts(params, queryID) {
         return fetch(url, {method: NormalizedName.GET, headers: header})
             .then(res => res.json(),
                 error => {console.log(error); dispatch(examReceiveFailedResult(queryID))})
-            .then(res => dispatch(examReceiveSuccessResult(res, queryID)));
+            .then(res => dispatch(examReceiveSuccessResult(res, params, queryID)));
     }
 }

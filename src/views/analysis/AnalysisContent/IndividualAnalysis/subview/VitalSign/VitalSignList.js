@@ -25,25 +25,25 @@ const useStyles = makeStyles(theme => ({
 const VitalSignList = ({vitalSigns, selectedVitalSign, setSelectedVitalSign, listClassName}) => {
 
   const classes = useStyles();
-  pinyinSort(vitalSigns)
+  pinyinSort(vitalSigns);
 
   return (
-    <div
-      className={clsx(classes.root, listClassName)}
-    >
-      <div className={classes.list}>
-        <List disablePadding >
-          {vitalSigns.map(vitalSign => (
-            <VitalSignListItem
-              active={vitalSign === selectedVitalSign}
-              vitalSignName={vitalSign}
-              setSelectedVitalSign = {setSelectedVitalSign}
-              key={vitalSign}
-            />
-          ))}
-        </List>
+      <div
+          className={clsx(classes.root, listClassName)}
+      >
+        <div className={classes.list}>
+          <List disablePadding >
+            {vitalSigns.map(vitalSign => (
+                <VitalSignListItem
+                    selected={vitalSign === selectedVitalSign}
+                    vitalSignName={vitalSign}
+                    setSelectedVitalSign = {setSelectedVitalSign}
+                    key={vitalSign}
+                />
+            ))}
+          </List>
+        </div>
       </div>
-    </div>
   );
 };
 

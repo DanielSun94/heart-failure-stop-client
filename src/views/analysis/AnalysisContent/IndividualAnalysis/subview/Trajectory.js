@@ -84,17 +84,22 @@ function formatTransform(visitList){
 const Trajectory = ({queryID}) => {
     // 我们希望Trajectory能够监听unifiedPatientID的变化，从而完成合适的响应
     const dispatch = useDispatch();
-
+    const currentCorrespondingUnifiedPatientID = useSelector(state=>state.individual.trajectory[queryID].correspondingUnifiedPatientID);
     const unifiedPatientID = useSelector(state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].unifiedPatientID);
+    const isUnifiedPatientIDChanged = currentCorrespondingUnifiedPatientID!==unifiedPatientID;
+    const visitList = useSelector(state=>state.individual.trajectory[queryID].visitList);
+    const currentVisit = useSelector(state=>state.individual.trajectory[queryID].currentVisit);
+
     useEffect(()=>{
         if(unifiedPatientID!==""){
-            dispatch(getValidVisitAndSetDefaultVisit({unifiedPatientID: unifiedPatientID}, queryID))
+            if(isUnifiedPatientIDChanged)
+                dispatch(getValidVisitAndSetDefaultVisit({unifiedPatientID: unifiedPatientID}, queryID))
         }
     }, [dispatch, queryID, unifiedPatientID]);
     const classes = useStyles();
 
     // 以下是水平时间线的view组装
-    const visitList = useSelector(state=>state.individual.trajectory[queryID].visitList);
+
     const transformedVisit = formatTransform(visitList);
     const hospitalNameList = transformedVisit.hospitalNameList;
     const visitIDList = transformedVisit.visitIDList;
@@ -114,7 +119,7 @@ const Trajectory = ({queryID}) => {
         return hospitalName + '\n 第' + visitID + '次' + visitType + '\n' + value;
     };
 
-    const currentVisit = useSelector(state=>state.individual.trajectory[queryID].currentVisit);
+
     const visitIndex = parseInt(currentVisit.visitNo);
     let horizontalTimeline = <h3>  </h3>;
     if(visitList.length > 0 && currentVisit.visitNo !== "")
@@ -131,12 +136,14 @@ const Trajectory = ({queryID}) => {
 
     // 以下是detailed visit info的组装部分
     const visitIdentifier = {...currentVisit, unifiedPatientID: unifiedPatientID};
+
     useEffect(()=>{
         if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
             dispatch(fetchDetailedVisitInfoPosts(visitIdentifier, queryID))
         }
-    }, [queryID, visitIdentifier.visitNo, visitIdentifier.hospitalCode, visitIdentifier.hospitalName,
-        visitIdentifier.visitType, visitIdentifier.visitID, visitIdentifier.unifiedPatientID]);
+    }, [queryID, visitIdentifier.hospitalCode, visitIdentifier.visitType, visitIdentifier.visitID,
+        isUnifiedPatientIDChanged
+    ]);
 
     const detailedVisitInfo = useSelector(state=>state.individual.trajectory[queryID].currentVisitInfo);
     const admissionTime = new Date(detailedVisitInfo[ParaName.ADMISSION_TIME].replace(/\//g, '-'));

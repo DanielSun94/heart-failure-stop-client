@@ -14,7 +14,7 @@ const examReducer = (state=initStateInfo, action) => {
         case EXAM_INITIALIZE: return examInitialize(state, action.queryID);
         case EXAM_DELETE: return examDelete(state, action.queryID);
         case EXAM_REQUEST_POST: return examRequestPost(state, action.queryID);
-        case EXAM_RECEIVE_SUCCESS_RESULT: return examReceiveSuccessResult(state, action.content, action.queryID);
+        case EXAM_RECEIVE_SUCCESS_RESULT: return examReceiveSuccessResult(state, action.content, action.params, action.queryID);
         case EXAM_RECEIVE_FAILED_RESULT: return examReceiveFailedResult(state, action.queryID);
         default: return {...state};
     }
@@ -30,7 +30,12 @@ function examInitialize(state, queryID){
         state[queryID] = ({
             isFetchingData: false,
             isDataValid: false,
-            content: []
+            content: [],
+            selectedExam: "",
+            correspondingUnifiedPatientID: "",
+            correspondingHospitalCode: "",
+            correspondingVisitID: "",
+            correspondingVisitType: "",
         });
 
     return {...state}
@@ -47,12 +52,16 @@ function examRequestPost(state, queryID){
     return {...state}
 }
 
-function examReceiveSuccessResult(state, content, queryID){
+function examReceiveSuccessResult(state, content, params, queryID){
     state[queryID] = ({
+        ...state[queryID],
         isFetchingData: false,
         isDataValid: true,
         content: content,
-        selectedExam: ""
+        correspondingUnifiedPatientID: params.unifiedPatientID,
+        correspondingHospitalCode: params.hospitalCode,
+        correspondingVisitID: params.visitID,
+        correspondingVisitType: params.visitType,
     });
     return {...state}
 }

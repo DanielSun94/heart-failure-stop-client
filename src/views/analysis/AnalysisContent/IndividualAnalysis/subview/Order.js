@@ -55,15 +55,22 @@ const Order = ({queryID}) => {
     const data = useSelector(state => state.individual.order[queryID].content);
     const isDataFetching = useSelector(state => state.individual.order[queryID].isFetchingData);
     const selectedOrder = useSelector(state => state.individual.order[queryID].selectedOrder);
-    const setSelectedOrder = (value) => {setNewSelectedOrder(value, queryID)};
+    const correspondingUnifiedPatientID = useSelector(state => state.individual.order[queryID].correspondingUnifiedPatientID);
+    const correspondingHospitalCode = useSelector(state => state.individual.order[queryID].correspondingHospitalCode);
+    const correspondingVisitID = useSelector(state => state.individual.order[queryID].correspondingVisitID);
+    const correspondingVisitType = useSelector(state => state.individual.order[queryID].correspondingVisitType);
+
+    const isVisitChanged = !(unifiedPatientID===correspondingUnifiedPatientID && correspondingHospitalCode===currentVisit.hospitalCode &&
+        correspondingVisitID===currentVisit.visitID && correspondingVisitType===currentVisit.visitType);
+
+    const setSelectedOrder = (value) => {dispatch(setNewSelectedOrder(value, queryID))};
 
     const visitIdentifier = {...currentVisit, unifiedPatientID: unifiedPatientID};
     useEffect(()=>{
-        if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
+        if(isVisitChanged){
             dispatch(orderFetchPost(visitIdentifier, queryID))
         }
-    },  [queryID, visitIdentifier.visitNo, visitIdentifier.hospitalCode, visitIdentifier.hospitalName,
-        visitIdentifier.visitType, visitIdentifier.visitID, visitIdentifier.unifiedPatientID]);
+    },  [queryID, visitIdentifier.hospitalCode, visitIdentifier.visitType, visitIdentifier.visitID, unifiedPatientID]);
 
 
     const [dataMap, orders] = dataReconstruct(data);

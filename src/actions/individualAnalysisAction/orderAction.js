@@ -27,10 +27,11 @@ function orderRequestPost(queryID) {
 }
 
 
-function orderReceiveSuccessResult(res, queryID) {
+function orderReceiveSuccessResult(res, params, queryID) {
   return ({
       type: ORDER_RECEIVE_SUCCESS_RESULT,
       content: res,
+      params: params,
       queryID: queryID
     })
 }
@@ -51,6 +52,6 @@ export function orderFetchPost(params, queryID) {
       return fetch(url, {method: NormalizedName.GET, headers: header})
             .then(res => res.json(),
                   error => {console.log(error); dispatch(orderReceiveFailedResult(queryID))})
-            .then(res => {dispatch(orderReceiveSuccessResult(res, queryID))})
+            .then(res => {dispatch(orderReceiveSuccessResult(res, params, queryID))})
   }
 }

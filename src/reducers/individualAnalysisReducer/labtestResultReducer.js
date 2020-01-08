@@ -11,7 +11,8 @@ import {
     LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POST,
     LAB_TEST_FILTER_STR,
     LAB_TEST_SELECTED_LAB_TEST_ITEM,
-    LAB_TEST_SHOWING_SINGLE_VISIT
+    LAB_TEST_SHOWING_SINGLE_VISIT,
+    LAB_TEST_RESET
 } from '../../actions/individualAnalysisAction/labtestResultAction';
 
 // Lab Test 分为三个模块
@@ -22,6 +23,7 @@ const initStateInfo = {
     labTestNameList: {},
     labTestFullTrace: {},
     singleVisitLabTestTrace: {},
+    correspondingVisit: {},
     selectedLabtest: {},
     showSingleVisit: {},
     filterStr: {}
@@ -29,6 +31,7 @@ const initStateInfo = {
 
 const labtestResultReducer = (state=initStateInfo, action) => {
     switch (action.type){
+        case LAB_TEST_RESET: return labTestReset(state, action.params, action.resetType, action.queryID);
         case LAB_TEST_SELECTED_LAB_TEST_ITEM:
             return labTestSetSelectedItem(state, action.selectedLabTest, action.queryID);
         case LAB_TEST_SHOWING_SINGLE_VISIT:
@@ -122,10 +125,41 @@ function labTestInitialize(state, queryID) {
             isDataValid: false,
             trace: {},
         };
+        state['correspondingVisit'][queryID] = {
+            correspondingUnifiedPatientID: "",
+            correspondingHospitalCode: "",
+            correspondingVisitID: "",
+            correspondingVisitType: "",
+        };
         state['selectedLabtest'][queryID] = "";
-        state['showSingleVisit'][queryID] = true;
-        state['filterStr'][queryID] = ""
+        state['showSingleVisit'][queryID] = "";
+        state['filterStr'][queryID] = "";
     }
+    return {...state}
+}
+
+function labTestReset(state, params, resetType, queryID) {
+    if(resetType==='visit'||resetType==='patient'){
+        state['singleVisitLabTestTrace'][queryID] = {
+            isFetchingData: false,
+            isDataValid: false,
+            trace: {},
+        };
+    }
+    if(resetType==='patient'){
+        state['labTestFullTrace'][queryID] = {
+            isFetchingData: false,
+            isDataValid: false,
+            trace: {},
+        };
+    }
+
+    state['correspondingVisit'][queryID] = {
+        correspondingUnifiedPatientID: params.unifiedPatientID,
+        correspondingHospitalCode: params.hospitalCode,
+        correspondingVisitID: params.visitID,
+        correspondingVisitType: params.visitType,
+    };
     return {...state}
 }
 

@@ -5,6 +5,7 @@ import RouteName from '../../utils/RouteName';
 import {pinyinSort} from '../../utils/queryUtilFunction'
 import pinyin from 'pinyin'
 
+export const LAB_TEST_RESET = "LAB_TEST_RESET";
 export const LAB_TEST_SELECTED_LAB_TEST_ITEM = "LAB_TEST_SELECTED_LAB_TEST_ITEM";
 export const LAB_TEST_FILTER_STR = "LAB_TEST_FILTER_STR";
 export const LAB_TEST_SHOWING_SINGLE_VISIT = "LAB_TEST_SHOWING_SINGLE_VISIT";
@@ -18,6 +19,15 @@ export const LAB_TEST_RESULT_FULL_TRACE_RECEIVE_FAILED_RESULT = 'LAB_TEST_RESULT
 export const LAB_TEST_LIST_REQUEST_POST = 'LAB_TEST_LIST_REQUEST_POST';
 export const LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT = 'LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT';
 export const LAB_TEST_LIST_RECEIVE_FAILED_RESULT = 'LAB_TEST_LIST_RECEIVE_FAILED_RESULT';
+
+export function labTestReset(params, resetType, queryID) {
+    return {
+        type: LAB_TEST_RESET,
+        queryID: queryID,
+        params: params,
+        resetType: resetType
+    }
+}
 
 export function labTestSetSelectedLabTest(selectedLabTest, queryID) {
     return {

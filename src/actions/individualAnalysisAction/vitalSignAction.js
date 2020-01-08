@@ -27,11 +27,12 @@ export function vitalSignDelete(queryID) {
 }
 
 
-export function vitalSignReceiveSuccessResult(res, queryID) {
+export function vitalSignReceiveSuccessResult(res, params, queryID) {
     return ({
         type: VITAL_SIGN_RECEIVE_SUCCESS_RESULT,
         content: res,
-        queryID: queryID
+        queryID: queryID,
+        params: params
     })
 }
 
@@ -49,6 +50,6 @@ export function vitalSignFetchPost(params, queryID) {
         return fetch(url, {method: NormalizedName.GET, headers: header})
             .then(res => res.json(),
                 error => {console.log(error); dispatch(vitalSignReceiveFailedResult(queryID))})
-            .then(res => dispatch(vitalSignReceiveSuccessResult(res, queryID)));
+            .then(res => dispatch(vitalSignReceiveSuccessResult(res, params, queryID)));
     }
 }
