@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import AnalysisContent from "./AnalysisContent";
+import AnalysisContent from "./AnalysisContent/AnalysisContent";
 import AnalysisManagement from "./AnalysisManagement/AnalysisManagement";
 import {makeStyles} from "@material-ui/styles";
 import {colors} from "@material-ui/core";
@@ -31,7 +31,6 @@ const useStyles = makeStyles(() => ({
 
 const Analysis = () => {
     const classes = useStyles();
-    const {nextID, metaInfoMap} = useSelector(state=>state.individual.metaInfo);
     const [selectedQueryID, setSelectedQueryID] = useState(null);
 
     return (

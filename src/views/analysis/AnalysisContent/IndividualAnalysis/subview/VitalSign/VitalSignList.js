@@ -5,7 +5,7 @@ import {
   List,
 } from '@material-ui/core';
 import VitalSignListItem from './VitalSignListItem';
-import {pinyinSort} from '../../../../../utils/queryUtilFunction'
+import {pinyinSort} from '../../../../../../utils/queryUtilFunction'
 
 const useStyles = makeStyles(theme => ({
   root: {

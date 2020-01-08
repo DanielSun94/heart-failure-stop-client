@@ -1,20 +1,20 @@
 import {
-    RISK_REQUEST,
-    REQUEST_RECEIVE_SUCCESS_POST,
-    REQUEST_RECEIVE_FAILED_POST} 
+    MODEL_EXECUTE_REQUEST,
+    MODEL_RECEIVE_FAILED_RESULT,
+    MODEL_RECEIVE_SUCCESS_RESULT}
     from '../../actions/individualAnalysisAction/riskAction';
 
 const initStateInfo = {};
 
 const riskReducer = (state=initStateInfo, action) => {
     switch (action.type){
-        case RISK_REQUEST: {
+        case MODEL_EXECUTE_REQUEST: {
             let taskMap = {"current": -1, "previous": -1, "fetchStatus": "isFetching"} 
             let newMap = {...state};
             newMap[action.predictionTask] = taskMap;
             return newMap
         }
-        case REQUEST_RECEIVE_SUCCESS_POST: {
+        case MODEL_RECEIVE_SUCCESS_RESULT: {
             const currentOrPrevious = action.currentOrPrevious;
             const result= action.result.outputs[0][0];
             let newMap = {...state};
@@ -34,7 +34,7 @@ const riskReducer = (state=initStateInfo, action) => {
 
             return newMap
         }
-        case REQUEST_RECEIVE_FAILED_POST: {
+        case MODEL_RECEIVE_FAILED_RESULT: {
             let newMap = {...state};
             let taskMap = {...state[action.predictTask]};
             taskMap["fetchStatus"] = "failed";

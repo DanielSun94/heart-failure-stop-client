@@ -1,8 +1,11 @@
-import {CREATE_NEW_QUERY, DELETE_QUERY, EDIT_QUERY_NAME} from "../../actions/individualAnalysisAction/metaInfoAction";
-import ParaName from "../../utils/ParaName";
+import {CREATE_NEW_QUERY, DELETE_QUERY, EDIT_QUERY_NAME} from "../actions/metaInfoAction";
+
+// 个体分析和群体分析的元信息保存（包括查询类型，名称，筛选信息等）
 
 // metaInfoMap结构
 // {id: {queryType: (individual/group), queryName: (xxx), context: {xxx}}}
+const initStateInfo = {nextID: 1, metaInfoMap: {}};
+/*
 const initStateInfo = {nextID: 1, metaInfoMap: {
         1:{queryType: ParaName.GROUP_ANALYSIS, queryName: 'one', affiliated: null, context: {}},
         2:{queryType: ParaName.GROUP_ANALYSIS, queryName: 'two', affiliated: 1, context: {}},
@@ -14,6 +17,7 @@ const initStateInfo = {nextID: 1, metaInfoMap: {
         4:{queryType: ParaName.INDIVIDUAL_ANALYSIS, queryName: 'four', context: '4'},
         6:{queryType: ParaName.INDIVIDUAL_ANALYSIS, queryName: 'five', context: '6'}
     }};
+*/
 
 // 目前暂未实现
 // 用于维护每个Tab页的信息（是个体分析还是群体分析，这些分析（如果重命名了），叫什么名字
@@ -24,12 +28,13 @@ const initStateInfo = {nextID: 1, metaInfoMap: {
 const metaInfoReducer = (state=initStateInfo, action) => {
     switch (action.type) {
         case CREATE_NEW_QUERY: {
-            const nextID = state.nextID;
-            const newQueryMetaInfo = action.metaInfo;
+            const queryID = state.nextID;
 
-            let metaInfoMap = {...state.metaInfoMap};
-            metaInfoMap[nextID] = newQueryMetaInfo;
-            return {...state, nextID: nextID+1, metaInfoMap: metaInfoMap}
+            let newQueryMetaInfo = {queryType: action.queryType, queryName: '查询'+queryID, affiliated: null, context: {}};
+            const metaInfoMap = {...state.metaInfoMap};
+            metaInfoMap[queryID] = newQueryMetaInfo;
+
+            return {...state, nextID: queryID+1, metaInfoMap: {...metaInfoMap}}
         }
         case DELETE_QUERY: {
             const metaInfoMap = {...state.metaInfoMap};

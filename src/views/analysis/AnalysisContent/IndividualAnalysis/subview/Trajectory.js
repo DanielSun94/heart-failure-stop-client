@@ -3,10 +3,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
     changeTargetVisit,
     fetchDetailedVisitInfoPosts,
-    getValidVisitAndSetDefaultVisit
-} from '../../../../actions/individualAnalysisAction/trajectoryAction';
+    getValidVisitAndSetDefaultVisit,
+} from '../../../../../actions/individualAnalysisAction/trajectoryAction';
 // Horizontal Timeline的源代码来源于Github https://github.com/sherubthakur/react-horizontal-timeline
-import HorizontalTimeline from '../../../../components/HorizontalTimeLine/HorizontalTimeline'
+import HorizontalTimeline from '../../../../../components/HorizontalTimeLine/HorizontalTimeline'
 import {
     Card,
     CardContent,
@@ -20,7 +20,7 @@ import {
     Typography
 } from '@material-ui/core'
 import {makeStyles} from '@material-ui/styles';
-import ParaName from '../../../../utils/ParaName';
+import ParaName from '../../../../../utils/ParaName';
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -66,7 +66,7 @@ function formatTransform(visitList){
     let admissionTimeList = [];
     for(let index in visitList){
         if(!visitList.hasOwnProperty(index))
-            continue
+            continue;
         admissionTimeList.push(visitList[index].admissionTime.replace(/\//g, '-'));
         hospitalNameList.push(visitList[index].hospitalName);
         visitIDList.push(visitList[index].visitID);
@@ -81,19 +81,20 @@ function formatTransform(visitList){
         admissionTimeList: admissionTimeList}
 }
 
-const Trajectory = () => {
+const Trajectory = ({queryID}) => {
     // 我们希望Trajectory能够监听unifiedPatientID的变化，从而完成合适的响应
     const dispatch = useDispatch();
-    const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID);
+
+    const unifiedPatientID = useSelector(state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].unifiedPatientID);
     useEffect(()=>{
         if(unifiedPatientID!==""){
-            dispatch(getValidVisitAndSetDefaultVisit({unifiedPatientID: unifiedPatientID}))
+            dispatch(getValidVisitAndSetDefaultVisit({unifiedPatientID: unifiedPatientID}, queryID))
         }
-    }, [unifiedPatientID]);
+    }, [dispatch, queryID, unifiedPatientID]);
     const classes = useStyles();
 
     // 以下是水平时间线的view组装
-    const visitList = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.visitList);
+    const visitList = useSelector(state=>state.individual.trajectory[queryID].visitList);
     const transformedVisit = formatTransform(visitList);
     const hospitalNameList = transformedVisit.hospitalNameList;
     const visitIDList = transformedVisit.visitIDList;
@@ -102,7 +103,7 @@ const Trajectory = () => {
 
 
     const handleClick = (index) => {
-        dispatch(changeTargetVisit(visitList[index]))
+        dispatch(changeTargetVisit(visitList[index], queryID))
     };
 
     const getLabel = (value) => {
@@ -113,7 +114,7 @@ const Trajectory = () => {
         return hospitalName + '\n 第' + visitID + '次' + visitType + '\n' + value;
     };
 
-    const currentVisit = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisit);
+    const currentVisit = useSelector(state=>state.individual.trajectory[queryID].currentVisit);
     const visitIndex = parseInt(currentVisit.visitNo);
     let horizontalTimeline = <h3>  </h3>;
     if(visitList.length > 0 && currentVisit.visitNo !== "")
@@ -129,14 +130,15 @@ const Trajectory = () => {
 
 
     // 以下是detailed visit info的组装部分
-    const visitIndentifier = {...currentVisit, unifiedPatientID: unifiedPatientID};
+    const visitIdentifier = {...currentVisit, unifiedPatientID: unifiedPatientID};
     useEffect(()=>{
         if(unifiedPatientID!=="" && currentVisit.visitID !== ""){
-            dispatch(fetchDetailedVisitInfoPosts(visitIndentifier))
+            dispatch(fetchDetailedVisitInfoPosts(visitIdentifier, queryID))
         }
-    }, [currentVisit]);
+    }, [queryID, visitIdentifier.visitNo, visitIdentifier.hospitalCode, visitIdentifier.hospitalName,
+        visitIdentifier.visitType, visitIdentifier.visitID, visitIdentifier.unifiedPatientID]);
 
-    const detailedVisitInfo = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory.currentVisitInfo);
+    const detailedVisitInfo = useSelector(state=>state.individual.trajectory[queryID].currentVisitInfo);
     const admissionTime = new Date(detailedVisitInfo[ParaName.ADMISSION_TIME].replace(/\//g, '-'));
     const dischargeTime = new Date(detailedVisitInfo[ParaName.DISCHARGE_TIME].replace(/\//g, '-'));
     let los = Math.ceil((dischargeTime.getTime()-admissionTime.getTime())/3600/24/1000);

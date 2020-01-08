@@ -5,14 +5,14 @@ import {
     colors,
     CircularProgress
     } from '@material-ui/core';
-import Label from '../../../../../components/Label';
+import Label from '../../../../../../components/Label';
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   fetchPosts} 
-  from '../../../../../actions/individualAnalysisAction/riskAction'
-import {predictTaskName} from '../../../../../utils/predictTask'
+  from '../../../../../../actions/individualAnalysisAction/riskAction'
+import {predictTaskName} from '../../../../../../utils/predictTask'
 
 const FETCH_SUCCESS = "success";
 const IS_FETCHING = "isFetching";

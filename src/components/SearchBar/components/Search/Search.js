@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Search = props => {
-  const { onSearch, onChange, defaultValue, className, ...rest } = props;
+  const { onSearch, onChange, value, className, ...rest } = props;
 
   const classes = useStyles();
 
@@ -51,12 +51,13 @@ const Search = props => {
         <Input
           className={classes.searchInput}
           onChange={onChange}
+          value={value}
           inputProps={{
             'aria-label': 'description',
             'text-overflow': 'ellipsis'
           }}
           disableUnderline
-          placeholder= {defaultValue? defaultValue: "请输入病人ID"}
+          placeholder= {value? value: "请输入病人ID"}
         />
       </Paper>
       <Button

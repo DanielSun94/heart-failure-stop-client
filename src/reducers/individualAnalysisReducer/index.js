@@ -6,7 +6,6 @@ import examReducer from './examReducer';
 import labtestResultReducer from './labtestResultReducer';
 import orderReducer from './orderReducer';
 import vitalSignReducer from './vitalSignReducer';
-import metaInfoReducer from "./metaInfoReducer";
 
 const individualAnalysisReducer = combineReducers({
     risk: riskReducer,
@@ -16,7 +15,6 @@ const individualAnalysisReducer = combineReducers({
     labtestResult: labtestResultReducer,
     order: orderReducer,
     vitalSign: vitalSignReducer,
-    metaInfo: metaInfoReducer
 });
 
 export default individualAnalysisReducer;

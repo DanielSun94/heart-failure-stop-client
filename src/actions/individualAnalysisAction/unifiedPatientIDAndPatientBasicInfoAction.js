@@ -79,7 +79,7 @@ function unifiedPatientIDNotFound(queryID) {
     return {type: UNIFIED_PATIENT_ID_NOT_FOUND, queryID: queryID}
 }
 
-function changeLocalPatientID(para, queryID) {
+export function changeLocalPatientID(para, queryID) {
     return {type: CHANGE_LOCAL_PATIENT_ID, localPatientID: para, queryID: queryID}
 }
 
@@ -102,7 +102,7 @@ function patientBasicInfoReceiveFailedResult(queryID) {
     return {type: PATIENT_BASIC_INFO_RECEIVE_FAILED_RESULT, queryID: queryID}
 }
 
-export function requestPatientBasicInfo(params, queryID) {
+export function fetchPatientBasicInfo(params, queryID) {
 
     return function(dispatch, getState) {
         dispatch(patientBasicInfoRequestPost(queryID));

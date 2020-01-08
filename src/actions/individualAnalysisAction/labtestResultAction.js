@@ -5,6 +5,9 @@ import RouteName from '../../utils/RouteName';
 import {pinyinSort} from '../../utils/queryUtilFunction'
 import pinyin from 'pinyin'
 
+export const LAB_TEST_SELECTED_LAB_TEST_ITEM = "LAB_TEST_SELECTED_LAB_TEST_ITEM";
+export const LAB_TEST_FILTER_STR = "LAB_TEST_FILTER_STR";
+export const LAB_TEST_SHOWING_SINGLE_VISIT = "LAB_TEST_SHOWING_SINGLE_VISIT";
 export const LAB_TEST_INITIALIZE = 'LAB_TEST_INITIALIZE';
 export const LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POST = 'LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POST';
 export const LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_SUCCESS_RESULT = 'LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_SUCCESS_RESULT';
@@ -15,6 +18,30 @@ export const LAB_TEST_RESULT_FULL_TRACE_RECEIVE_FAILED_RESULT = 'LAB_TEST_RESULT
 export const LAB_TEST_LIST_REQUEST_POST = 'LAB_TEST_LIST_REQUEST_POST';
 export const LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT = 'LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT';
 export const LAB_TEST_LIST_RECEIVE_FAILED_RESULT = 'LAB_TEST_LIST_RECEIVE_FAILED_RESULT';
+
+export function labTestSetSelectedLabTest(selectedLabTest, queryID) {
+    return {
+        type: LAB_TEST_SELECTED_LAB_TEST_ITEM,
+        queryID: queryID,
+        selectedLabTest: selectedLabTest
+    }
+}
+
+export function labTestFilterStr(filterStr, queryID) {
+    return {
+        type: LAB_TEST_FILTER_STR,
+        queryID: queryID,
+        filterStr: filterStr
+    }
+}
+
+export function labTestShowingSingle(showingSingle, queryID) {
+    return {
+        type: LAB_TEST_SHOWING_SINGLE_VISIT,
+        queryID: queryID,
+        showingSingle: showingSingle
+    }
+}
 
 export function labTestInitialize(queryID) {
     return {
@@ -79,16 +106,18 @@ function labTestListRequestPost(queryID) {
 }
 
 
-function labTestListReceiveSuccessResult(res) {
+function labTestListReceiveSuccessResult(res, queryID) {
     return {
         type: LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT,
         labTestList: res,
+        queryID: queryID
     }
 }
 
-function labTestListReceiveFailedResult() {
+function labTestListReceiveFailedResult(queryID) {
     return {
         type: LAB_TEST_LIST_RECEIVE_FAILED_RESULT,
+        queryID: queryID
     }
 }
 
@@ -122,17 +151,17 @@ export function labTestFetchFullTraceLabTestResult(params, queryID) {
     }
 }
 
-export function fetchLabTestList() {
+export function fetchLabTestList(queryID) {
     // LabTestList全局统一，无需queryID标识
     return function(dispatch, getState) {
-        dispatch(labTestListRequestPost());
+        dispatch(labTestListRequestPost(queryID));
         let url = RouteName.B_INDIVIDUAL_ANALYSIS_DATA_ROOT + RouteName.B_INDIVIDUAL_ANALYSIS_LAB_TEST_LIST;
         let token = getState().session.authenticToken;
         let header = {'Authorization': token};
 
         return fetch(url, {method: ParaName.GET, headers: header})
             .then(res => res.json(),
-                error => {console.log(error); dispatch(labTestListReceiveSuccessResult())})
+                error => {console.log(error); dispatch(labTestListReceiveFailedResult(queryID))})
             .then(
                 res => {
                     pinyinSort(res);
@@ -145,7 +174,7 @@ export function fetchLabTestList() {
                         firstLetterStr = firstLetterStr.toLowerCase();
                         itemListWithPinyin.push([item, firstLetterStr])
                     }
-                    dispatch(labTestListReceiveFailedResult(itemListWithPinyin));
+                    dispatch(labTestListReceiveSuccessResult(itemListWithPinyin, queryID));
                 }
             )
     }

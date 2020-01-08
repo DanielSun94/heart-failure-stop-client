@@ -8,7 +8,10 @@ import {
     LAB_TEST_RESULT_FULL_TRACE_REQUEST_POST,
     LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_FAILED_RESULT,
     LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_SUCCESS_RESULT,
-    LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POST
+    LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POST,
+    LAB_TEST_FILTER_STR,
+    LAB_TEST_SELECTED_LAB_TEST_ITEM,
+    LAB_TEST_SHOWING_SINGLE_VISIT
 } from '../../actions/individualAnalysisAction/labtestResultAction';
 
 // Lab Test 分为三个模块
@@ -16,17 +19,22 @@ import {
 // labTestFullTrace指的是某个指标的长期演变模式，和具体查询相关
 // singleVisitLabTestTrace指的是某个指标在一次入院中的变化趋势，和具体查询相关
 const initStateInfo = {
-    labTestNameList: {
-        isFetchingData: false,
-        isDataValid: false,
-        list: {}
-    },
+    labTestNameList: {},
     labTestFullTrace: {},
-    singleVisitLabTestTrace: {}
+    singleVisitLabTestTrace: {},
+    selectedLabtest: {},
+    showSingleVisit: {},
+    filterStr: {}
 };
 
 const labtestResultReducer = (state=initStateInfo, action) => {
     switch (action.type){
+        case LAB_TEST_SELECTED_LAB_TEST_ITEM:
+            return labTestSetSelectedItem(state, action.selectedLabTest, action.queryID);
+        case LAB_TEST_SHOWING_SINGLE_VISIT:
+            return labTestShowingSingle(state, action.showingSingle, action.queryID);
+        case LAB_TEST_FILTER_STR:
+            return labTestFilteredStr(state, action.filterStr, action.queryID);
         case LAB_TEST_RESULT_SINGLE_VISIT_REQUEST_POST:
             return singleVisitLabTestTraceRequestPost(state, action.queryID);
         case LAB_TEST_RESULT_SINGLE_VISIT_RECEIVE_SUCCESS_RESULT:
@@ -45,38 +53,80 @@ const labtestResultReducer = (state=initStateInfo, action) => {
             return labTestInitialize(state, action.queryID);
 
         case LAB_TEST_LIST_REQUEST_POST:
-            return labTestListRequestPost(state);
+            return labTestListRequestPost(state, action.queryID);
         case LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT:
-            return labTestListReceiveSuccessResult(state, action.labTestList);
+            return labTestListReceiveSuccessResult(state, action.labTestList, action.queryID);
         case LAB_TEST_LIST_RECEIVE_FAILED_RESULT:
-            return labTestListReceiveFailedResult(state);
+            return labTestListReceiveFailedResult(state, action.queryID);
         default: return {...state};
     }
 };
 
-function labTestListRequestPost(state){
-    return {...state, labTestNameList: {...state.labTestNameList, isFetchingData: true}};
+function labTestSetSelectedItem(state, selectedItem, queryID){
+    state['selectedLabtest'][queryID] = selectedItem;
+    return {...state}
 }
 
-function labTestListReceiveSuccessResult(state, labTestNameList){
-    return {...state, labTestNameList: {isFetchingData: false, isDataValid: true, list: labTestNameList}};
+function labTestFilteredStr(state, filterStr, queryID){
+    state['filterStr'][queryID] = filterStr;
+    return {...state}
+}
+
+function labTestShowingSingle(state, showingSingle, queryID){
+    state['showSingleVisit'][queryID] = showingSingle;
+    return {...state}
+}
+
+function labTestListRequestPost(state, queryID){
+    let list = state['labTestNameList'][queryID].labTestNameList;
+    state['labTestNameList'][queryID] = ({
+        isFetchingData: true,
+        isDataValid: false,
+        labTestNameList: [...list]
+    });
+    return {...state};
+}
+
+function labTestListReceiveSuccessResult(state, labTestNameList, queryID){
+    state.labTestNameList[queryID] = ({
+        isFetchingData: false,
+        isDataValid: true,
+        labTestNameList: labTestNameList
+    });
+    return {...state}
 }
 
 function labTestListReceiveFailedResult(state, queryID){
-    return {...state, labTestNameList: {isFetchingData: false, isDataValid: false}};
+    state.labTestNameList[queryID] = ({
+        isFetchingData: false,
+        isDataValid: false,
+        labTestNameList: state['labTestNameList'][queryID].labTestNameList
+    });
+    return {...state}
 }
 
 function labTestInitialize(state, queryID) {
-    state['labTestFullTrace'][queryID] = {
-        isFetchingData: true,
-        isDataValid: false,
-        trace: {}
-    };
-    state['singleVisitLabTestTrace'][queryID] = {
-        isFetchingData: true,
-        isDataValid: false,
-        trace: {}
-    };
+    if(!state[queryID]){
+        state['labTestNameList'][queryID] = {
+            isFetchingData: false,
+            isDataValid: false,
+            labTestNameList: [],
+        };
+        state['labTestFullTrace'][queryID] = {
+            isFetchingData: false,
+            isDataValid: false,
+            trace: {},
+        };
+        state['singleVisitLabTestTrace'][queryID] = {
+            isFetchingData: false,
+            isDataValid: false,
+            trace: {},
+        };
+        state['selectedLabtest'][queryID] = "";
+        state['showSingleVisit'][queryID] = true;
+        state['filterStr'][queryID] = ""
+    }
+    return {...state}
 }
 
 function labTestFullTraceRequestPost(state, queryID){

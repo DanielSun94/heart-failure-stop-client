@@ -3,11 +3,16 @@ import {queryParamsTrans} from '../../utils/queryUtilFunction';
 import NormalizedName from '../../utils/ParaName';
 import RouteName from '../../utils/RouteName';
 
+export const EXAM_SELECTED_EXAM = "EXAM_SELECTED_EXAM";
 export const EXAM_INITIALIZE = "EXAM_INITIALIZE";
 export const EXAM_DELETE = "EXAM_INITIALIZE";
 export const EXAM_REQUEST_POST = 'EXAM_REQUEST_POST';
 export const EXAM_RECEIVE_SUCCESS_RESULT = 'EXAM_RECEIVE_SUCCESS_RESULT';
 export const EXAM_RECEIVE_FAILED_RESULT = 'EXAM_RECEIVE_FAILED_RESULT';
+
+export function setNewSelectedExam(newSelectedExam, queryID) {
+    return ({type: EXAM_REQUEST_POST, queryID: queryID, newSelectedExam: newSelectedExam})
+}
 
 function examRequestPost(queryID) {
     return ({type: EXAM_REQUEST_POST, queryID: queryID})

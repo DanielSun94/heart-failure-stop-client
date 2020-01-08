@@ -69,8 +69,8 @@ export function getValidVisitAndSetDefaultVisit(params, queryID){
                 }
             )
             .then(()=>{
-                const visitList= getState().individual.trajectory.visitList;
-                dispatch(changeTargetVisit(visitList[visitList.length-1]))
+                const visitList= getState().individual.trajectory[queryID].visitList;
+                dispatch(changeTargetVisit(visitList[visitList.length-1], queryID))
             })
     }
 }

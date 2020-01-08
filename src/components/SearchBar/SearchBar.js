@@ -17,17 +17,17 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SearchBar = props => {
-  const {onSearch, onChange, defaultValue, className } = props;
+  const {onSearch, onChange, value, className } = props;
 
   const classes = useStyles();
 
   return (
-    <Search
-    className={classes.search}
-    onSearch={onSearch}
-    onChange={onChange}
-    defaultValue={defaultValue}
-    />
+      <Search
+          className={classes.search}
+          onSearch={onSearch}
+          onChange={onChange}
+          value={value}
+      />
   );
 };
 

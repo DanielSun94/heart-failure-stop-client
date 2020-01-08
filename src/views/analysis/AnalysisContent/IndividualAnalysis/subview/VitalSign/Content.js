@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { monthAndDateAndTimeTrans } from '../../../../../utils/queryUtilFunction';
+import { monthAndDateAndTimeTrans } from '../../../../../../utils/queryUtilFunction';
 import {
   LineChart, 
   Line, 
@@ -17,7 +17,7 @@ import {
     TableRow,
     TableCell
 } from '@material-ui/core'
-import ParaName from '../../../../../utils/ParaName'
+import ParaName from '../../../../../../utils/ParaName'
 
 const useStyles = makeStyles({
     root: {

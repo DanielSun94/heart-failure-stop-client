@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import LabtestListItem from './LabtestListItem';
-import {filter} from '../../../../../utils/queryUtilFunction'
+import {filter} from '../../../../../../utils/queryUtilFunction'
 
 
 const useStyles = makeStyles(theme => ({

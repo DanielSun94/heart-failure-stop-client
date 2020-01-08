@@ -56,22 +56,23 @@ function panelDelete(state, queryID){
 }
 
 function initialize(state, queryID){
-    state[queryID] = {
-        localPatientID: "S112395129",
-        unifiedPatientID: "",
-        dataStatus: NO_ACTION,
-        patientBasicInfo:{
+    if(!state[queryID])
+        state[queryID] = {
+            localPatientID: "S112395129",
+            unifiedPatientID: "",
             dataStatus: NO_ACTION,
-            patientName: "",
-            sex: "",
-            ethnicGroup: "",
-            birthday: ""
-        }
-    };
+            patientBasicInfo:{
+                dataStatus: NO_ACTION,
+                patientName: "",
+                sex: "",
+                ethnicGroup: "",
+                birthday: ""
+            },
+        };
     return {...state}
 }
 
-function changeLocalPatientID(state, queryID, localPatientID){
+function changeLocalPatientID(state, localPatientID, queryID){
     let queryState = state[queryID];
     state[queryID] = {...queryState, localPatientID: localPatientID};
     return {...state}
@@ -84,7 +85,7 @@ function unifiedPatientIDRequest(state, queryID){
     return {...state}
 }
 
-function unifiedPatientIDReceiveSuccess(state, queryID, unifiedPatientID){
+function unifiedPatientIDReceiveSuccess(state, unifiedPatientID, queryID){
     let queryState = state[queryID];
     state[queryID] = {...queryState, unifiedPatientID: unifiedPatientID, dataStatus: SUCCESS};
     return {...state}
@@ -111,7 +112,7 @@ function patientBasicInfoRequest(state, queryID){
     return {...state}
 }
 
-function patientBasicInfoReceiveSuccess(state, queryID, res){
+function patientBasicInfoReceiveSuccess(state, res, queryID){
     let queryState = state[queryID];
     let basicInfoState = {
         dataStatus: SUCCESS,

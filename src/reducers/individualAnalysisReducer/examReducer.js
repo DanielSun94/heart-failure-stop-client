@@ -1,4 +1,5 @@
 import {
+    EXAM_SELECTED_EXAM,
     EXAM_RECEIVE_FAILED_RESULT,
     EXAM_RECEIVE_SUCCESS_RESULT,
     EXAM_REQUEST_POST,
@@ -9,6 +10,7 @@ import {
 const initStateInfo = {};
 const examReducer = (state=initStateInfo, action) => {
     switch (action.type){
+        case EXAM_SELECTED_EXAM: return setNewSelectedExam(state, action.newSelectedExam, action.queryID);
         case EXAM_INITIALIZE: return examInitialize(state, action.queryID);
         case EXAM_DELETE: return examDelete(state, action.queryID);
         case EXAM_REQUEST_POST: return examRequestPost(state, action.queryID);
@@ -18,12 +20,18 @@ const examReducer = (state=initStateInfo, action) => {
     }
 };
 
+function setNewSelectedExam(state, newSelectedExam, queryID){
+    state[queryID] = {...state[queryID], selectedExam: newSelectedExam};
+    return {...state}
+}
+
 function examInitialize(state, queryID){
-    state[queryID] = ({
-        isFetchingData: false,
-        isDataValid: false,
-        content: []
-    });
+    if(!state[queryID])
+        state[queryID] = ({
+            isFetchingData: false,
+            isDataValid: false,
+            content: []
+        });
 
     return {...state}
 }
@@ -43,7 +51,8 @@ function examReceiveSuccessResult(state, content, queryID){
     state[queryID] = ({
         isFetchingData: false,
         isDataValid: true,
-        content: content
+        content: content,
+        selectedExam: ""
     });
     return {...state}
 }

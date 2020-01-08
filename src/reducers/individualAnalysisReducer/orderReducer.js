@@ -1,4 +1,5 @@
 import {
+    ORDER_SET_SELECTED_ORDER,
     ORDER_INITIALIZE,
     ORDER_REQUEST_POST,
     ORDER_RECEIVE_SUCCESS_RESULT,
@@ -11,6 +12,7 @@ const initStateInfo = {};
 
 const orderReducer = (state=initStateInfo, action) => {
     switch (action.type){
+        case ORDER_SET_SELECTED_ORDER: return setNewSelectedOrder(state, action.selectedOrder, action.queryID);
         case ORDER_INITIALIZE: return orderInitialize(state, action.queryID);
         case ORDER_DELETE: return orderDelete(state, action.queryID);
         case ORDER_REQUEST_POST: return orderRequestPost(state, action.queryID);
@@ -20,17 +22,24 @@ const orderReducer = (state=initStateInfo, action) => {
     }
 };
 
+function setNewSelectedOrder(state, selectedOrder, queryID){
+    state[queryID] = {...state[queryID], selectedOrder: selectedOrder};
+    return {...state}
+}
+
 function orderDelete(state, queryID){
-    delete state[queryID]
+    delete state[queryID];
     return {...state}
 }
 
 function orderInitialize(state, queryID){
-    state[queryID] = ({
-        isFetchingData: false,
-        isDataValid: false,
-        content: []
-    });
+    if(!state[queryID])
+        state[queryID] = ({
+            isFetchingData: false,
+            isDataValid: false,
+            content: [],
+            selectedOrder: ""
+        });
     return {...state}
 }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { monthAndDateAndTimeTrans } from '../../../../../utils/queryUtilFunction';
+import { monthAndDateAndTimeTrans } from '../../../../../../utils/queryUtilFunction';
 import {
     Table,
     TableBody,

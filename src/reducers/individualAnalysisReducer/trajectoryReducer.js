@@ -108,31 +108,33 @@ function trajectoryReceiveFailedResult(state, queryID){
 }
 
 function trajectoryInitialize(state, queryID){
-    state[queryID] = {
-        currentVisit: {
-            visitNo: "",
-            hospitalCode: "",
-            hospitalName: "",
-            visitType: "",
-            visitID: ""
-        },
-        currentVisitInfo: {
-            age: "",
-            admissionTime: "",
-            dischargeTime: "",
-            mainDiagnosis: "",
-            operation: "",
-            otherDiagnosis: "",
-            deathFlag: "",
-            symptom: "",
-            sex: "",
-            patientName: "",
-            hospitalName: "",
-        },
-        visitList: [],
-        currentVisitInfoDataStatus: NO_ACTION,
-        visitListDataStatus: NO_ACTION,
-    };
+    if(!state[queryID])
+        state[queryID] = {
+            currentVisit: {
+                visitNo: "",
+                hospitalCode: "",
+                hospitalName: "",
+                visitType: "",
+                visitID: ""
+            },
+            currentVisitInfo: {
+                age: "",
+                admissionTime: "",
+                dischargeTime: "",
+                mainDiagnosis: "",
+                operation: "",
+                otherDiagnosis: "",
+                deathFlag: "",
+                symptom: "",
+                sex: "",
+                patientName: "",
+                hospitalName: "",
+            },
+            visitList: [],
+            currentVisitInfoDataStatus: NO_ACTION,
+            visitListDataStatus: NO_ACTION,
+            cache: {}
+        };
     return {...state}
 }
 

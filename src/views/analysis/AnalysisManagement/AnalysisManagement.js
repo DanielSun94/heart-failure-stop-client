@@ -1,14 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {makeStyles} from "@material-ui/styles";
-import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-import {colors, Typography} from "@material-ui/core";
+import {
+    colors,
+    Typography,
+    Button} from "@material-ui/core";
 import {withStyles} from "@material-ui/core/styles";
 import {TreeView, TreeItem} from "@material-ui/lab";
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+        import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import {useSelector} from "react-redux";
 import ParaName from "../../../utils/ParaName";
+import QuerySelectionDialog from "./QuerySelectionDialog";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,8 +44,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AnalysisManagement = ({setSelectedQueryID}) => {
-    const nextID = useSelector(state=>state.individual.metaInfo.nextID);
     const classes = useStyles();
+
+    const [openDialog, setOpenDialog] = useState(false);
+
     return (
         <div className={classes.root}>
             <div className={classes.createNewQuery}>
@@ -50,6 +55,7 @@ const AnalysisManagement = ({setSelectedQueryID}) => {
                     className={classes.createNewQueryButton}
                     color="primary"
                     variant="contained"
+                    onClick={()=>setOpenDialog(true)}
                     size={'large'}
                     startIcon={<AddIcon size='large'/>}>
                     <Typography variant={'h5'} style={{paddingTop: 6, paddingBottom:6, paddingLeft: 12, paddingRight: 12, color: "white"}}>
@@ -62,21 +68,19 @@ const AnalysisManagement = ({setSelectedQueryID}) => {
                     setSelectedQueryID={setSelectedQueryID}
                 />
             </div>
+            <QuerySelectionDialog
+                openDialog={openDialog}
+                setOpenDialog={setOpenDialog}
+                setSelectedQueryID={setSelectedQueryID}
+            />
         </div>
     )
 };
 
-const RoundedButton = withStyles({
-    root: {
-        borderRadius: 15
-    },
-})(Button);
-
-
 function QueryTreeView({setSelectedQueryID}) {
     const classes = useStyles();
 
-    const metaInfoMap = useSelector(state=>state.individual.metaInfo.metaInfoMap);
+    const metaInfoMap = useSelector(state=>state.metaInfo.metaInfoMap);
     const [groupMap, individualMap] = metaInfoMapSplit(metaInfoMap);
     const individualIDList = Object.keys(individualMap).sort();
 
@@ -127,8 +131,6 @@ function QueryTreeView({setSelectedQueryID}) {
     );
 }
 
-
-
 const metaInfoMapSplit = (metaInfoMap) => {
     // 将metaInfoMap中混杂在一起的个体分析和群体分析MateInfo拆分成两个单独的部分
     let individualMap = {};
@@ -164,7 +166,6 @@ const createNestedStructure = (groupQueryMap) => {
 
     // 根据设计，查询ID是单调递增的，子查询的ID号一定比父查询的ID号大，因此我们先做排序，从前往后遍历
     queryList.sort(function(a, b){return a[0] - b[0]});
-    console.log(groupQueryMap);
 
     // 构建树形结构，我们以后可以使用BFS或者DFS替代当前的这种算法
     const rootNode = {id: -1, nodeName: 'root', "isLeaf": true, parentNodeID: null, childNodes: null};
@@ -197,6 +198,13 @@ function insertIntoTree(newNode, rootNode, nodeList){
         }
     }
 }
+
+const RoundedButton = withStyles({
+    root: {
+        borderRadius: 15
+    },
+})(Button);
+
 
 
 export default AnalysisManagement;

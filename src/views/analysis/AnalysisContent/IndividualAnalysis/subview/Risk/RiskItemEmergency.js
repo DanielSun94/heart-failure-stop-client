@@ -4,10 +4,10 @@ import {
     Typography,
     colors,
 } from '@material-ui/core';
-import Label from '../../../../../components/Label';
+import Label from '../../../../../../components/Label';
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
-import {predictTaskName} from '../../../../../utils/predictTask'
+import {predictTaskName} from '../../../../../../utils/predictTask'
 
 
 const useStyles = makeStyles(theme => ({
