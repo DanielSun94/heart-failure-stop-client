@@ -18,10 +18,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 const uploadInfoMap = {
-    updateModelFile: {toolTipTitle: "上传模型", uploadPath: RouteName.UPLOAD_MODEL_FILE, fileName: 'model.zip'},
-    updateDataConfig: {toolTipTitle: "上传配置", uploadPath: RouteName.UPLOAD_MODEL_CONFIG, fileName: 'config.yml'},
-    updateModelDoc: {toolTipTitle: "上传文档", uploadPath: RouteName.UPLOAD_MODEL_CONFIG, fileName: 'doc.md'},
-    updateModelPreprocess: {toolTipTitle: "上传预处理文件", uploadPath: RouteName.UPLOAD_PREPROCESSING_MODULE, fileName: 'preprocess.zip'},
+    updateModelFile: {toolTipTitle: "上传模型", uploadPath: RouteName.B_UPLOAD_MODEL_FILE, fileName: 'model.zip'},
+    updateDataConfig: {toolTipTitle: "上传配置", uploadPath: RouteName.B_UPLOAD_MODEL_CONFIG, fileName: 'config.yml'},
+    updateModelDoc: {toolTipTitle: "上传文档", uploadPath: RouteName.B_UPLOAD_MODEL_CONFIG, fileName: 'doc.md'},
+    updateModelPreprocess: {toolTipTitle: "上传预处理文件", uploadPath: RouteName.B_UPLOAD_PREPROCESSING_MODULE, fileName: 'preprocess.zip'},
 };
 
 const UploadComponent = ({mainCategory, algorithmMainCategory, algorithmSubCategory, fileType}) => {

@@ -8,7 +8,7 @@ const rootReducer = combineReducers({
     individual: individualAnalysisReducer,
     metaInfo: metaInfoReducer,
     session: sessionReducer,
-    algorithm: algorithmReducer
+    algorithm: algorithmReducer,
 });
 
 export default rootReducer;

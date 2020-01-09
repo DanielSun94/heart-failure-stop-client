@@ -7,7 +7,8 @@ import {
     TRAJECTORY_INITIALIZE,
     TRAJECTORY_RECEIVE_FAILED_RESULT,
     TRAJECTORY_RECEIVE_SUCCESS_RESULT,
-    TRAJECTORY_REQUEST_POST
+    TRAJECTORY_REQUEST_POST,
+    TRAJECTORY_SET_STATE
 } from '../../actions/individualAnalysisAction/trajectoryAction';
 
 export const FAILED_ERROR = 'failedError';
@@ -23,6 +24,7 @@ const trajectoryReducer = (state=initStateInfo, action) => {
     // 由于先前确定trajectory 更新必须在也仅在unifiedPatientID更新成功后自动触发进行
     // 因此为保证数据一致性，一旦触发新的request，就把现有数据清空，宁可不显示数据，也不显示过期数据
     switch (action.type){
+        case TRAJECTORY_SET_STATE: return {...action.newState};
         case TRAJECTORY_INITIALIZE: return trajectoryInitialize(state, action.queryID);
 
         case TRAJECTORY_DELETE: return trajectoryDelete(state, action.queryID);

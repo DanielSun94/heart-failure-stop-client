@@ -20,6 +20,12 @@ export const LAB_TEST_LIST_REQUEST_POST = 'LAB_TEST_LIST_REQUEST_POST';
 export const LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT = 'LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT';
 export const LAB_TEST_LIST_RECEIVE_FAILED_RESULT = 'LAB_TEST_LIST_RECEIVE_FAILED_RESULT';
 
+export const LAB_TEST_SET_STATE = "LAB_TEST_SET_STATE";
+
+export function labTestSetState(newState) {
+    return ({type: LAB_TEST_SET_STATE, newState: newState})
+}
+
 export function labTestReset(params, resetType, queryID) {
     return {
         type: LAB_TEST_RESET,

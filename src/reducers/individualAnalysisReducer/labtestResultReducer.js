@@ -12,7 +12,8 @@ import {
     LAB_TEST_FILTER_STR,
     LAB_TEST_SELECTED_LAB_TEST_ITEM,
     LAB_TEST_SHOWING_SINGLE_VISIT,
-    LAB_TEST_RESET
+    LAB_TEST_RESET,
+    LAB_TEST_SET_STATE
 } from '../../actions/individualAnalysisAction/labtestResultAction';
 
 // Lab Test 分为三个模块
@@ -31,6 +32,7 @@ const initStateInfo = {
 
 const labtestResultReducer = (state=initStateInfo, action) => {
     switch (action.type){
+        case LAB_TEST_SET_STATE: return {...action.newState};
         case LAB_TEST_RESET: return labTestReset(state, action.params, action.resetType, action.queryID);
         case LAB_TEST_SELECTED_LAB_TEST_ITEM:
             return labTestSetSelectedItem(state, action.selectedLabTest, action.queryID);

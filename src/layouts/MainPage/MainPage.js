@@ -1,15 +1,24 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import RouteName from '../../utils/RouteName';
 import BlankPage from '../../components/blank-page/blank-page';
 import { makeStyles } from '@material-ui/styles';
 import { NavBar } from './components';
 import {
-  Switch, 
+  Switch,
   Route} from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux';
 import AccountManagement from '../../views/account/AccountManagement'
 import AlgorithmManagement from '../../views/algorithm/AlgorithmManagement'
 import Analysis from '../../views/analysis/Analysis'
 import DataOutput from '../../views/output/DataOutput'
+import ParaName from "../../utils/ParaName";
+import {examSetState} from "../../actions/individualAnalysisAction/examAction";
+import {labTestSetState} from "../../actions/individualAnalysisAction/labtestResultAction";
+import {vitalSignSetState} from "../../actions/individualAnalysisAction/vitalSignAction";
+import {trajectorySetState} from "../../actions/individualAnalysisAction/trajectoryAction";
+import {patientBasicInfoSetState} from "../../actions/individualAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction";
+import {orderSetState} from "../../actions/individualAnalysisAction/orderAction";
+import {metaInfoSetState} from "../../actions/metaInfoAction";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -52,36 +61,102 @@ const useStyles = makeStyles(() => ({
 
 const MainPage= () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const entireState = useSelector(state=> state);
+  const currentSessionUser = useSelector(state=> state.session.user.userID);
+  const token = useSelector(state=> state.session.authenticToken);
+
+  useEffect(()=>{
+    // 每次有人登陆，都加载一遍上次访问的metaInfo和具体分析数据
+    // 按照目前的路由设计，登出和登陆一定会造成MainPage的重加载，因此不会出现用户A退出，用户B登录，结果B看到了A的数据的情况
+    // 同时，userID异步获取，可能第一次刷这个component的时候还没回来，所以我们要在userID变化时重刷，在一个session中
+    // userID只会被置一次，从逻辑上看，这是一个只会执行一次的effect函数
+    reloadOrResetState(currentSessionUser, token, dispatch);
+
+  }, [currentSessionUser]);
+
+  // 上传state
+  useEffect(()=>{
+    // 为防止saveState先于reload执行，reload之后metaInfo Map的size一定不为0
+    // 如果真的是0，说明上轮把所有查询删光了，那先于reload执行无关紧要
+    if(Object.keys(entireState.metaInfo.metaInfoMap).length>0){
+      saveState(currentSessionUser, token, entireState)
+    }
+  }, [entireState, currentSessionUser]);
 
   return (
-    <div id='mainPage' className={classes.root}>
-      <div className={classes.navBar}>
-        <NavBar />
+      <div id='mainPage' className={classes.root}>
+        <div className={classes.navBar}>
+          <NavBar />
+        </div>
+        <main className={classes.content}>
+          <Switch>
+            <Route path={RouteName.MAIN_PAGE+RouteName.ANALYSIS}>
+              <Analysis />
+            </Route>
+            <Route path={RouteName.MAIN_PAGE+RouteName.DATA_OUTPUT}>
+              <DataOutput />
+            </Route>
+            <Route path={RouteName.MAIN_PAGE+RouteName.ALGORITHM_MANAGEMENT}>
+              <AlgorithmManagement />
+            </Route>
+            <Route path={RouteName.MAIN_PAGE+RouteName.ACCOUNT_MANAGEMENT}>
+              <AccountManagement />
+            </Route>
+            {
+              // black page只在出现错误的情况下出现
+            }
+            <Route path={RouteName.MAIN_PAGE}>
+              <BlankPage />
+            </Route>
+          </Switch>
+        </main>
       </div>
-      <main className={classes.content}>
-        <Switch>
-          <Route path={RouteName.MAIN_PAGE+RouteName.ANALYSIS}>
-            <Analysis />
-          </Route>
-          <Route path={RouteName.MAIN_PAGE+RouteName.DATA_OUTPUT}>
-            <DataOutput />
-          </Route>
-          <Route path={RouteName.MAIN_PAGE+RouteName.ALGORITHM_MANAGEMENT}>
-            <AlgorithmManagement />
-          </Route>
-          <Route path={RouteName.MAIN_PAGE+RouteName.ACCOUNT_MANAGEMENT}>
-            <AccountManagement />
-          </Route>
-          {
-            // black page只在出现错误的情况下出现
-          }
-          <Route path={RouteName.MAIN_PAGE}>
-            <BlankPage />
-          </Route>
-        </Switch>
-      </main>
-    </div>
   );
+};
+
+const reloadOrResetState = (currentSessionUser, token, dispatch) =>{
+  if(currentSessionUser.toString().length>0) {
+    let url = RouteName.B_STATE_MANAGEMENT + RouteName.B_DOWNLOAD_STATE + '?userID=' + currentSessionUser;
+    let header = {'Authorization': token};
+    fetch(url, {method: ParaName.GET, headers: header})
+        .then(res => res.json())
+        .then(res=>{
+          return res
+        })
+        .then(res=>res.response)
+        .then((res)=>{
+          if(res!=='CacheStateNotFound'){
+            res = JSON.parse(res);
+            const individual = res.individual;
+            dispatch(examSetState(individual.exam));
+            dispatch(patientBasicInfoSetState(individual.unifiedPatientIDAndPatientBasicInfo));
+            dispatch(trajectorySetState(individual.trajectory));
+            dispatch(labTestSetState(individual.labtestResult));
+            dispatch(orderSetState(individual.order));
+            dispatch(vitalSignSetState(individual.vitalSign));
+
+            const metaInfo = res.metaInfo;
+            dispatch(metaInfoSetState(metaInfo))
+          }
+        })
+  }
+};
+
+const saveState=(currentSessionUser, token, entireState)=>{
+  if(currentSessionUser.toString().length>0) {
+    let url = RouteName.B_STATE_MANAGEMENT + RouteName.B_UPDATE_STATE;
+    let header = {'Authorization': token};
+    let formData = new FormData();
+    const jsonStr = JSON.stringify(entireState);
+    const jsonStrLength = jsonStr.length;
+    console.log(jsonStrLength);
+    formData.append('userID', currentSessionUser);
+    formData.append('stateContent', jsonStr);
+    // 目前只做只管发出，不管是否成功
+    fetch(url, {method: ParaName.POST, headers: header, body: formData}).then(r => {console.log(r)});
+  }
 };
 
 export default MainPage

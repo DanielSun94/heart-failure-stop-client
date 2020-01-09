@@ -8,7 +8,8 @@ import {
     UNIFIED_PATIENT_ID_RECEIVE_FAILED_RESULT,
     UNIFIED_PATIENT_ID_RECEIVE_SUCCESS_RESULT,
     UNIFIED_PATIENT_ID_REQUEST_POST,
-    UNIFIED_ID_AND_BASIC_INFO_DELETE
+    UNIFIED_ID_AND_BASIC_INFO_DELETE,
+    PATIENT_BASIC_INFO_SET_STATE
 } from '../../actions/individualAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction';
 
 export const FAILED_ERROR = 'failedError';
@@ -21,6 +22,7 @@ const initState = {};
 
 const unifiedPatientIDAndPatientBasicInfoReducer = (state=initState, action) => {
     switch (action.type){
+        case PATIENT_BASIC_INFO_SET_STATE: return {...action.newState};
         case UNIFIED_ID_AND_BASIC_INFO_INITIALIZE: return initialize(state, action.queryID);
 
         case UNIFIED_ID_AND_BASIC_INFO_DELETE: return panelDelete(state, action.queryID);

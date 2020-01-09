@@ -66,7 +66,7 @@ export function createNewModel(modelNameMap, modelFileMap, accessControl){
         let header = {
             'Authorization': token,
         };
-        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.CREATE_NEW_MODEL;
+        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.B_CREATE_NEW_MODEL;
 
         let formData = new FormData();
         formData.append('modelNameChinese', modelNameMap['modelChineseName']);
@@ -125,7 +125,7 @@ export function getModelInfo(mainCategory, algorithmMainCategory, algorithmSubCa
             'mainCategory': mainCategory,
             'modelFunctionEnglish': algorithmSubCategory
         };
-        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.MODEL_INFO+queryParamsTrans(param);
+        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.B_MODEL_INFO+queryParamsTrans(param);
 
         return fetch(url, {method: ParaName.GET, headers: header})
             .then(res => res.json())
@@ -199,7 +199,7 @@ export function deleteModel(mainCategory, algorithmMainCategory, algorithmSubCat
         let header = {
             'Authorization': token,
         };
-        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.DELETE_EXIST_MODEL;
+        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.B_DELETE_EXIST_MODEL;
 
         let formData = new FormData();
         formData.append('modelNameEnglish', algorithmMainCategory);
@@ -228,7 +228,7 @@ export function deleteModel(mainCategory, algorithmMainCategory, algorithmSubCat
 export function fetchModelListPosts() {
     return function(dispatch, getState) {
         dispatch(modelListRequest());
-        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.FETCH_MODEL_LIST;
+        let url = RouteName.B_ALGORITHM_MANAGEMENT + RouteName.B_FETCH_MODEL_LIST;
         let token = getState().session.authenticToken;
         let header = {'Authorization': token};
         return fetch(url, {method: ParaName.GET, headers: header})

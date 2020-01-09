@@ -7,6 +7,7 @@ const initialState = {
   loggedIn: false,
   authenticToken: "",
   user: {
+    userID: "",
     realName: '',
     userName: "",
     institutionCode: '1',
@@ -52,7 +53,11 @@ const sessionReducer = (state = initialState, action) => {
     }
 
     case SESSION_USER_INFO_REQUEST_SUCCESS: {
-      return {...state, user: {...state.user, userName: action.content.userName, realName: action.content.realName, role: action.content.role}};
+      return {...state,
+        user: {...state.user, userName: action.content.userName,
+          realName: action.content.realName, role: action.content.role,
+          userID: action.content.id
+        }};
     }
 
     case SESSION_USER_INFO_REQUEST_FAILED: {

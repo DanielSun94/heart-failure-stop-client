@@ -9,6 +9,11 @@ export const EXAM_DELETE = "EXAM_INITIALIZE";
 export const EXAM_REQUEST_POST = 'EXAM_REQUEST_POST';
 export const EXAM_RECEIVE_SUCCESS_RESULT = 'EXAM_RECEIVE_SUCCESS_RESULT';
 export const EXAM_RECEIVE_FAILED_RESULT = 'EXAM_RECEIVE_FAILED_RESULT';
+export const EXAM_SET_STATE = "EXAM_SET_STATE";
+
+export function examSetState(newState) {
+    return ({type: EXAM_SET_STATE, newState: newState})
+}
 
 export function setNewSelectedExam(newSelectedExam, queryID) {
     return ({type: EXAM_SELECTED_EXAM, queryID: queryID, newSelectedExam: newSelectedExam})

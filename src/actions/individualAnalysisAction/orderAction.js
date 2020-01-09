@@ -10,6 +10,12 @@ export const ORDER_REQUEST_POST = 'ORDER_REQUEST_POST';
 export const ORDER_RECEIVE_SUCCESS_RESULT = 'ORDER_RECEIVE_SUCCESS_RESULT';
 export const ORDER_RECEIVE_FAILED_RESULT = 'ORDER_RECEIVE_FAILED_RESULT';
 
+export const ORDER_SET_STATE = "ORDER_SET_STATE";
+
+export function orderSetState(newState) {
+    return ({type: ORDER_SET_STATE, newState: newState})
+}
+
 export function orderInitialize(queryID) {
     return ({type: ORDER_INITIALIZE, queryID: queryID})
 }

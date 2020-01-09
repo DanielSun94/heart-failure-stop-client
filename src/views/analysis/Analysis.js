@@ -3,8 +3,6 @@ import AnalysisContent from "./AnalysisContent/AnalysisContent";
 import AnalysisManagement from "./AnalysisManagement/AnalysisManagement";
 import {makeStyles} from "@material-ui/styles";
 import {colors} from "@material-ui/core";
-import {useSelector} from "react-redux";
-import individualAnalysisReducer from "../../reducers/individualAnalysisReducer";
 
 const useStyles = makeStyles(() => ({
     root: {

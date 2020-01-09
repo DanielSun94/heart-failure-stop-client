@@ -54,20 +54,24 @@ class RouteName{
 
     // Algorithm Management
     static B_ALGORITHM_MANAGEMENT = "/backend/algorithmManagement";
-    static UPLOAD_MODEL_FILE = "/uploadModelFile";
-    static DOWNLOAD_MODEL_FILE = "/downloadModelFile";
-    static UPLOAD_MODEL_CONFIG = "/uploadModelConfig";
-    static DOWNLOAD_MODEL_CONFIG = "/downloadModelConfig";
-    static UPLOAD_PREPROCESSING_MODULE = "/uploadPreprocessingModule";
-    static DOWNLOAD_PREPROCESSING_MODULE = "/downloadPreprocessingModule";
-    static UPLOAD_MODEL_DOCUMENT = "/uploadModelDoc";
-    static DOWNLOAD_MODEL_DOCUMENT="/downloadModelDoc";
-    static CREATE_NEW_MODEL= "/createNewModel";
-    static DELETE_EXIST_MODEL = "/deleteExistModel";
-    static FETCH_MODEL_LIST = "/fetchModelList";
-    static UPDATE_PLATFORM='/updatePlatform';
-    static UPDATE_ACCESS_CONTROL = '/updateAccessControl';
-    static MODEL_INFO = '/modelInfo';
+    static B_UPLOAD_MODEL_FILE = "/uploadModelFile";
+    static B_DOWNLOAD_MODEL_FILE = "/downloadModelFile";
+    static B_UPLOAD_MODEL_CONFIG = "/uploadModelConfig";
+    static B_DOWNLOAD_MODEL_CONFIG = "/downloadModelConfig";
+    static B_UPLOAD_PREPROCESSING_MODULE = "/uploadPreprocessingModule";
+    static B_DOWNLOAD_PREPROCESSING_MODULE = "/downloadPreprocessingModule";
+    static B_UPLOAD_MODEL_DOCUMENT = "/uploadModelDoc";
+    static B_DOWNLOAD_MODEL_DOCUMENT="/downloadModelDoc";
+    static B_CREATE_NEW_MODEL= "/createNewModel";
+    static B_DELETE_EXIST_MODEL = "/deleteExistModel";
+    static B_FETCH_MODEL_LIST = "/fetchModelList";
+    static B_UPDATE_PLATFORM='/updatePlatform';
+    static B_UPDATE_ACCESS_CONTROL = '/updateAccessControl';
+    static B_MODEL_INFO = '/modelInfo';
+
+    static B_STATE_MANAGEMENT = "/backend/stateManagement";
+    static B_UPDATE_STATE = "/uploadState";
+    static B_DOWNLOAD_STATE = "/downloadState";
 }
 
 export default RouteName;

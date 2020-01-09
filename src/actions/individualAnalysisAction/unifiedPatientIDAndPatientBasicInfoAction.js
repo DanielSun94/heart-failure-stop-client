@@ -18,6 +18,11 @@ export const PATIENT_BASIC_INFO_REQUEST_POST = 'PATIENT_BASIC_INFO_REQUEST_POST'
 export const PATIENT_BASIC_INFO_RECEIVE_SUCCESS_RESULT = 'PATIENT_BASIC_INFO_RECEIVE_SUCCESS_RESULT';
 export const PATIENT_BASIC_INFO_RECEIVE_FAILED_RESULT = 'PATIENT_BASIC_INFO_RECEIVE_FAILED_RESULT';
 
+export const PATIENT_BASIC_INFO_SET_STATE = "PATIENT_BASIC_INFO_SET_STATE";
+
+export function patientBasicInfoSetState(newState) {
+    return ({type: PATIENT_BASIC_INFO_SET_STATE, newState: newState})
+}
 
 export function fetchUnifiedPatientID(event, hospitalCode, queryID) {
     // 由于此event默认由form的submit触发（默认会刷新页面，但是在本处我们不希望这样），因此要避免缺省动作

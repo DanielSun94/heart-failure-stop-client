@@ -1,4 +1,4 @@
-import {CREATE_NEW_QUERY, DELETE_QUERY, EDIT_QUERY_NAME} from "../actions/metaInfoAction";
+import {CREATE_NEW_QUERY, DELETE_QUERY, EDIT_QUERY_NAME, META_INFO_SET_STATE} from "../actions/metaInfoAction";
 
 // 个体分析和群体分析的元信息保存（包括查询类型，名称，筛选信息等）
 
@@ -27,6 +27,7 @@ const initStateInfo = {nextID: 1, metaInfoMap: {
 // 我们就可以快速恢复上一次的查询
 const metaInfoReducer = (state=initStateInfo, action) => {
     switch (action.type) {
+        case META_INFO_SET_STATE: return {...action.newState};
         case CREATE_NEW_QUERY: {
             const queryID = state.nextID;
 

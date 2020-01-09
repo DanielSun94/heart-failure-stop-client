@@ -4,7 +4,8 @@ import {
     VITAL_SIGN_REQUEST_POST,
     VITAL_SIGN_INITIALIZE,
     VITAL_SIGN_DELETE,
-    VITAL_SIGN_SET_VITAL_SIGN
+    VITAL_SIGN_SET_VITAL_SIGN,
+    VITAL_SIGN_SET_STATE
 }
     from '../../actions/individualAnalysisAction/vitalSignAction';
 
@@ -13,6 +14,8 @@ const initStateInfo = {};
 
 const vitalSignReducer = (state=initStateInfo, action) => {
     switch (action.type){
+
+        case VITAL_SIGN_SET_STATE: return {...action.newState};
         case VITAL_SIGN_SET_VITAL_SIGN: return setNewSelectedVitalSign(state, action.selectedVitalSign, action.queryID);
         case VITAL_SIGN_INITIALIZE: return vitalSignInitialize(state, action.queryID);
         case VITAL_SIGN_DELETE: return vitalSignDelete(state, action.queryID);

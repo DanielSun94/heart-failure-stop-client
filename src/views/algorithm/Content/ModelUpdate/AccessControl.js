@@ -38,7 +38,7 @@ const AccessControl = ({mainCategory, algorithmMainCategory, algorithmSubCategor
     const handleChange = event => {
         const access = event.target.value;
         setValue(access);
-        const path = RouteName.UPDATE_ACCESS_CONTROL;
+        const path = RouteName.B_UPDATE_ACCESS_CONTROL;
         dispatch(modelUpdatePost(mainCategory, algorithmMainCategory, algorithmSubCategory, access, ACCESS_CONTROL, path));
     };
 

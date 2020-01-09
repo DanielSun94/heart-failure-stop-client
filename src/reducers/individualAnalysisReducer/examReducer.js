@@ -4,7 +4,8 @@ import {
     EXAM_RECEIVE_SUCCESS_RESULT,
     EXAM_REQUEST_POST,
     EXAM_INITIALIZE,
-    EXAM_DELETE
+    EXAM_DELETE,
+    EXAM_SET_STATE
 } from '../../actions/individualAnalysisAction/examAction';
 
 const initStateInfo = {};
@@ -16,6 +17,7 @@ const examReducer = (state=initStateInfo, action) => {
         case EXAM_REQUEST_POST: return examRequestPost(state, action.queryID);
         case EXAM_RECEIVE_SUCCESS_RESULT: return examReceiveSuccessResult(state, action.content, action.params, action.queryID);
         case EXAM_RECEIVE_FAILED_RESULT: return examReceiveFailedResult(state, action.queryID);
+        case EXAM_SET_STATE: return {...action.newState}
         default: return {...state};
     }
 };

@@ -7,10 +7,10 @@ import React from "react";
 import {MODEL_CONFIG, MODEL_DOC, MODEL_FILE, MODEL_PREPROCESS} from "../../../../../actions/algorithmManagementAction";
 
 const downloadInfoMap = {
-    updateModelFile: {toolTipTitle: "下载模型", downloadPath: RouteName.DOWNLOAD_MODEL_FILE, fileName: 'model.zip'},
-    updateDataConfig: {toolTipTitle: "下载配置", downloadPath: RouteName.DOWNLOAD_MODEL_CONFIG, fileName: 'config.yml'},
-    updateModelDoc: {toolTipTitle: "下载文档", downloadPath: RouteName.DOWNLOAD_MODEL_DOCUMENT, fileName: 'doc.md'},
-    updateModelPreprocess: {toolTipTitle: "下载预处理文件", downloadPath: RouteName.DOWNLOAD_PREPROCESSING_MODULE, fileName: 'preprocess.zip'},
+    updateModelFile: {toolTipTitle: "下载模型", downloadPath: RouteName.B_DOWNLOAD_MODEL_FILE, fileName: 'model.zip'},
+    updateDataConfig: {toolTipTitle: "下载配置", downloadPath: RouteName.B_DOWNLOAD_MODEL_CONFIG, fileName: 'config.yml'},
+    updateModelDoc: {toolTipTitle: "下载文档", downloadPath: RouteName.B_DOWNLOAD_MODEL_DOCUMENT, fileName: 'doc.md'},
+    updateModelPreprocess: {toolTipTitle: "下载预处理文件", downloadPath: RouteName.B_DOWNLOAD_PREPROCESSING_MODULE, fileName: 'preprocess.zip'},
 };
 
 const DownloadComponent = ({mainCategory, algorithmMainCategory, algorithmSubCategory, fileType}) => {

@@ -12,6 +12,12 @@ export const TRAJECTORY_RECEIVE_FAILED_RESULT = 'TRAJECTORY_RECEIVE_FAILED_RESUL
 export const CHANGE_TARGET_VISIT = 'CHANGE_TARGET_VISIT';
 export const TRAJECTORY_DELETE = "TRAJECTORY_DELETE";
 
+export const TRAJECTORY_SET_STATE = "TRAJECTORY_SET_STATE";
+
+export function trajectorySetState(newState) {
+    return ({type: TRAJECTORY_SET_STATE, newState: newState})
+}
+
 export function trajectoryInitialize(queryID) {
     return ({type: TRAJECTORY_INITIALIZE, queryID: queryID})
 }

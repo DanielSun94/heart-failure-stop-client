@@ -47,7 +47,7 @@ const PlatformSelect = ({mainCategory, algorithmMainCategory, algorithmSubCatego
     const handleChange = event => {
         const newPlatform = event.target.value;
         setSelectedPlatform(newPlatform);
-        const path = RouteName.UPDATE_PLATFORM;
+        const path = RouteName.B_UPDATE_PLATFORM;
         dispatch(modelUpdatePost(mainCategory, algorithmMainCategory, algorithmSubCategory, newPlatform, MODEL_PLATFORM, path));
     };
 

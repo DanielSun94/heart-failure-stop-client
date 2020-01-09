@@ -10,6 +10,12 @@ export const VITAL_SIGN_REQUEST_POST = 'VITAL_SIGN_REQUEST_POST';
 export const VITAL_SIGN_RECEIVE_SUCCESS_RESULT = 'VITAL_SIGN_RECEIVE_SUCCESS_RESULT';
 export const VITAL_SIGN_RECEIVE_FAILED_RESULT = 'VITAL_SIGN_RECEIVE_FAILED_RESULT';
 
+export const VITAL_SIGN_SET_STATE = "VITAL_SIGN_SET_STATE";
+
+export function vitalSignSetState(newState) {
+    return ({type: VITAL_SIGN_SET_STATE, newState: newState})
+}
+
 export function setNewVitalSign(selectedVitalSign, queryID) {
     return ({type: VITAL_SIGN_SET_VITAL_SIGN, queryID: queryID, selectedVitalSign: selectedVitalSign})
 }
