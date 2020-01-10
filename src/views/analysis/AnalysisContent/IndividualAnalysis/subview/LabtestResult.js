@@ -122,6 +122,8 @@ const LabtestResult = ({queryID}) => {
 
     useEffect(()=>{
         // LabTest和其它三项逻辑有些不同，其它三项都是VisitChange后重新获取数据，LabTest则是重置数据
+        // 这是因为其他三项的数据都是一次获得，而LabTest的数据是即时获取的，VisitChange后LabTest只能确定原有的数据都过时了
+        // 但是并不知道新的数据是什么
         const params = {
             unifiedPatientID: unifiedPatientID,
             hospitalCode: currentVisit.hospitalCode,
@@ -132,6 +134,7 @@ const LabtestResult = ({queryID}) => {
         const singleParam = {...currentVisit, unifiedPatientID: unifiedPatientID, itemName: selectedLabtest};
         const traceParam = {unifiedPatientID: unifiedPatientID, itemName: selectedLabtest};
 
+        // 这里之所以要用这么麻烦的逻辑判断，是为了保证获取过一次的数据不重复请求
         if(isPatientChanged||isVisitChanged) {
             if (isPatientChanged) {
                 dispatch(labTestReset(params, 'patient', queryID));

@@ -17,7 +17,7 @@ const examReducer = (state=initStateInfo, action) => {
         case EXAM_REQUEST_POST: return examRequestPost(state, action.queryID);
         case EXAM_RECEIVE_SUCCESS_RESULT: return examReceiveSuccessResult(state, action.content, action.params, action.queryID);
         case EXAM_RECEIVE_FAILED_RESULT: return examReceiveFailedResult(state, action.queryID);
-        case EXAM_SET_STATE: return {...action.newState}
+        case EXAM_SET_STATE: return {...action.newState};
         default: return {...state};
     }
 };

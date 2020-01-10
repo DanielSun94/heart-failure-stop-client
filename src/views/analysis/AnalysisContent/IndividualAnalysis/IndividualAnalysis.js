@@ -5,6 +5,7 @@ import LabtestResult from './subview/LabtestResult';
 import Order from './subview/Order';
 import Exam from './subview/Exam';
 import VitalSign from './subview/VitalSign';
+import ModelPanel from "./subview/ModelPanel";
 import ParaName from '../../../../utils/ParaName'
 import { makeStyles } from '@material-ui/styles';
 import { colors, Grid, Hidden } from '@material-ui/core';
@@ -34,11 +35,9 @@ const IndividualAnalysis = ({selectedQueryID}) => {
                 <Grid item xl={9} lg={8} md={12} xs={12}>
                     <Trajectory queryID={selectedQueryID}/>
                 </Grid>
-                {
-                    //<Grid item xs={12}>
-                      //  <RiskFullPanel queryID={selectedQueryID}/>
-                    //</Grid>
-                }
+                <Grid item xs={12}>
+                    <ModelPanel queryID={selectedQueryID}/>
+                </Grid>
                 <Grid item lg={12} md={12} xs={12}>
                     <LabtestResult queryID={selectedQueryID}/>
                 </Grid>

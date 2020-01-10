@@ -17,8 +17,10 @@ import {labTestSetState} from "../../actions/individualAnalysisAction/labtestRes
 import {vitalSignSetState} from "../../actions/individualAnalysisAction/vitalSignAction";
 import {trajectorySetState} from "../../actions/individualAnalysisAction/trajectoryAction";
 import {patientBasicInfoSetState} from "../../actions/individualAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction";
+import {modelSetState} from "../../actions/individualAnalysisAction/modelAction";
 import {orderSetState} from "../../actions/individualAnalysisAction/orderAction";
 import {metaInfoSetState} from "../../actions/metaInfoAction";
+import {fetchModelListPosts} from "../../actions/algorithmManagementAction";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -68,10 +70,17 @@ const MainPage= () => {
   const token = useSelector(state=> state.session.authenticToken);
 
   useEffect(()=>{
-    // 每次有人登陆，都加载一遍上次访问的metaInfo和具体分析数据
+    // 每次重登陆时更新ModelList
+    // 目前这种第一次进入界面载入算法库的设计存在缺陷，体现在两个用户同时在线，其中一个用户删除了一个公开算法时
+    // 另一个用户无法感知，这一问题留待以后使用WebSocket解决
+    dispatch(fetchModelListPosts());
+  }, []);
+
+  useEffect(()=>{
+    // 每次有人登陆，都加载一遍该用户上次访问的metaInfo和具体分析数据
     // 按照目前的路由设计，登出和登陆一定会造成MainPage的重加载，因此不会出现用户A退出，用户B登录，结果B看到了A的数据的情况
-    // 同时，userID异步获取，可能第一次刷这个component的时候还没回来，所以我们要在userID变化时重刷，在一个session中
-    // userID只会被置一次，从逻辑上看，这是一个只会执行一次的effect函数
+    // 同时，userID异步获取，可能第一次刷这个component的时候还没回来，所以我们要在userID变化时重刷，所以dependency不能设空，
+    // 在一个session中userID只会被置一次，从逻辑上看，这是一个只会执行一次的effect函数
     reloadOrResetState(currentSessionUser, token, dispatch);
 
   }, [currentSessionUser]);
@@ -136,7 +145,7 @@ const reloadOrResetState = (currentSessionUser, token, dispatch) =>{
             dispatch(labTestSetState(individual.labtestResult));
             dispatch(orderSetState(individual.order));
             dispatch(vitalSignSetState(individual.vitalSign));
-
+            dispatch(modelSetState(individual.model));
             const metaInfo = res.metaInfo;
             dispatch(metaInfoSetState(metaInfo))
           }

@@ -10,8 +10,8 @@ import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import {useSelector, useDispatch} from 'react-redux';
 import {
-  fetchPosts} 
-  from '../../../../../../actions/individualAnalysisAction/riskAction'
+  fetchPosts}
+  from '../../../../../../actions/individualAnalysisAction/modelAction'
 import {predictTaskName} from '../../../../../../utils/predictTask'
 
 const FETCH_SUCCESS = "success";
@@ -60,7 +60,7 @@ const RiskItem = ({predictionTask}) => {
 
   // 获取入院相关信息
   const unifiedPatientID = useSelector(state=>state.dashboard.trajectoryAnalysis.unifiedPatientIDAndPatientBasicInfo.unifiedPatientID)
-  
+
   const trajectory = useSelector(state=>state.dashboard.trajectoryAnalysis.trajectory);
   const currentVisitID = trajectory.currentVisit.visitID;
   const currentHospitalCode = trajectory.currentVisit.hospitalCode;

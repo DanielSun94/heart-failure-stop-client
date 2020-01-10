@@ -50,7 +50,7 @@ class ParaName{
     // trajectory analysis panel name
     static QUERY_AND_BASIC_INFO_PANEL = 'queryAndBasicInfoPanel';
     static TRAJECTORY_PANEL = 'trajectoryPanel';
-    static RISK_PANEL = 'riskPanel';
+    static MODEL_PANEL = 'modelPanel';
     static LABTEST_RESULT_PANEL = 'labtestResultPanel';
     static ORDER_PANEL = 'orderPanel';
     static VITAL_SIGN_PANEL = 'vitalSignPanel';

@@ -4,7 +4,7 @@ import ParaName from '../../../../../utils/ParaName';
 import {
     fetchPatientBasicInfo,
     fetchUnifiedPatientID,
-    changeLocalPatientID, unifiedIdAndBasicInfoInitialize
+    changeLocalPatientID,
 } from '../../../../../actions/individualAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction';
 import {
     FAILED_ERROR,

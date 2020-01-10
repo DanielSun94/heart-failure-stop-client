@@ -26,24 +26,24 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const defaultValue = "搜索（拼音首字母）"
+const defaultValue = "搜索（拼音首字母）";
 
 // 此处我们遇到了
 const OrderList = ({orders, selectedOrder, setSelectedOrder, listClassName}) => {
 
   const classes = useStyles();
 
-  const [searchText, setSearchText] = useState("")
-  const [filteredOrders, setFilteredOrders] = useState([])
+  const [searchText, setSearchText] = useState("");
+  const [filteredOrders, setFilteredOrders] = useState([]);
 
   useEffect(()=>{
     setFilteredOrders(pinYinFilter(orders, searchText, defaultValue))
   } , [searchText]);
 
   useEffect(()=>{
-    const orderList = pinYinFilter(orders, searchText, defaultValue)
+    const orderList = pinYinFilter(orders, searchText, defaultValue);
     setFilteredOrders(orderList)
-  }, [orders])
+  }, [orders]);
   
 
   return (

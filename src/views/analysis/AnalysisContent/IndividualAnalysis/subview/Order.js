@@ -1,4 +1,4 @@
-import React, {useEffect, useState, Fragment} from 'react';
+import React, {useEffect, Fragment} from 'react';
 import ParaName from '../../../../../utils/ParaName';
 import { useSelector, useDispatch } from 'react-redux';
 import {orderFetchPost, setNewSelectedOrder} from '../../../../../actions/individualAnalysisAction/orderAction'

@@ -40,7 +40,7 @@ class RouteName{
 
     // run machine learning model
     static B_MACHINE_LEARNING = "/backend/machineLearning";
-    static B_TENSORFLOW_HAWKES_RNN = "/tensorflow/hawkesRNN";
+    static B_SINGLE_VISIT_INVOKE_MACHINE_LEARNING_SERVICE = "/singleVisitInvokeMachineLearningService";
 
     // Authentic Route
     static B_AUTHENTIC = "/backend/authentic";

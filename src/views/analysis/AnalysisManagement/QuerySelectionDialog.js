@@ -21,6 +21,7 @@ import {trajectoryInitialize} from "../../../actions/individualAnalysisAction/tr
 import {unifiedIdAndBasicInfoInitialize} from "../../../actions/individualAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction";
 import {vitalSignInitialize} from "../../../actions/individualAnalysisAction/vitalSignAction";
 import {orderInitialize} from "../../../actions/individualAnalysisAction/orderAction";
+import {modelInitialize} from "../../../actions/individualAnalysisAction/modelAction";
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -47,6 +48,7 @@ const QuerySelectionDialog =({openDialog, setOpenDialog, setSelectedQueryID})=>{
             dispatch(labTestInitialize(queryID));
             dispatch(vitalSignInitialize(queryID));
             dispatch(examInitialize(queryID));
+            dispatch(modelInitialize(queryID));
         }
         else if(queryType===ParaName.GROUP_ANALYSIS){
             console.log('To Be Done')

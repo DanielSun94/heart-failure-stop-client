@@ -1,16 +1,15 @@
 import React from 'react';
+import {makeStyles} from "@material-ui/styles";
 import {
-    withStyles,
     Typography,
     List,
     ListItem,
-    colors
 } from "@material-ui/core";
-import {makeStyles} from "@material-ui/styles";
-import MuiExpansionPanel from "@material-ui/core/ExpansionPanel";
-import MuiExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import MuiExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-
+import {
+    ExpansionPanelSummary,
+    ExpansionPanel,
+    ExpansionPanelDetails
+} from "../../components/ExpansionPanel/ExpansionPanel";
 import {
     MODEL_CATEGORY_DATA_IMPUTATION,
     MODEL_CATEGORY_PROGRESSION_ANALYSIS,
@@ -33,58 +32,6 @@ const useStyles = makeStyles(() => ({
         overflow: 'auto',
     }
 }));
-
-const ExpansionPanel = withStyles({
-    root: {
-        borderTop: '1px solid rgba(0, 0, 0, .125)',
-        borderBottom: '1px solid rgba(0, 0, 0, .125)',
-        boxShadow: 'none',
-        '&:not(:last-child)': {
-            borderBottom: 0,
-        },
-        '&:before': {
-            display: 'none',
-        },
-        '&$expanded': {
-            margin: 'auto',
-        },
-    },
-    expanded: {},
-})(MuiExpansionPanel);
-
-const ExpansionPanelSummary = withStyles({
-    root: {
-        backgroundColor: '#F4F6F8',
-        borderTopStyle: 'solid',
-        borderTopWidth: 1,
-        borderTopColor: colors.grey[200],
-        borderBottomStyle: 'solid',
-        borderBottomWidth: 1,
-        borderBottomColor: colors.grey[200],
-        marginTop: -1,
-        height: 44,
-        '&$expanded': {
-            height: 44,
-        },
-    },
-    content: {
-        '&$expanded': {
-            marginTop: '8px',
-            marginBottom: '8px'
-        },
-    },
-    expanded: {},
-})(MuiExpansionPanelSummary);
-
-const ExpansionPanelDetails = withStyles(theme => ({
-    root: {
-        paddingTop: theme.spacing(1),
-        paddingBottom: theme.spacing(1),
-        paddingLeft: theme.spacing(0),
-        paddingRight: theme.spacing(0)
-
-    },
-}))(MuiExpansionPanelDetails);
 
 const Panel = ({pId, pTitle, expandPanel, setExpandPanel, algorithmList, selectedAlgorithm,
                    setSelectedAlgorithm, setAlgorithmSubCategory, block}) => {

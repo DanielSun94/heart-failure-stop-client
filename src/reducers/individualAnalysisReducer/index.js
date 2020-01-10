@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import riskReducer from './riskReducer';
+import modelReducer from './modelReducer';
 import trajectoryReducer from './trajectoryReducer';
 import unifiedPatientIDAndPatientBasicInfoReducer from './unifiedPatientIDAndPatientBasicInfoReducer';
 import examReducer from './examReducer';
@@ -8,7 +8,7 @@ import orderReducer from './orderReducer';
 import vitalSignReducer from './vitalSignReducer';
 
 const individualAnalysisReducer = combineReducers({
-    risk: riskReducer,
+    model: modelReducer,
     trajectory: trajectoryReducer,
     unifiedPatientIDAndPatientBasicInfo: unifiedPatientIDAndPatientBasicInfoReducer,
     exam: examReducer,

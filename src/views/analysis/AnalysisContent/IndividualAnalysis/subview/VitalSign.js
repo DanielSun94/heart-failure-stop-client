@@ -16,7 +16,6 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import useStyles from "./sharedLayout";
-import {setNewSelectedOrder} from "../../../../../actions/individualAnalysisAction/orderAction";
 
 
 const dataReconstruct = (data) => {
@@ -98,7 +97,6 @@ const VitalSign = ({queryID}) => {
                             <Content dataMap={dataMap} selectedVitalSign={selectedVitalSign} />
                         </CardContent>
                     )}
-
                 </Card>
             </Hidden>
             <Hidden lgUp>
@@ -132,7 +130,6 @@ const VitalSign = ({queryID}) => {
                             <Content dataMap={dataMap} selectedVitalSign={selectedVitalSign} />
                         </CardContent>
                     )}
-
                 </Card>
             </Hidden>
         </Fragment>

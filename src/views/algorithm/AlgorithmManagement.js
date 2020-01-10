@@ -1,6 +1,5 @@
 import React, {
     useState,
-    useEffect
 } from 'react';
 import {
     Button,
@@ -8,7 +7,6 @@ import {
     Typography
 } from '@material-ui/core';
 import {
-    useDispatch,
     useSelector
 } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -16,7 +14,6 @@ import MainCategory from './MainCategory'
 import SubCategory from './SubCategory'
 import UpdateModelContent from './Content/ModelUpdate/UpdateModelContent'
 import {makeStyles} from "@material-ui/styles";
-import {fetchModelListPosts} from "../../actions/algorithmManagementAction";
 import CreateNewModel from "./Content/ModelCreate/CreateNewModelContent";
 
 export const MODEL_CATEGORY_PROGRESSION_ANALYSIS = "progressionAnalysis";
@@ -138,14 +135,8 @@ const constructAlgorithmSubList = (selectedMainCategory, selectedAlgorithmMainCa
 
 const AlgorithmManagement = () => {
     const classes = useStyles();
-    const dispatch = useDispatch();
 
-    // 目前仅支持到这一程度，以后可以使用WebSocket技术更改，使得算法数据库更新时，后端可以通知前端
-    // 这样就不用重新打开界面才能看到新载入的数据了
-    useEffect(()=>{
-        dispatch(fetchModelListPosts())
-    }, [dispatch]);
-
+    // 算法列表清单的初始化已经在MainPage完成
     const algorithmList = useSelector(state=>state.algorithm.algorithmList);
     const algorithmMap = algorithmTransfer(algorithmList);
 
