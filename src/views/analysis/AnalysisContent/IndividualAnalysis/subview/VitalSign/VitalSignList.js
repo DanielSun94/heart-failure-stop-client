@@ -35,6 +35,7 @@ const VitalSignList = ({vitalSigns, selectedVitalSign, setSelectedVitalSign, lis
           <List disablePadding >
             {vitalSigns.map(vitalSign => (
                 <VitalSignListItem
+                    active ={vitalSign === selectedVitalSign}
                     selected={vitalSign === selectedVitalSign}
                     vitalSignName={vitalSign}
                     setSelectedVitalSign = {setSelectedVitalSign}
