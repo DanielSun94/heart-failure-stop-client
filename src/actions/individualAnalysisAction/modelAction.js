@@ -32,7 +32,7 @@ export function deleteSelectedModel(unifiedModelName, queryID) {
 
 export function modelReset(params, queryID) {
     return ({
-        type: MODEL_PANEL_INITIALIZE,
+        type: MODEL_RESET,
         params: params,
         queryID: queryID})
 }

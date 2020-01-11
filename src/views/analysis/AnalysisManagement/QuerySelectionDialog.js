@@ -15,6 +15,7 @@ import {useSelector} from 'react-redux';
 import {createNewQuery} from "../../../actions/metaInfoAction";
 import ParaName from "../../../utils/ParaName";
 import {useDispatch} from 'react-redux';
+import {setSelectedQuery} from "../../../actions/metaInfoAction";
 import {examInitialize} from "../../../actions/individualAnalysisAction/examAction";
 import {labTestInitialize} from "../../../actions/individualAnalysisAction/labtestResultAction";
 import {trajectoryInitialize} from "../../../actions/individualAnalysisAction/trajectoryAction";
@@ -29,7 +30,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const QuerySelectionDialog =({openDialog, setOpenDialog, setSelectedQueryID})=>{
+const QuerySelectionDialog =({openDialog, setOpenDialog})=>{
     const classes = useStyles();
     const dispatch = useDispatch();
     const [queryType, setQueryType] = React.useState(ParaName.INDIVIDUAL_ANALYSIS);
@@ -56,7 +57,7 @@ const QuerySelectionDialog =({openDialog, setOpenDialog, setSelectedQueryID})=>{
         else {
             console.log('error')
         }
-        setSelectedQueryID(queryID)
+        dispatch(setSelectedQuery(queryID))
     };
 
     return (

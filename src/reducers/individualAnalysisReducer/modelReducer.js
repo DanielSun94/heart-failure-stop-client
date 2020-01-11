@@ -40,7 +40,7 @@ function addSelectedModel(state, selectedModel, queryID) {
 }
 
 function deleteSelectedModel(state, selectedModel, queryID) {
-    state[queryID].selectedModelList.pop(selectedModel);
+    state[queryID].selectedModelList = state[queryID].selectedModelList.filter(e => e !== selectedModel);
     return {...state};
 }
 
@@ -84,8 +84,8 @@ function modelReset(state, params, queryID){
         modelDetail: {},
         correspondingUnifiedPatientID: params.unifiedPatientID,
         correspondingHospitalCode: params.hospitalCode,
-        correspondingVisitID: params.visitType,
-        correspondingVisitType: params.visitID,
+        correspondingVisitID: params.visitID,
+        correspondingVisitType: params.visitType,
     };
     return {...state};
 }

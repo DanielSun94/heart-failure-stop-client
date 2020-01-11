@@ -160,11 +160,10 @@ const saveState=(currentSessionUser, token, entireState)=>{
     let formData = new FormData();
     const jsonStr = JSON.stringify(entireState);
     const jsonStrLength = jsonStr.length;
-    console.log(jsonStrLength);
     formData.append('userID', currentSessionUser);
     formData.append('stateContent', jsonStr);
     // 目前只做只管发出，不管是否成功
-    fetch(url, {method: ParaName.POST, headers: header, body: formData}).then(r => {console.log(r)});
+    fetch(url, {method: ParaName.POST, headers: header, body: formData}).then(() => null);
   }
 };
 

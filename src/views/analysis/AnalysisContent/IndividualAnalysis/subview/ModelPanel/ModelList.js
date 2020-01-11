@@ -71,7 +71,7 @@ const ModelList = ({queryID}) =>{
         <div className={classes.root}>
             {
                 chineseCategoryName.map((item, index)=>(
-                <ExpansionPanel square expanded={true}>
+                <ExpansionPanel square expanded={true} key={index}>
                     <ExpansionPanelSummaryExpandNotSwell id={englishCategoryName[index]}>
                         <Typography className={classes.summaryContent}>{chineseCategoryName[index]}</Typography>
                     </ExpansionPanelSummaryExpandNotSwell>
@@ -93,8 +93,9 @@ const ModelListSingleCategory = ({selectedModelList, modelList, modelCategory, q
     return (
         <div style={{width: '100%'}}>
             {
-                modelList.map((item)=>(
+                modelList.map((item, index)=>(
                     <ModelListItem
+                        key={index}
                         selectedModelList={selectedModelList}
                         modelCategory={modelCategory}
                         modelChineseFunction={item.modelChineseFunctionName}

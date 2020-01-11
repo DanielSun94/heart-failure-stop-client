@@ -1,17 +1,25 @@
-import React, {useState} from 'react';
-import {makeStyles} from "@material-ui/styles";
+import React, {useState, Fragment} from 'react';
+import {makeStyles, withStyles} from "@material-ui/styles";
 import AddIcon from '@material-ui/icons/Add';
 import {
     colors,
     Typography,
-    Button} from "@material-ui/core";
-import {withStyles} from "@material-ui/core/styles";
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogActions,
+    TextField
+} from "@material-ui/core";
+import DeleteIcon from '@material-ui/icons/Delete';
 import {TreeView, TreeItem} from "@material-ui/lab";
-        import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import ParaName from "../../../utils/ParaName";
 import QuerySelectionDialog from "./QuerySelectionDialog";
+import {setSelectedQuery, setExpandedQueryList, deleteQuery, editQueryName} from "../../../actions/metaInfoAction";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,10 +48,22 @@ const useStyles = makeStyles((theme) => ({
     createNewQueryButton: {
         marginBottom:  theme.spacing(2),
         marginLeft: theme.spacing(2)
+    },
+    itemContent: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingTop: 6,
+        paddingBottom: 6
+    },
+    deleteIcon: {
+        '&:hover': {
+            color: colors.indigo[400]
+        }
     }
 }));
 
-const AnalysisManagement = ({setSelectedQueryID}) => {
+const AnalysisManagement = () => {
     const classes = useStyles();
 
     const [openDialog, setOpenDialog] = useState(false);
@@ -64,35 +84,181 @@ const AnalysisManagement = ({setSelectedQueryID}) => {
                 </RoundedButton >
             </div>
             <div className={classes.content}>
-                <QueryTreeView
-                    setSelectedQueryID={setSelectedQueryID}
-                />
+                <QueryTreeView/>
             </div>
             <QuerySelectionDialog
                 openDialog={openDialog}
                 setOpenDialog={setOpenDialog}
-                setSelectedQueryID={setSelectedQueryID}
             />
         </div>
     )
 };
 
-function QueryTreeView({setSelectedQueryID}) {
+function QueryTreeView() {
     const classes = useStyles();
+    const dispatch = useDispatch();
 
+    const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
+
+    const expandedNodeList =  useSelector(state=>state.metaInfo.expandedNodeList);
+    const selectedQuery =  useSelector(state=>state.metaInfo.selectedQuery);
     const metaInfoMap = useSelector(state=>state.metaInfo.metaInfoMap);
     const [groupMap, individualMap] = metaInfoMapSplit(metaInfoMap);
     const individualIDList = Object.keys(individualMap).sort();
 
+    return (
+        <TreeView
+            className={classes.treeView}
+            defaultCollapseIcon={<ArrowDropDownIcon />}
+            defaultExpandIcon={<ArrowRightIcon />}
+            expanded={expandedNodeList}
+            defaultEndIcon={<div style={{ width: 24 }}/>}
+            onNodeToggle={(event, nodes)=>(dispatch(setExpandedQueryList(nodes)))}
+        >
+            <GroupAnalysisList groupMap={groupMap}/>
+            <IndividualAnalysisList
+                individualIDList={individualIDList}
+                metaInfoMap={metaInfoMap}
+                selectedQuery={selectedQuery}
+                setDeleteDialogVisible={setDeleteDialogVisible}
+            />
+            <DeleteDialog
+                deleteDialogVisible={deleteDialogVisible}
+                setDeleteDialogVisible={setDeleteDialogVisible}
+                selectedQuery={selectedQuery}
+            />
+        </TreeView>
+    );
+}
+
+const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, setDeleteDialogVisible}) => {
+    const dispatch = useDispatch();
+    const classes = useStyles();
+
+    return (
+        <TreeItem style={{paddingTop: 16}} nodeId={ParaName.INDIVIDUAL_ANALYSIS} label={
+            <Typography variant="h5" color="inherit">
+                个体分析
+            </Typography>
+        }>
+            {
+                individualIDList.map(id=>(
+                    <TreeItem
+                        key={id}
+                        style={{backgroundColor: (id===selectedQuery? colors.grey[300]:'white')}}
+                        nodeId={id}
+                        onClick={()=>dispatch(setSelectedQuery(id))}
+                        label={
+                            <div className={classes.itemContent}>
+                                <DoubleClickToEdit
+                                    defaultValue={metaInfoMap[id].queryName}
+                                    editQuery={(value)=>dispatch(editQueryName(value,id))}
+                                />
+                                <DeleteIcon
+                                    className={classes.deleteIcon}
+                                    onClick={()=>setDeleteDialogVisible(true)}
+                                />
+                            </div>
+                        }
+                    >
+                    </TreeItem>
+                ))
+            }
+        </TreeItem>
+    )
+};
+
+const DoubleClickToEdit =({defaultValue, editQuery})=>{
+    // 如果两次点击之间的时间间隔小于250毫秒，判定为双击，可以进行修改
+    const [value, setValue] = useState(defaultValue);
+    const [isDialogOpen, setDialogOpen] = useState(false);
+    const [firstClickTime, setFirstClickTime] = useState(0);
+
+    const handleClick = (event)=>{
+        if(firstClickTime===0) {
+            // 初始化
+            setFirstClickTime(Date.now);
+        }
+        else{
+            const now = Date.now();
+            if((now-firstClickTime)<250){
+                setDialogOpen(true)
+            }
+            setFirstClickTime(Date.now);
+        }
+    };
+
+    const handleChange =(event)=>{
+        setValue(event.target.value)
+    };
+    return(
+        <Fragment>
+            <Typography onClick={handleClick} variant="h6" color="inherit">
+                {defaultValue}
+            </Typography>
+            <Dialog open={isDialogOpen}>
+                <DialogContent>
+                    <DialogActions>
+                        <TextField
+                            id={'editQuery'}
+                            label={"修改查询名称"}
+                            type={"text"}
+                            onChange={handleChange}
+                            value={value}
+                        />
+                        <Button onClick={()=>setDialogOpen(false)} color="primary">
+                            取消
+                        </Button>
+                        <Button onClick={()=>{
+                            editQuery(value);
+                            setDialogOpen(false)
+                        }} color="primary" autoFocus>
+                            确认
+                        </Button>
+                    </DialogActions>
+                </DialogContent>
+            </Dialog>
+        </Fragment>
+    )
+};
+
+const DeleteDialog = ({deleteDialogVisible, setDeleteDialogVisible, selectedQuery})=>{
+    const dispatch = useDispatch();
+
+    const handleConfirm =()=>{
+        setDeleteDialogVisible(false);
+        dispatch(deleteQuery(selectedQuery))
+    };
+
+    return (
+        <Dialog open={deleteDialogVisible}>
+            <DialogTitle>删除当前查询页</DialogTitle>
+            <DialogContent>
+                <DialogActions>
+                    <Button onClick={()=>setDeleteDialogVisible(false)} color="primary">
+                        取消
+                    </Button>
+                    <Button onClick={handleConfirm} color="primary" autoFocus>
+                        确认
+                    </Button>
+                </DialogActions>
+            </DialogContent>
+        </Dialog>
+    )
+};
+
+const GroupAnalysisList = ({groupMap})=>{
+    const dispatch = useDispatch();
     const rootNode =  createNestedStructure(groupMap);
 
+    // 由于群体分析会产生树形嵌套结构，需要使用递归才能实现
     const generateTreeMap = (node) =>{
         return (
             <TreeItem
                 key={node['id']}
                 nodeId={node['id']}
                 label={node['nodeName']}
-                onClick={()=>setSelectedQueryID(node['id'])}
+                onClick={()=>dispatch(setSelectedQuery(node['id']))}
             >
                 {
                     node['isLeaf']? null:
@@ -103,39 +269,24 @@ function QueryTreeView({setSelectedQueryID}) {
     };
 
     return (
-        <TreeView
-            className={classes.treeView}
-            defaultCollapseIcon={<ArrowDropDownIcon />}
-            defaultExpandIcon={<ArrowRightIcon />}
-            defaultEndIcon={<div style={{ width: 24 }} />}
-        >
-            <TreeItem nodeId={ParaName.GROUP_ANALYSIS} label="群体分析">
-                {
-                    rootNode['isLeaf']? null:
-                        rootNode['childNodes'].map(node=>(generateTreeMap(node)))
-                }
-            </TreeItem>
-            <TreeItem nodeId={ParaName.INDIVIDUAL_ANALYSIS} label="个体分析">
-                {
-                    individualIDList.map(id=>(
-                        <TreeItem
-                            key={id}
-                            nodeId={id}
-                            onClick={()=>setSelectedQueryID(id)}
-                            label={metaInfoMap[id].queryName}
-                        />
-                    ))
-                }
-            </TreeItem>
-        </TreeView>
-    );
-}
+        <TreeItem style={{paddingTop: 16}} nodeId={ParaName.GROUP_ANALYSIS} label={
+            <Typography variant="h5" color="inherit">
+                群体分析
+            </Typography>
+        }>
+            {
+                rootNode['isLeaf']? null:
+                    rootNode['childNodes'].map(node=>(generateTreeMap(node)))
+            }
+        </TreeItem>
+    )
+};
 
 const metaInfoMapSplit = (metaInfoMap) => {
     // 将metaInfoMap中混杂在一起的个体分析和群体分析MateInfo拆分成两个单独的部分
     let individualMap = {};
     let groupMap = {};
-    
+
     for(let id in metaInfoMap){
         if(!metaInfoMap.hasOwnProperty(id))
             continue;

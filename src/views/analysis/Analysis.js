@@ -29,20 +29,14 @@ const useStyles = makeStyles(() => ({
 
 const Analysis = () => {
     const classes = useStyles();
-    const [selectedQueryID, setSelectedQueryID] = useState(null);
 
     return (
         <div className={classes.root}>
             <div className={classes.management}>
-                <AnalysisManagement
-                    selectedQueryID={selectedQueryID}
-                    setSelectedQueryID={setSelectedQueryID}
-                />
+                <AnalysisManagement/>
             </div>
             <div className={classes.content}>
-                <AnalysisContent
-                    selectedQueryID={selectedQueryID}
-                />
+                <AnalysisContent/>
             </div>
         </div>
     )

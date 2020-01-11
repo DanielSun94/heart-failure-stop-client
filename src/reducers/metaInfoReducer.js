@@ -1,10 +1,22 @@
-import {CREATE_NEW_QUERY, DELETE_QUERY, EDIT_QUERY_NAME, META_INFO_SET_STATE} from "../actions/metaInfoAction";
+import {
+    CREATE_NEW_QUERY,
+    DELETE_QUERY,
+    EDIT_QUERY_NAME,
+    META_INFO_SET_STATE,
+    SET_EXPANDED,
+    SET_SELECTED_QUERY
+} from "../actions/metaInfoAction";
 
 // 个体分析和群体分析的元信息保存（包括查询类型，名称，筛选信息等）
 
 // metaInfoMap结构
 // {id: {queryType: (individual/group), queryName: (xxx), context: {xxx}}}
-const initStateInfo = {nextID: 1, metaInfoMap: {}};
+const initStateInfo = {
+    nextID: 1,
+    metaInfoMap: {},
+    expandedNodeList: [],
+    selectedQuery: "",
+};
 /*
 const initStateInfo = {nextID: 1, metaInfoMap: {
         1:{queryType: ParaName.GROUP_ANALYSIS, queryName: 'one', affiliated: null, context: {}},
@@ -27,6 +39,8 @@ const initStateInfo = {nextID: 1, metaInfoMap: {
 // 我们就可以快速恢复上一次的查询
 const metaInfoReducer = (state=initStateInfo, action) => {
     switch (action.type) {
+        case SET_EXPANDED: return {...state, expandedNodeList: action.expandedQueryList};
+        case SET_SELECTED_QUERY: return {...state, selectedQuery: action.selectedQuery};
         case META_INFO_SET_STATE: return {...action.newState};
         case CREATE_NEW_QUERY: {
             const queryID = state.nextID;
@@ -44,7 +58,7 @@ const metaInfoReducer = (state=initStateInfo, action) => {
         }
         case EDIT_QUERY_NAME: {
             const metaInfoMap = {...state.metaInfoMap};
-            metaInfoMap[action.id]['name'] = action.name;
+            metaInfoMap[action.id]['queryName'] = action.name;
             return {...state, metaInfoMap: metaInfoMap}
         }
         default: return {...state}

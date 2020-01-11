@@ -21,8 +21,7 @@ const useStyles = makeStyles({
         width: '100%',
         height: 470,
         display: 'flex',
-        paddingTop: 0,
-        paddingLeft: 0
+        padding: '0px 0px 0px 0px'
     },
     list: {
         width: "25%",
@@ -62,7 +61,8 @@ const ModelPanel = ({queryID}) => {
         if(isChanged){
             dispatch(modelReset(params, queryID))
         }
-    }, [unifiedPatientID, currentVisit, queryID]);
+    }, [unifiedPatientID, currentVisit.hospitalCode, currentVisit.visitType, currentVisit.visitID,
+        queryID]);
 
     return (
         <Card id={ParaName.MODEL_PANEL} className={classes.root}>

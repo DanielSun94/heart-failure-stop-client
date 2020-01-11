@@ -1,6 +1,5 @@
 import React from 'react';
 import {makeStyles} from "@material-ui/styles";
-import {Tabs, Tab, AppBar} from "@material-ui/core";
 import IndividualAnalysis from "./IndividualAnalysis/IndividualAnalysis";
 import GroupAnalysis from "./GroupAnalysis/GroupAnalysis";
 import {useSelector} from "react-redux";
@@ -18,10 +17,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const AnalysisContent = ({selectedQueryID}) => {
+const AnalysisContent = () => {
     const classes = useStyles();
-
-    const metaInfo = useSelector(state=>state.metaInfo.metaInfoMap)[selectedQueryID];
+    const selectedQuery =  useSelector(state=>state.metaInfo.selectedQuery);
+    const metaInfo = useSelector(state=>state.metaInfo.metaInfoMap)[selectedQuery];
     if(!metaInfo)
         return null;
 
@@ -32,10 +31,10 @@ const AnalysisContent = ({selectedQueryID}) => {
             {
                 queryType === ParaName.GROUP_ANALYSIS ?
                     <GroupAnalysis
-                        selectedQueryID={selectedQueryID}
+                        selectedQueryID={selectedQuery}
                     />
                     :
-                    <IndividualAnalysis selectedQueryID={selectedQueryID}/>
+                    <IndividualAnalysis selectedQueryID={selectedQuery}/>
             }
         </div>
     )
