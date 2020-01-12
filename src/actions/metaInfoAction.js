@@ -17,8 +17,9 @@ export function metaInfoSetState(newState) {
     return ({type: META_INFO_SET_STATE, newState: newState})
 }
 
-export function createNewQuery(queryType) {
-    return ({type: CREATE_NEW_QUERY, queryType: queryType})
+export function createNewQuery(queryType, affiliatedTo=null) {
+    // AffiliatedTo这一参数只对群体分析有意义（为了管理嵌套查询所形成的树状结构）
+    return ({type: CREATE_NEW_QUERY, queryType: queryType, affiliatedTo: affiliatedTo})
 }
 
 export function editQueryName(name, id) {

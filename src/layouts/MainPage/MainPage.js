@@ -159,7 +159,6 @@ const saveState=(currentSessionUser, token, entireState)=>{
     let header = {'Authorization': token};
     let formData = new FormData();
     const jsonStr = JSON.stringify(entireState);
-    const jsonStrLength = jsonStr.length;
     formData.append('userID', currentSessionUser);
     formData.append('stateContent', jsonStr);
     // 目前只做只管发出，不管是否成功

@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: 6,
         paddingBottom: 6
     },
-    deleteIcon: {
+    hover: {
         '&:hover': {
             color: colors.indigo[400]
         }
@@ -78,7 +78,8 @@ const AnalysisManagement = () => {
                     onClick={()=>setOpenDialog(true)}
                     size={'large'}
                     startIcon={<AddIcon size='large'/>}>
-                    <Typography variant={'h5'} style={{paddingTop: 6, paddingBottom:6, paddingLeft: 12, paddingRight: 12, color: "white"}}>
+                    <Typography variant={'h5'}
+                                style={{paddingTop: 6, paddingBottom:6, paddingLeft: 12, paddingRight: 12, color: "white"}}>
                         添加新查询
                     </Typography>
                 </RoundedButton >
@@ -155,7 +156,7 @@ const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, s
                                     editQuery={(value)=>dispatch(editQueryName(value,id))}
                                 />
                                 <DeleteIcon
-                                    className={classes.deleteIcon}
+                                    className={classes.hover}
                                     onClick={()=>setDeleteDialogVisible(true)}
                                 />
                             </div>
@@ -170,11 +171,12 @@ const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, s
 
 const DoubleClickToEdit =({defaultValue, editQuery})=>{
     // 如果两次点击之间的时间间隔小于250毫秒，判定为双击，可以进行修改
+    const classes = useStyles();
     const [value, setValue] = useState(defaultValue);
     const [isDialogOpen, setDialogOpen] = useState(false);
     const [firstClickTime, setFirstClickTime] = useState(0);
 
-    const handleClick = (event)=>{
+    const handleClick = ()=>{
         if(firstClickTime===0) {
             // 初始化
             setFirstClickTime(Date.now);
@@ -193,7 +195,7 @@ const DoubleClickToEdit =({defaultValue, editQuery})=>{
     };
     return(
         <Fragment>
-            <Typography onClick={handleClick} variant="h6" color="inherit">
+            <Typography className={classes.hover} onClick={handleClick} variant="h6" color="inherit">
                 {defaultValue}
             </Typography>
             <Dialog open={isDialogOpen}>
@@ -209,10 +211,14 @@ const DoubleClickToEdit =({defaultValue, editQuery})=>{
                         <Button onClick={()=>setDialogOpen(false)} color="primary">
                             取消
                         </Button>
-                        <Button onClick={()=>{
-                            editQuery(value);
-                            setDialogOpen(false)
-                        }} color="primary" autoFocus>
+                        <Button
+                            onClick={()=>{
+                                editQuery(value);
+                                setDialogOpen(false)
+                            }}
+                            color="primary"
+                            disabled={value.length === 0}
+                            autoFocus>
                             确认
                         </Button>
                     </DialogActions>

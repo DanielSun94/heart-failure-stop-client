@@ -45,7 +45,7 @@ const metaInfoReducer = (state=initStateInfo, action) => {
         case CREATE_NEW_QUERY: {
             const queryID = state.nextID;
 
-            let newQueryMetaInfo = {queryType: action.queryType, queryName: '查询'+queryID, affiliated: null, context: {}};
+            let newQueryMetaInfo = {queryType: action.queryType, queryName: '查询'+queryID, affiliated: action.affiliatedTo, context: {}};
             const metaInfoMap = {...state.metaInfoMap};
             metaInfoMap[queryID] = newQueryMetaInfo;
 

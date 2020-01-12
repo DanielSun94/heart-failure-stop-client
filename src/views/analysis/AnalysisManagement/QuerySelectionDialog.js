@@ -52,7 +52,7 @@ const QuerySelectionDialog =({openDialog, setOpenDialog})=>{
             dispatch(modelInitialize(queryID));
         }
         else if(queryType===ParaName.GROUP_ANALYSIS){
-            console.log('To Be Done')
+            dispatch(createNewQuery(ParaName.GROUP_ANALYSIS));
         }
         else {
             console.log('error')
@@ -68,14 +68,16 @@ const QuerySelectionDialog =({openDialog, setOpenDialog})=>{
             <DialogTitle id="query-type-selection">{"新查询类型"}</DialogTitle>
             <DialogContent>
                 <FormControl component="fieldset" className={classes.formControl}>
-                    <FormLabel component="legend">查询类型选择</FormLabel>
-                    <RadioGroup name="queryTypeSelection" value={queryType}
-                                onChange={(event)=>setQueryType(event.target.type)}>
-                        <FormControlLabel value={ParaName.INDIVIDUAL_ANALYSIS} control={<Radio />} label="个体分析" />
+                    <RadioGroup name="queryTypeSelection"
+                                onChange={(event)=>setQueryType(event.target.value)}>
+                        <FormControlLabel
+                            value={ParaName.INDIVIDUAL_ANALYSIS}
+                            control={<Radio color={'primary'} />}
+                            label="个体分析"
+                        />
                         <FormControlLabel
                             value={ParaName.GROUP_ANALYSIS}
-                            disabled
-                            control={<Radio />}
+                            control={<Radio color={'primary'}/>}
                             label="群体分析"
                         />
                     </RadioGroup>

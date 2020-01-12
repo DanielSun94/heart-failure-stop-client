@@ -63,7 +63,7 @@ const NavBar = () => {
   const history = useHistory();
   const classes = useStyles();
 
-  const [selectedIndex, setSelectedIndex] = useState(2);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   //初始状态下默认打开分析界面
   useEffect(()=>{

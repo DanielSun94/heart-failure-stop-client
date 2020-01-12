@@ -40,6 +40,12 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
+    },
+    waitContent: {
+        display: 'flex',
+        justifyContent: "center",
+        alignItems: 'center',
+        flexWrap: 'wrap'
     }
 }));
 
@@ -214,7 +220,7 @@ const WaitDialog = ({waitDialog, setWaitDialog, changeToUpdatePage}) => {
     let content;
     if(updateStatus==="complete"){
         content = (
-            <div >
+            <div className={classes.waitContent}>
                 <Typography variant="h6">
                     上传成功
                 </Typography>
@@ -223,7 +229,7 @@ const WaitDialog = ({waitDialog, setWaitDialog, changeToUpdatePage}) => {
     }
     else if(updateStatus==="inProgress"){
         content = (
-            <div >
+            <div className={classes.waitContent}>
                 <CircularProgress size={25} />
                 <Typography variant="h6">
                     上传中
@@ -233,7 +239,7 @@ const WaitDialog = ({waitDialog, setWaitDialog, changeToUpdatePage}) => {
     }
     else{
         content = (
-            <div >
+            <div className={classes.waitContent}>
                 <Typography variant="h6">
                     上传失败
                 </Typography>
