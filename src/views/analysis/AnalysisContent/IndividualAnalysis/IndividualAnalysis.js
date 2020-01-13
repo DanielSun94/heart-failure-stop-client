@@ -8,7 +8,8 @@ import VitalSign from './subview/VitalSign';
 import ModelPanel from "./subview/ModelPanel";
 import ParaName from '../../../../utils/ParaName'
 import { makeStyles } from '@material-ui/styles';
-import { colors, Grid, Hidden } from '@material-ui/core';
+import { colors, Grid } from '@material-ui/core';
+import {useParams} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -19,8 +20,9 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const IndividualAnalysis = ({selectedQueryID}) => {
+const IndividualAnalysis = () => {
     const classes = useStyles();
+    const {queryID} = useParams();
 
     document.title = ParaName.HF_STOP+"个体分析";
 
@@ -28,27 +30,25 @@ const IndividualAnalysis = ({selectedQueryID}) => {
         <div className={classes.root}>
             <Grid container spacing={2}>
                 <Grid item lg={3} sm={4} xs={12}>
-                    <UnifiedPatientIDAndPatientBasicInfoPanel queryID={selectedQueryID} />
+                    <UnifiedPatientIDAndPatientBasicInfoPanel queryID={queryID} />
                 </Grid>
-                <Hidden lgUp>
-                </Hidden>
                 <Grid item xl={9} lg={8} md={12} xs={12}>
-                    <Trajectory queryID={selectedQueryID}/>
+                    <Trajectory queryID={queryID}/>
                 </Grid>
                 <Grid item xs={12}>
-                    <ModelPanel queryID={selectedQueryID}/>
+                    <ModelPanel queryID={queryID}/>
                 </Grid>
                 <Grid item lg={12} md={12} xs={12}>
-                    <LabtestResult queryID={selectedQueryID}/>
+                    <LabtestResult queryID={queryID}/>
                 </Grid>
                 <Grid item lg={12} md={12} xs={12}>
-                    <VitalSign queryID={selectedQueryID}/>
+                    <VitalSign queryID={queryID}/>
                 </Grid>
                 <Grid item lg={12} md={12} xs={12}>
-                    <Order queryID={selectedQueryID}/>
+                    <Order queryID={queryID}/>
                 </Grid>
                 <Grid item lg={12} md={12} xs={12}>
-                    <Exam queryID={selectedQueryID}/>
+                    <Exam queryID={queryID}/>
                 </Grid>
             </Grid>
         </div>

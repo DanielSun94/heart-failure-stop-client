@@ -3,7 +3,11 @@ import {makeStyles} from "@material-ui/styles";
 import IndividualAnalysis from "./IndividualAnalysis/IndividualAnalysis";
 import GroupAnalysis from "./GroupAnalysis/GroupAnalysis";
 import {useSelector} from "react-redux";
-import ParaName from "../../../utils/ParaName";
+import RouteName from "../../../utils/RouteName";
+import {
+    Switch,
+    Route
+} from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -21,21 +25,23 @@ const AnalysisContent = () => {
     const classes = useStyles();
     const selectedQuery =  useSelector(state=>state.metaInfo.selectedQuery);
     const metaInfo = useSelector(state=>state.metaInfo.metaInfoMap)[selectedQuery];
+    const path = RouteName.MAIN_PAGE+RouteName.ANALYSIS;
     if(!metaInfo)
         return null;
 
-    const queryType = metaInfo['queryType'];
-
     return (
         <div className={classes.root}>
-            {
-                queryType === ParaName.GROUP_ANALYSIS ?
-                    <GroupAnalysis
-                        selectedQueryID={selectedQuery}
-                    />
-                    :
-                    <IndividualAnalysis selectedQueryID={selectedQuery}/>
-            }
+            <Switch>
+                <Route path={path+RouteName.GROUP_ANALYSIS+"/:queryID"}>
+                    <GroupAnalysis />
+                </Route>
+                <Route path={path+RouteName.INDIVIDUAL_ANALYSIS+"/:queryID"}>
+                    <IndividualAnalysis />
+                </Route>
+                <Route path={path+RouteName.BLANK}>
+                    <h1> 未选中数据 </h1>
+                </Route>
+            </Switch>
         </div>
     )
 };

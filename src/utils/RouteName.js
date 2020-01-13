@@ -4,14 +4,15 @@ class RouteName{
     static INDEX = "/";
 
     // Main page
-    static MAIN_PAGE = "/heart-failure-stop";
+    static MAIN_PAGE = "/heartFailureStop";
 
     // content route
     static ANALYSIS = '/analysis';
-    static DATA_OUTPUT = '/data-output';
-    static ALGORITHM_MANAGEMENT = "/algorithm-management";
-    static ACCOUNT_MANAGEMENT = "/account-management";
-    static LOG_OUT = "/log-out";
+    static DATA_OUTPUT = '/dataOutput';
+    static ALGORITHM_MANAGEMENT = "/algorithmManagement";
+    static ACCOUNT_MANAGEMENT = "/accountManagement";
+    static LOG_OUT = "/logout";
+    static BLANK = "/blank";
 
     // Authentic Route
     static AUTHENTIC_PAGE = "/authentic";
@@ -22,7 +23,16 @@ class RouteName{
     static GET = "GET";
     static POST = "POST";
 
-    // Trajectory Analysis Data Route
+    // Group Analysis
+    static GROUP_ANALYSIS = '/groupAnalysis';
+    static VISIT_LIST = '/visitList';
+    static STATISTICS = '/statistics';
+    static SAVE_RESULT = '/saveResult';
+    static FILTER = '/filter';
+
+    // Individual Analysis Data Route
+    static INDIVIDUAL_ANALYSIS = '/individualAnalysis';
+
     // b means backend
     static B_INDIVIDUAL_ANALYSIS_DATA_ROOT = "/backend/data/individualAnalysis";
     static B_INDIVIDUAL_ANALYSIS_UNIFIED_PATIENT_ID = "/unifiedPatientID";
@@ -53,6 +63,9 @@ class RouteName{
     static B_USER_INFO = "/userInfo";
 
     // Algorithm Management
+    static CREATE_ALGORITHM = '/createAlgorithm';
+    static UPDATE_ALGORITHM = '/updateAlgorithm';
+
     static B_ALGORITHM_MANAGEMENT = "/backend/algorithmManagement";
     static B_UPLOAD_MODEL_FILE = "/uploadModelFile";
     static B_DOWNLOAD_MODEL_FILE = "/downloadModelFile";

@@ -5,7 +5,8 @@ import { makeStyles } from '@material-ui/styles';
 import { NavBar } from './components';
 import {
   Switch,
-  Route} from 'react-router-dom';
+  Route
+} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import AccountManagement from '../../views/account/AccountManagement'
 import AlgorithmManagement from '../../views/algorithm/AlgorithmManagement'
@@ -44,6 +45,7 @@ const useStyles = makeStyles(() => ({
   },
   navBar: {
     width: "3%",
+    minWidth: 56,
     height: '100%',
     // flex指代flex grow，flex-shrink和flex-basis，因此有三个属性
     // 该三个元素用于标记本元素（在沿主轴方向排列后）如何分配父级元素中的空间（主轴默认为水平方向从左至右，可以通过flexDirection设定）

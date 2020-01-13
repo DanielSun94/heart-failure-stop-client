@@ -19,6 +19,8 @@ import {useSelector, useDispatch} from "react-redux";
 import ParaName from "../../../utils/ParaName";
 import QuerySelectionDialog from "./QuerySelectionDialog";
 import {setSelectedQuery, setExpandedQueryList, deleteQuery, editQueryName} from "../../../actions/metaInfoAction";
+import {useHistory} from 'react-router-dom'
+import RouteName from "../../../utils/RouteName";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
         height: 264,
         flexGrow: 1,
         maxWidth: 400,
+        minWidth: 250,
     },
     createNewQuery:{
         height: 85,
@@ -60,12 +63,14 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             color: colors.indigo[400]
         }
+    },
+    treeItem:{
+        backgroundColor: colors.grey[400],
     }
 }));
 
 const AnalysisManagement = () => {
     const classes = useStyles();
-
     const [openDialog, setOpenDialog] = useState(false);
 
     return (
@@ -112,11 +117,16 @@ function QueryTreeView() {
             className={classes.treeView}
             defaultCollapseIcon={<ArrowDropDownIcon />}
             defaultExpandIcon={<ArrowRightIcon />}
-            expanded={expandedNodeList}
+            expanded={expandedNodeList.map(item=>item.toString())}
             defaultEndIcon={<div style={{ width: 24 }}/>}
             onNodeToggle={(event, nodes)=>(dispatch(setExpandedQueryList(nodes)))}
         >
-            <GroupAnalysisList groupMap={groupMap}/>
+            <GroupAnalysisList 
+                groupMap={groupMap} 
+                selectedQuery={selectedQuery}
+                metaInfoMap={metaInfoMap}
+                setDeleteDialogVisible={setDeleteDialogVisible}
+            />
             <IndividualAnalysisList
                 individualIDList={individualIDList}
                 metaInfoMap={metaInfoMap}
@@ -135,7 +145,8 @@ function QueryTreeView() {
 const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, setDeleteDialogVisible}) => {
     const dispatch = useDispatch();
     const classes = useStyles();
-
+    const history = useHistory();
+    const path = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS;
     return (
         <TreeItem style={{paddingTop: 16}} nodeId={ParaName.INDIVIDUAL_ANALYSIS} label={
             <Typography variant="h5" color="inherit">
@@ -146,18 +157,26 @@ const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, s
                 individualIDList.map(id=>(
                     <TreeItem
                         key={id}
-                        style={{backgroundColor: (id===selectedQuery? colors.grey[300]:'white')}}
                         nodeId={id}
-                        onClick={()=>dispatch(setSelectedQuery(id))}
+                        onClick={()=>{
+                            dispatch(setSelectedQuery(id));
+                            history.push(path+"/"+id)
+                        }}
+                        classes={selectedQuery===id?{content:classes.treeItem}:null}
                         label={
-                            <div className={classes.itemContent}>
+                            <div 
+                                className={classes.itemContent}
+                            >
                                 <DoubleClickToEdit
                                     defaultValue={metaInfoMap[id].queryName}
                                     editQuery={(value)=>dispatch(editQueryName(value,id))}
                                 />
                                 <DeleteIcon
                                     className={classes.hover}
-                                    onClick={()=>setDeleteDialogVisible(true)}
+                                    onClick={()=>{
+                                        setDeleteDialogVisible(true);
+                                        history.push(path+RouteName.BLANK)
+                                    }}
                                 />
                             </div>
                         }
@@ -230,10 +249,13 @@ const DoubleClickToEdit =({defaultValue, editQuery})=>{
 
 const DeleteDialog = ({deleteDialogVisible, setDeleteDialogVisible, selectedQuery})=>{
     const dispatch = useDispatch();
+    const path = RouteName.MAIN_PAGE+RouteName.ANALYSIS;
+    const history = useHistory();
 
     const handleConfirm =()=>{
         setDeleteDialogVisible(false);
-        dispatch(deleteQuery(selectedQuery))
+        dispatch(deleteQuery(selectedQuery));
+        history.push(path+RouteName.BLANK)
     };
 
     return (
@@ -253,18 +275,43 @@ const DeleteDialog = ({deleteDialogVisible, setDeleteDialogVisible, selectedQuer
     )
 };
 
-const GroupAnalysisList = ({groupMap})=>{
+const GroupAnalysisList = ({groupMap, selectedQuery, setDeleteDialogVisible, metaInfoMap})=>{
     const dispatch = useDispatch();
+    const classes = useStyles();
+    const history = useHistory();
     const rootNode =  createNestedStructure(groupMap);
+    const path = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.GROUP_ANALYSIS;
 
     // 由于群体分析会产生树形嵌套结构，需要使用递归才能实现
     const generateTreeMap = (node) =>{
+        const id = node.id;
+        const idStr = id.toString();
         return (
             <TreeItem
-                key={node['id']}
-                nodeId={node['id']}
-                label={node['nodeName']}
-                onClick={()=>dispatch(setSelectedQuery(node['id']))}
+                key={idStr}
+                nodeId={idStr}
+                classes={selectedQuery===id?{content:classes.treeItem}:null}
+                onClick={()=>{
+                    dispatch(setSelectedQuery(idStr));
+                    history.push(path+"/"+idStr)
+                }}
+                label={
+                <div 
+                    className={classes.itemContent}
+                >
+                    <DoubleClickToEdit
+                        defaultValue={metaInfoMap[id].queryName}
+                        editQuery={(value)=>dispatch(editQueryName(value,id))}
+                    />
+                    <DeleteIcon
+                        className={classes.hover}
+                        onClick={()=>{
+                            setDeleteDialogVisible(true)
+                        }}
+                    />
+                </div>
+
+            }
             >
                 {
                     node['isLeaf']? null:

@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const CreateNewModel = ({changeToUpdatePage, setBlockAlgorithmChange})=>{
+const CreateNewModel = ({setBlockAlgorithmChange})=>{
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
     const [modelNameMap, setModelNameMap] = useState({
@@ -142,13 +142,11 @@ const CreateNewModel = ({changeToUpdatePage, setBlockAlgorithmChange})=>{
            />
            <WaitDialog
                waitDialog={waitDialog}
-               changeToUpdatePage={changeToUpdatePage}
                setWaitDialog={setWaitDialog}
            />
             <ExitDialog
                 exitDialog={exitDialog}
                 setExitDialog={setExitDialog}
-                changeToUpdatePage={changeToUpdatePage}
             />
         </div>
     );

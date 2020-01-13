@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import AnalysisContent from "./AnalysisContent/AnalysisContent";
 import AnalysisManagement from "./AnalysisManagement/AnalysisManagement";
 import {makeStyles} from "@material-ui/styles";
@@ -14,6 +14,7 @@ const useStyles = makeStyles(() => ({
     },
     management:{
         width: "20%",
+        minWidth: 250,
         height: "100%",
         backgroundColor: 'white',
         borderRightColor: colors.grey[200],

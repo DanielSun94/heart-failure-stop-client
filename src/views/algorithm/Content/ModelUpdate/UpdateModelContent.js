@@ -14,6 +14,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import DeleteModel from "./DeleteModel";
 import ModelInfo from "./ModelInfo";
 import {useDispatch, useSelector} from "react-redux";
+import {useParams} from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -93,14 +94,14 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const UpdateModelContent = ({selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory,
-                     setMainCategory, setAlgorithmMainCategory, setAlgorithmSubCategory})=> {
+const UpdateModelContent = ({setMainCategory, setAlgorithmMainCategory, setAlgorithmSubCategory})=> {
+    const {modelCategory, modelName, modelFunction} = useParams();
     const classes = useStyles();
     const dispatch = useDispatch();
     const modelInfo = useSelector(state=>state.algorithm.modelInfo);
     useEffect(()=>{
-        dispatch(getModelInfo(selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory))
-        }, [selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory]);
+        dispatch(getModelInfo(modelCategory, modelName, modelFunction))
+        }, [modelFunction, modelName, modelCategory]);
 
     return (
         <div className={classes.root}>
@@ -115,45 +116,45 @@ const UpdateModelContent = ({selectedMainCategory, selectedAlgorithmMainCategory
             <div className={classes.modelModify}>
                 <div className={classes.platform}>
                     <PlatformSelect
-                        mainCategory={selectedMainCategory}
-                        algorithmSubCategory={selectedAlgorithmSubCategory}
-                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                        mainCategory={modelCategory}
+                        algorithmSubCategory={modelFunction}
+                        algorithmMainCategory={modelName}
                     />
                 </div>
                 <div className={classes.modelFile}>
                     <ModelFileManagement
-                        mainCategory={selectedMainCategory}
-                        algorithmSubCategory={selectedAlgorithmSubCategory}
-                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                        mainCategory={modelCategory}
+                        algorithmSubCategory={modelFunction}
+                        algorithmMainCategory={modelName}
                     />
                 </div>
                 <div className={classes.modelConfig}>
                     <ModelConfigManagement
-                        mainCategory={selectedMainCategory}
-                        algorithmSubCategory={selectedAlgorithmSubCategory}
-                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                        mainCategory={modelCategory}
+                        algorithmSubCategory={modelFunction}
+                        algorithmMainCategory={modelName}
                     />
                 </div>
 
                 <div className={classes.preprocessModule}>
                     <PreprocessingManagement
-                        mainCategory={selectedMainCategory}
-                        algorithmSubCategory={selectedAlgorithmSubCategory}
-                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                        mainCategory={modelCategory}
+                        algorithmSubCategory={modelFunction}
+                        algorithmMainCategory={modelName}
                     />
                 </div>
                 <div className={classes.modelDoc}>
                     <ModelDocumentManagement
-                        mainCategory={selectedMainCategory}
-                        algorithmSubCategory={selectedAlgorithmSubCategory}
-                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                        mainCategory={modelCategory}
+                        algorithmSubCategory={modelFunction}
+                        algorithmMainCategory={modelName}
                     />
                 </div>
                 <div className={classes.accessControl}>
                     <AccessControl
-                        mainCategory={selectedMainCategory}
-                        algorithmSubCategory={selectedAlgorithmSubCategory}
-                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                        mainCategory={modelCategory}
+                        algorithmSubCategory={modelFunction}
+                        algorithmMainCategory={modelName}
                     />
                 </div>
                 <div className={classes.note}>
@@ -166,9 +167,9 @@ const UpdateModelContent = ({selectedMainCategory, selectedAlgorithmMainCategory
                 </div>
                 <div className={classes.deleteDiv}>
                     <DeleteModel
-                        mainCategory={selectedMainCategory}
-                        algorithmSubCategory={selectedAlgorithmSubCategory}
-                        algorithmMainCategory={selectedAlgorithmMainCategory}
+                        mainCategory={modelCategory}
+                        algorithmSubCategory={modelFunction}
+                        algorithmMainCategory={modelName}
                         setMainCategory={setMainCategory}
                         setAlgorithmMainCategory={setAlgorithmMainCategory}
                         setAlgorithmSubCategory={setAlgorithmSubCategory}

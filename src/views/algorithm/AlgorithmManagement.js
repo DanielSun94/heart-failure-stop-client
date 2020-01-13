@@ -1,5 +1,6 @@
 import React, {
     useState,
+    useEffect
 } from 'react';
 import {
     Button,
@@ -15,6 +16,12 @@ import SubCategory from './SubCategory'
 import UpdateModelContent from './Content/ModelUpdate/UpdateModelContent'
 import {makeStyles} from "@material-ui/styles";
 import CreateNewModel from "./Content/ModelCreate/CreateNewModelContent";
+import {
+    Switch,
+    Route,
+    useHistory
+} from 'react-router-dom';
+import RouteName from "../../utils/RouteName";
 
 export const MODEL_CATEGORY_PROGRESSION_ANALYSIS = "progressionAnalysis";
 export const MODEL_CATEGORY_RISK_ASSESSMENT = "riskAssessment";
@@ -135,58 +142,33 @@ const constructAlgorithmSubList = (selectedMainCategory, selectedAlgorithmMainCa
 
 const AlgorithmManagement = () => {
     const classes = useStyles();
-
+    const history = useHistory();
+    const path = RouteName.MAIN_PAGE+RouteName.ALGORITHM_MANAGEMENT;
     // 算法列表清单的初始化已经在MainPage完成
     const algorithmList = useSelector(state=>state.algorithm.algorithmList);
     const algorithmMap = algorithmTransfer(algorithmList);
 
     // create or upload
-    const [pageType, setPageType] = useState("update");
     const [blockAlgorithmChange, setBlockAlgorithmChange] = useState(false);
     const [selectedMainCategory, setMainCategory] = useState('NotSelected');
     const [selectedAlgorithmMainCategory, setAlgorithmMainCategory] = useState('NotSelected');
     const [selectedAlgorithmSubCategory, setAlgorithmSubCategory] = useState('NotSelected');
 
-    const algorithmSubList= constructAlgorithmSubList(selectedMainCategory, selectedAlgorithmMainCategory, algorithmMap);
-
-    const changeToCreatePage = ()=>{
-        setPageType("create");
-        setBlockAlgorithmChange(true)
-    };
-    const changeToUpdatePage = ()=>{
-        setPageType("update");
-        setBlockAlgorithmChange(false)
-    };
-
-    let content;
-    if(pageType==="create")(
-        content = <CreateNewModel
-            changeToUpdatePage={changeToUpdatePage} setBlockAlgorithmChange={setBlockAlgorithmChange}
-        />
-    );
-    else if(pageType==="update"){
+    useEffect(()=>{
         if(selectedMainCategory !== "NotSelected"
             && selectedAlgorithmMainCategory !== "NotSelected"
             && selectedAlgorithmSubCategory !== "NotSelected") {
-            content = (<UpdateModelContent
-                selectedMainCategory={selectedMainCategory}
-                selectedAlgorithmMainCategory={selectedAlgorithmMainCategory}
-                selectedAlgorithmSubCategory={selectedAlgorithmSubCategory}
-                setMainCategory={setMainCategory}
-                setAlgorithmMainCategory={setAlgorithmMainCategory}
-                setAlgorithmSubCategory={setAlgorithmSubCategory}
-            />)
+            history.push(path + RouteName.UPDATE_ALGORITHM + "/" + selectedMainCategory + "/" +
+                selectedAlgorithmMainCategory + "/" + selectedAlgorithmSubCategory);
         }
-        else{
-            content = (
-                <div className={classes.nullContainer}>
-                    <Typography variant={'h4'}>
-                        请选择算法
-                    </Typography>
-                </div>
-            )
-        }
-    }
+    }, [selectedMainCategory, selectedAlgorithmMainCategory, selectedAlgorithmSubCategory]);
+
+    const algorithmSubList= constructAlgorithmSubList(selectedMainCategory, selectedAlgorithmMainCategory, algorithmMap);
+
+    const changeToCreatePage = ()=>{
+        history.push(path+RouteName.CREATE_ALGORITHM);
+        setBlockAlgorithmChange(true)
+    };
 
     return (
         <div className={classes.root}>
@@ -220,7 +202,6 @@ const AlgorithmManagement = () => {
                         algorithmList={algorithmSubList}
                         setAlgorithmSubCategory={setAlgorithmSubCategory}
                         block={blockAlgorithmChange}
-
                     />
                 </div>
                 <div className={classes.addAlgorithm}>
@@ -236,7 +217,25 @@ const AlgorithmManagement = () => {
                 </div>
             </div>
             <div className={classes.content}>
-                {content}
+                <Switch>
+                    <Route path={path+RouteName.CREATE_ALGORITHM}>
+                        <CreateNewModel setBlockAlgorithmChange={setBlockAlgorithmChange}/>
+                    </Route>
+                    <Route path={path+RouteName.UPDATE_ALGORITHM+"/:modelCategory/:modelName/:modelFunction"}>
+                        <UpdateModelContent
+                            setMainCategory={setMainCategory}
+                            setAlgorithmMainCategory={setAlgorithmMainCategory}
+                            setAlgorithmSubCategory={setAlgorithmSubCategory}
+                        />
+                    </Route>
+                    <Route path={path}>
+                        <div className={classes.nullContainer}>
+                            <Typography variant={'h4'}>
+                                请选择算法
+                            </Typography>
+                        </div>
+                    </Route>
+                </Switch>
             </div>
         </div>
     )
