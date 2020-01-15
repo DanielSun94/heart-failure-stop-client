@@ -23,7 +23,7 @@ function examRequestPost(queryID) {
     return ({type: EXAM_REQUEST_POST, queryID: queryID})
 }
 
-function examDelete(queryID) {
+export function examDelete(queryID) {
     return ({type: EXAM_DELETE, queryID: queryID})
 }
 

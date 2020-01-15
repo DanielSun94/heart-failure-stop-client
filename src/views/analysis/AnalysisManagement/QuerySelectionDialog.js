@@ -6,7 +6,6 @@ import {
     DialogTitle,
     FormControl,
     FormControlLabel,
-    FormLabel,
     Radio,
     RadioGroup,
     DialogContent} from "@material-ui/core";
@@ -23,6 +22,7 @@ import {unifiedIdAndBasicInfoInitialize} from "../../../actions/individualAnalys
 import {vitalSignInitialize} from "../../../actions/individualAnalysisAction/vitalSignAction";
 import {orderInitialize} from "../../../actions/individualAnalysisAction/orderAction";
 import {modelInitialize} from "../../../actions/individualAnalysisAction/modelAction";
+import {initializeManagementQuery} from "../../../actions/groupAnalysisAction/managementAction";
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -53,6 +53,7 @@ const QuerySelectionDialog =({openDialog, setOpenDialog})=>{
         }
         else if(queryType===ParaName.GROUP_ANALYSIS){
             dispatch(createNewQuery(ParaName.GROUP_ANALYSIS));
+            dispatch(initializeManagementQuery(queryID));
         }
         else {
             console.log('error')

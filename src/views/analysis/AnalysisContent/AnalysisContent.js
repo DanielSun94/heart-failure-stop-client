@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
         display: 'flex',
         justifyContent: 'flex-start',
         flexWrap: 'wrap',
-        overflow: 'scroll'
+        overflow: 'auto'
     },
 }));
 

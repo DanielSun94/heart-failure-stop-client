@@ -6,13 +6,15 @@ import {
     MODEL_RESET,
     ADD_SELECTED_MODEL,
     DELETE_SELECTED_MODEL,
-    MODEL_SET_STATE
+    MODEL_SET_STATE,
+    MODEL_DELETE_ALL
 } from '../../actions/individualAnalysisAction/modelAction';
 
 const initStateInfo = {};
 
 const modelReducer = (state=initStateInfo, action) => {
     switch (action.type){
+        case MODEL_DELETE_ALL: return deleteAllModel(state, action.queryID);
         case ADD_SELECTED_MODEL: return addSelectedModel(state, action.unifiedModelName, action.queryID);
         case DELETE_SELECTED_MODEL: return deleteSelectedModel(state, action.unifiedModelName, action.queryID);
         case MODEL_PANEL_INITIALIZE: return modelPanelInitialize(state, action.queryID);
@@ -33,6 +35,11 @@ const modelReducer = (state=initStateInfo, action) => {
         default: return state;
     }
 };
+
+function deleteAllModel(state, queryID){
+    delete state[queryID];
+    return {...state}
+}
 
 function addSelectedModel(state, selectedModel, queryID) {
     state[queryID].selectedModelList.push(selectedModel);

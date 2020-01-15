@@ -17,8 +17,11 @@ import {addSelectedModel, deleteSelectedModel} from "../../../../../../actions/i
 const useStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.white,
-        overflow: 'scroll',
+        overflow: 'auto',
         height: 417,
+        borderRightColor: colors.grey[200],
+        borderRightStyle: 'solid',
+        borderRightWidth: 1
     },
     summaryContent: {
         display: 'flex',

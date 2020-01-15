@@ -25,16 +25,16 @@ const Auth = () => {
   // 如果url不做任何指定，则跳转到登录界面，如果url被指定为Register，则跳转到注册界面
   // 如果URL是其它值，则跳转到登录界面，但是在控制台报错
   if (currentUrl === RouteName.AUTHENTIC_PAGE){
-    history.push(RouteName.AUTHENTIC_PAGE+RouteName.AUTH_LOGIN)
+    history.push(RouteName.AUTHENTIC_PAGE+RouteName.AUTH_LOGIN);
     console.log('no page delegated, auto redirect to login page')
   }
   else if (currentUrl===RouteName.AUTHENTIC_PAGE+RouteName.AUTH_LOGIN)
-    console.log('to login page')
+    console.log('to login page');
   else if (currentUrl===RouteName.AUTHENTIC_PAGE+RouteName.AUTH_REGISTER){
     console.log('to register page')
   }
   else{
-    history.push(RouteName.AUTHENTIC_PAGE+RouteName.AUTH_LOGIN)
+    history.push(RouteName.AUTHENTIC_PAGE+RouteName.AUTH_LOGIN);
     console.log('illegal authentic url, auto redirect to login page')
   }
   return (

@@ -52,7 +52,7 @@ const metaInfoReducer = (state=initStateInfo, action) => {
             return {...state, nextID: queryID+1, metaInfoMap: {...metaInfoMap}}
         }
         case DELETE_QUERY: {
-            let toDeleteList = [action.id]
+            let toDeleteList = [action.id];
             const cascadeDeleteList=(fatherNodeID, queryToDeleteList) => {
                 for(let id in metaInfoMap){
                     const affiliatedID = metaInfoMap[id].affiliated;
@@ -62,8 +62,7 @@ const metaInfoReducer = (state=initStateInfo, action) => {
                     }
                 }
                 return queryToDeleteList;
-            }
-            
+            };
 
             // 当删除一个父query时，级联删除所有下级query
             const metaInfoMap = {...state.metaInfoMap};
@@ -72,14 +71,15 @@ const metaInfoReducer = (state=initStateInfo, action) => {
                 delete metaInfoMap[Number.parseInt(item)];
             }
 
-            // 每当delete一个query时，重新扫描所有id，将最大id进行重置
-            let nextID = 1
+            // 每当delete一个query时，重新扫描所有id，将最大id进行重置，并重新选择selectedQuery
+            let currentMaxID = 1;
             for(let id in metaInfoMap){
-                id = Number.parseInt(id)
-                if(id>=nextID)
-                    nextID=id+1; 
+                id = Number.parseInt(id);
+                if(id>=currentMaxID)
+                    currentMaxID=id;
             }
-        return {...state, metaInfoMap: metaInfoMap, nextID: nextID}
+
+        return {...state, metaInfoMap: metaInfoMap, nextID: currentMaxID+1, selectedQuery: currentMaxID}
         }
         case EDIT_QUERY_NAME: {
             const metaInfoMap = {...state.metaInfoMap};

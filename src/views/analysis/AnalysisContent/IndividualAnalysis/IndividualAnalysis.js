@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => ({
 const IndividualAnalysis = () => {
     const classes = useStyles();
     const {queryID} = useParams();
+    const queryIDNumber = Number.parseInt(queryID);
 
     document.title = ParaName.HF_STOP+"个体分析";
 
@@ -30,25 +31,25 @@ const IndividualAnalysis = () => {
         <div className={classes.root}>
             <Grid container spacing={2}>
                 <Grid item lg={3} sm={4} xs={12}>
-                    <UnifiedPatientIDAndPatientBasicInfoPanel queryID={queryID} />
+                    <UnifiedPatientIDAndPatientBasicInfoPanel queryID={queryIDNumber} />
                 </Grid>
                 <Grid item xl={9} lg={8} md={12} xs={12}>
-                    <Trajectory queryID={queryID}/>
+                    <Trajectory queryID={queryIDNumber}/>
                 </Grid>
                 <Grid item xs={12}>
-                    <ModelPanel queryID={queryID}/>
+                    <ModelPanel queryID={queryIDNumber}/>
                 </Grid>
                 <Grid item lg={12} md={12} xs={12}>
-                    <LabtestResult queryID={queryID}/>
+                    <LabtestResult queryID={queryIDNumber}/>
                 </Grid>
                 <Grid item lg={12} md={12} xs={12}>
-                    <VitalSign queryID={queryID}/>
+                    <VitalSign queryID={queryIDNumber}/>
                 </Grid>
                 <Grid item lg={12} md={12} xs={12}>
-                    <Order queryID={queryID}/>
+                    <Order queryID={queryIDNumber}/>
                 </Grid>
                 <Grid item lg={12} md={12} xs={12}>
-                    <Exam queryID={queryID}/>
+                    <Exam queryID={queryIDNumber}/>
                 </Grid>
             </Grid>
         </div>

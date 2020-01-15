@@ -37,6 +37,11 @@ const useStyles = makeStyles(() => ({
 
 const UnifiedPatientIDAndPatientBasicInfoPanel = ({queryID}) => {
     const dispatch = useDispatch();
+    const localPatientID = useSelector(
+        state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].localPatientID);
+    const errorType = useSelector(
+        state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].dataStatus);
+
 
     const classes = useStyles();
 
@@ -45,13 +50,11 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = ({queryID}) => {
 
     // query part
     const handlePatientQuery = (event) => {
-        dispatch(fetchUnifiedPatientID(event, hospitalCode, queryID))
+        event.preventDefault();
+        dispatch(fetchUnifiedPatientID(localPatientID, hospitalCode, queryID))
     };
     const handleLocalPatientIDChange = (event) => dispatch(changeLocalPatientID(event.target.value, queryID));
-    const localPatientID = useSelector(
-        state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].localPatientID);
-    const errorType = useSelector(
-        state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].dataStatus);
+
     let errorTag;
     switch(errorType){
         case FAILED_NOT_FOUND: errorTag= <h5> 该ID无法匹配到患者 </h5>; break;

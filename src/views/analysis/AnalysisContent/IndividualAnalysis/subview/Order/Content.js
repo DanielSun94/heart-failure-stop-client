@@ -103,8 +103,6 @@ const OrderContent = ({dataMap, selectedOrder}) => {
     if(dataMap && Object.keys(dataMap).length > 0 && selectedOrder && selectedOrder !== '' && dataMap[selectedOrder]){
 
         const result = dataMap[selectedOrder];
-        if(result.length > 1)
-            console.log(result);
         let resultList = [];
 
         for(let item of result){

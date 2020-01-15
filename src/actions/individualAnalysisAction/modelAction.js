@@ -3,6 +3,7 @@ import {queryParamsTrans} from '../../utils/queryUtilFunction';
 import ParaName from '../../utils/ParaName';
 import RouteName from '../../utils/RouteName';
 
+export const MODEL_DELETE_ALL = "MODEL_DELETE_ALL";
 export const MODEL_SET_STATE = "MODEL_SET_STATE";
 export const ADD_SELECTED_MODEL = "ADD_SELECTED_MODEL";
 export const DELETE_SELECTED_MODEL = "DELETE_SELECTED_MODEL";
@@ -11,6 +12,10 @@ export const MODEL_PANEL_INITIALIZE = "MODEL_PANEL_INITIALIZE";
 export const MODEL_EXECUTE_REQUEST = 'MODEL_EXECUTE_REQUEST';
 export const MODEL_RECEIVE_SUCCESS_RESULT = 'MODEL_RECEIVE_SUCCESS_RESULT';
 export const MODEL_RECEIVE_FAILED_RESULT = 'MODEL_RECEIVE_FAILED_RESULT';
+
+export function modelDeleteAll(queryID) {
+    return ({type: MODEL_DELETE_ALL, queryID: queryID})
+}
 
 export function modelSetState(newState) {
     return ({type: MODEL_SET_STATE, newState: newState})

@@ -241,7 +241,6 @@ export function fetchModelListPosts() {
                     }
                     else{
                         dispatch(receiveModelListSuccessResult(res));
-                        console.log('get algorithm info succeed');
 
                         //初始化所有模型更新信息的状态
                         let modelUpdateInfo = {

@@ -4,7 +4,7 @@ import ParaName from '../../utils/ParaName';
 import RouteName from '../../utils/RouteName';
 
 export const UNIFIED_ID_AND_BASIC_INFO_INITIALIZE = 'UNIFIED_ID_AND_BASIC_INFO_INITIALIZE';
-export const UNIFIED_ID_AND_BASIC_INFO_DELETE = "UNIFIED_ID_AND_BASIC_INFO_INITIALIZE";
+export const UNIFIED_ID_AND_BASIC_INFO_DELETE = "UNIFIED_ID_AND_BASIC_INFO_DELETE";
 
 // 以下为与获取unified patient id的相关Action代码
 export const UNIFIED_PATIENT_ID_REQUEST_POST = 'UNIFIED_PATIENT_ID_REQUEST_POST';
@@ -24,44 +24,44 @@ export function patientBasicInfoSetState(newState) {
     return ({type: PATIENT_BASIC_INFO_SET_STATE, newState: newState})
 }
 
-export function fetchUnifiedPatientID(event, hospitalCode, queryID) {
-    // 由于此event默认由form的submit触发（默认会刷新页面，但是在本处我们不希望这样），因此要避免缺省动作
-    event.preventDefault();
+export function fetchUnifiedPatientID(localPatientID, hospitalCode, queryID) {
 
     // 在确定病人local ID 后，查询其全局ID
     return function(dispatch, getState) {
-        let state = getState();
         dispatch(unifiedIdAndBasicInfoUnifiedPatientIDRequestPost(queryID));
 
-        let localPatientID = state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].localPatientID;
         let params = {patientID: localPatientID, hospitalCode: hospitalCode};
         let url = RouteName.B_INDIVIDUAL_ANALYSIS_DATA_ROOT + RouteName.B_INDIVIDUAL_ANALYSIS_UNIFIED_PATIENT_ID + queryParamsTrans(params);
 
         // get unified patient id
         let token = getState().session.authenticToken;
         let header = {'Authorization': token};
-        fetch(url, {method: ParaName.GET, headers: header})
-            .then(res=> res.json(),
-                error => {console.log(error); dispatch(unifiedPatientIDReceiveFailedResult(queryID))})
+
+        return fetch(url, {method: ParaName.GET, headers: header})
+            .then(res => res.json(),
+                error => {
+                    console.log(error);
+                    dispatch(unifiedPatientIDReceiveFailedResult(queryID))
+                })
             .then(res => {
-                    if (res.unifiedPatientID==="noUnifiedPatientIDFound"){
+                    if (res.unifiedPatientID === "noUnifiedPatientIDFound") {
                         dispatch(unifiedPatientIDNotFound(queryID));
-                    }
-                    else{
+                    } else {
                         dispatch(unifiedPatientIDReceiveSuccessResult(res[ParaName.UNIFIED_PATIENT_ID], queryID));
                     }
                 }
             )
+
     }
 }
 
 export function unifiedIdAndBasicInfoDelete(queryID) {
-    return ({type: UNIFIED_ID_AND_BASIC_INFO_INITIALIZE, queryID: queryID})
+    return ({type: UNIFIED_ID_AND_BASIC_INFO_DELETE, queryID: queryID})
 }
 
 
 export function unifiedIdAndBasicInfoInitialize(queryID) {
-    return ({type: UNIFIED_ID_AND_BASIC_INFO_DELETE, queryID: queryID})
+    return ({type: UNIFIED_ID_AND_BASIC_INFO_INITIALIZE, queryID: queryID})
 }
 
 function unifiedIdAndBasicInfoUnifiedPatientIDRequestPost(queryID) {

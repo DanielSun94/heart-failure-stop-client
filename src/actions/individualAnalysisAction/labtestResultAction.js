@@ -6,6 +6,7 @@ import {pinyinSort} from '../../utils/queryUtilFunction'
 import pinyin from 'pinyin'
 
 export const LAB_TEST_RESET = "LAB_TEST_RESET";
+export const LAB_TEST_DELETE = "LAB_TEST_DELETE";
 export const LAB_TEST_SELECTED_LAB_TEST_ITEM = "LAB_TEST_SELECTED_LAB_TEST_ITEM";
 export const LAB_TEST_FILTER_STR = "LAB_TEST_FILTER_STR";
 export const LAB_TEST_SHOWING_SINGLE_VISIT = "LAB_TEST_SHOWING_SINGLE_VISIT";
@@ -21,6 +22,10 @@ export const LAB_TEST_LIST_RECEIVE_SUCCESS_RESULT = 'LAB_TEST_LIST_RECEIVE_SUCCE
 export const LAB_TEST_LIST_RECEIVE_FAILED_RESULT = 'LAB_TEST_LIST_RECEIVE_FAILED_RESULT';
 
 export const LAB_TEST_SET_STATE = "LAB_TEST_SET_STATE";
+
+export function labTestDelete(queryID) {
+    return ({type: LAB_TEST_DELETE, queryID: queryID})
+}
 
 export function labTestSetState(newState) {
     return ({type: LAB_TEST_SET_STATE, newState: newState})

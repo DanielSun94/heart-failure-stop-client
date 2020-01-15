@@ -21,6 +21,7 @@ import {patientBasicInfoSetState} from "../../actions/individualAnalysisAction/u
 import {modelSetState} from "../../actions/individualAnalysisAction/modelAction";
 import {orderSetState} from "../../actions/individualAnalysisAction/orderAction";
 import {metaInfoSetState} from "../../actions/metaInfoAction";
+import {managementSetState} from "../../actions/groupAnalysisAction/managementAction";
 import {fetchModelListPosts} from "../../actions/algorithmManagementAction";
 
 const useStyles = makeStyles(() => ({
@@ -149,7 +150,8 @@ const reloadOrResetState = (currentSessionUser, token, dispatch) =>{
             dispatch(vitalSignSetState(individual.vitalSign));
             dispatch(modelSetState(individual.model));
             const metaInfo = res.metaInfo;
-            dispatch(metaInfoSetState(metaInfo))
+            dispatch(metaInfoSetState(metaInfo));
+            dispatch(managementSetState(res.group.management))
           }
         })
   }

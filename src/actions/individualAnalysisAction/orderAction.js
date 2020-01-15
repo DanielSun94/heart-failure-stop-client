@@ -24,7 +24,7 @@ export function setNewSelectedOrder(selectedOrder, queryID) {
     return ({type: ORDER_SET_SELECTED_ORDER, queryID: queryID, selectedOrder: selectedOrder})
 }
 
-function orderDelete(queryID) {
+export function orderDelete(queryID) {
     return ({type: ORDER_DELETE, queryID: queryID})
 }
 

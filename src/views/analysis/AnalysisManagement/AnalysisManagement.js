@@ -21,7 +21,13 @@ import QuerySelectionDialog from "./QuerySelectionDialog";
 import {setSelectedQuery, setExpandedQueryList, deleteQuery, editQueryName} from "../../../actions/metaInfoAction";
 import {useHistory} from 'react-router-dom'
 import RouteName from "../../../utils/RouteName";
-
+import {trajectoryDelete} from "../../../actions/individualAnalysisAction/trajectoryAction";
+import {vitalSignDelete} from "../../../actions/individualAnalysisAction/vitalSignAction";
+import {unifiedIdAndBasicInfoDelete} from "../../../actions/individualAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction";
+import {orderDelete} from "../../../actions/individualAnalysisAction/orderAction";
+import {examDelete} from "../../../actions/individualAnalysisAction/examAction";
+import {labTestDelete} from "../../../actions/individualAnalysisAction/labtestResultAction";
+import {modelDeleteAll} from "../../../actions/individualAnalysisAction/modelAction";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,8 +51,9 @@ const useStyles = makeStyles((theme) => ({
         borderBottomWidth: 1,
     },
     content:{
-        maxHeight: 850,
-        backgroundColor: 'white'
+        height: 850,
+        backgroundColor: 'white',
+        overflow: 'auto'
     },
     createNewQueryButton: {
         marginBottom:  theme.spacing(2),
@@ -255,6 +262,14 @@ const DeleteDialog = ({deleteDialogVisible, setDeleteDialogVisible, selectedQuer
     const handleConfirm =()=>{
         setDeleteDialogVisible(false);
         dispatch(deleteQuery(selectedQuery));
+        dispatch(unifiedIdAndBasicInfoDelete(selectedQuery));
+        dispatch(orderDelete(selectedQuery));
+        dispatch(trajectoryDelete(selectedQuery));
+        dispatch(labTestDelete(selectedQuery));
+        dispatch(vitalSignDelete(selectedQuery));
+        dispatch(examDelete(selectedQuery));
+        dispatch(modelDeleteAll(selectedQuery));
+
         history.push(path+RouteName.BLANK)
     };
 
@@ -290,7 +305,7 @@ const GroupAnalysisList = ({groupMap, selectedQuery, setDeleteDialogVisible, met
             <TreeItem
                 key={idStr}
                 nodeId={idStr}
-                classes={selectedQuery===id?{content:classes.treeItem}:null}
+                classes={selectedQuery===idStr?{content:classes.treeItem}:null}
                 onClick={()=>{
                     dispatch(setSelectedQuery(idStr));
                     history.push(path+"/"+idStr)

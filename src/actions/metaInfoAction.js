@@ -18,7 +18,7 @@ export function metaInfoSetState(newState) {
 }
 
 export function createNewQuery(queryType, affiliatedTo=null) {
-    // AffiliatedTo这一参数只对群体分析有意义（为了管理嵌套查询所形成的树状结构）
+    // AffiliatedTo这一参数只对群体分析(包括群体分析导出的个体分析)有意义（为了管理嵌套查询所形成的树状结构）
     return ({type: CREATE_NEW_QUERY, queryType: queryType, affiliatedTo: affiliatedTo})
 }
 

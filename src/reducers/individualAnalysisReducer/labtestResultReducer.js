@@ -13,7 +13,8 @@ import {
     LAB_TEST_SELECTED_LAB_TEST_ITEM,
     LAB_TEST_SHOWING_SINGLE_VISIT,
     LAB_TEST_RESET,
-    LAB_TEST_SET_STATE
+    LAB_TEST_SET_STATE,
+    LAB_TEST_DELETE
 } from '../../actions/individualAnalysisAction/labtestResultAction';
 
 // Lab Test 分为三个模块
@@ -33,6 +34,7 @@ const initStateInfo = {
 const labtestResultReducer = (state=initStateInfo, action) => {
     switch (action.type){
         case LAB_TEST_SET_STATE: return {...action.newState};
+        case LAB_TEST_DELETE: return labtestDelete(state, action.queryID);
         case LAB_TEST_RESET: return labTestReset(state, action.params, action.resetType, action.queryID);
         case LAB_TEST_SELECTED_LAB_TEST_ITEM:
             return labTestSetSelectedItem(state, action.selectedLabTest, action.queryID);
@@ -66,6 +68,18 @@ const labtestResultReducer = (state=initStateInfo, action) => {
         default: return {...state};
     }
 };
+
+function labtestDelete(state, queryID) {
+    delete state['labTestNameList'][queryID];
+    delete state['labTestFullTrace'][queryID];
+    delete state['singleVisitLabTestTrace'][queryID];
+    delete state['correspondingVisit'][queryID];
+    delete state['selectedLabtest'][queryID];
+    delete state['showSingleVisit'][queryID];
+    delete state['filterStr'][queryID];
+
+    return {...state}
+}
 
 function labTestSetSelectedItem(state, selectedItem, queryID){
     state['selectedLabtest'][queryID] = selectedItem;

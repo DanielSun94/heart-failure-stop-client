@@ -48,12 +48,13 @@ function trajectoryReceiveFailedResult(queryID) {
 
 export function getValidVisitAndSetDefaultVisit(params, queryID){
     return function(dispatch, getState) {
+
         let validVisitSearching = RouteName.B_INDIVIDUAL_ANALYSIS_DATA_ROOT + RouteName.B_INDIVIDUAL_ANALYSIS_TRAJECTORY + queryParamsTrans(params);
         let token = getState().session.authenticToken;
         let header = {'Authorization': token};
 
         dispatch(trajectoryRequestPost(queryID));
-        fetch(validVisitSearching, {method: ParaName.GET, headers: header})
+        return fetch(validVisitSearching, {method: ParaName.GET, headers: header})
             .then(res => res.json(),
                 error => {console.log(error); dispatch(trajectoryReceiveFailedResult(queryID))})
             .then(
@@ -78,7 +79,7 @@ export function getValidVisitAndSetDefaultVisit(params, queryID){
             .then(()=>{
                 const visitList= getState().individual.trajectory[queryID].visitList;
                 dispatch(changeTargetVisit(visitList[visitList.length-1], queryID))
-            })
+            });
     }
 }
 
