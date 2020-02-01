@@ -81,7 +81,7 @@ const AnalysisContent = () => {
                 borderBottomWidth: 1
             }}>
                 <Tabs
-                    value={selectedQuery}
+                    value={selectedQuery.toString()}
                     onChange={handleChange}
                     indicatorColor="primary"
                     textColor="primary"
@@ -98,7 +98,7 @@ const AnalysisContent = () => {
                                         setDeleteDialogVisible={setDeleteDialogVisibleStatus}
                                     />}
                                 key={index}
-                                value={index}
+                                value={index.toString()}
                             />)
                     }
                 </Tabs>

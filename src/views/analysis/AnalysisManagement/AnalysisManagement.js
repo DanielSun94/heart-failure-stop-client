@@ -207,10 +207,11 @@ const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, s
             </Typography>
         }>
             {
+                // 此处的id是str
                 individualIDList.map(id=>(
                     <TreeItem
-                        key={Number.parseInt(id)}
-                        nodeId={Number.parseInt(id)}
+                        key={id}
+                        nodeId={id}
                         onClick={()=>{
                             dispatch(setSelectedQuery(Number.parseInt(id)));
                             history.push(path+"/"+id)
@@ -347,9 +348,9 @@ const GroupAnalysisList = ({groupMap, selectedQuery, setDeleteDialogVisible, met
             <TreeItem
                 key={idStr}
                 nodeId={idStr}
-                classes={selectedQuery===idStr?{content:classes.treeItem}:null}
+                classes={selectedQuery===id?{content:classes.treeItem}:null}
                 onClick={()=>{
-                    dispatch(setSelectedQuery(idStr));
+                    dispatch(setSelectedQuery(id));
                     history.push(path+"/"+idStr)
                 }}
                 label={
