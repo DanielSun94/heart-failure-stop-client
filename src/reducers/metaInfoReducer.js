@@ -41,7 +41,9 @@ const metaInfoReducer = (state=initStateInfo, action) => {
     switch (action.type) {
         case SET_EXPANDED: return {...state, expandedNodeList: action.expandedQueryList};
         case SET_SELECTED_QUERY: return {...state, selectedQuery: action.selectedQuery};
-        case META_INFO_SET_STATE: return {...action.newState};
+        case META_INFO_SET_STATE: {
+            return {...action.newState}
+        }
         case CREATE_NEW_QUERY: {
             const queryID = state.nextID;
 
@@ -71,7 +73,7 @@ const metaInfoReducer = (state=initStateInfo, action) => {
                 delete metaInfoMap[Number.parseInt(item)];
             }
 
-            // 每当delete一个query时，重新扫描所有id，将最大id进行重置，并重新选择selectedQuery
+            // 每当delete一个query时，重新扫描所有id，将最大id进行重置，并将selectedQuery置空
             let currentMaxID = 1;
             for(let id in metaInfoMap){
                 id = Number.parseInt(id);
@@ -79,7 +81,7 @@ const metaInfoReducer = (state=initStateInfo, action) => {
                     currentMaxID=id;
             }
 
-        return {...state, metaInfoMap: metaInfoMap, nextID: currentMaxID+1, selectedQuery: currentMaxID}
+        return {...state, metaInfoMap: metaInfoMap, nextID: currentMaxID+1, selectedQuery: ""}
         }
         case EDIT_QUERY_NAME: {
             const metaInfoMap = {...state.metaInfoMap};

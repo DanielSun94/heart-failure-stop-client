@@ -1,4 +1,4 @@
-import React, {useState, Fragment} from 'react';
+import React, {useState, Fragment, useEffect} from 'react';
 import {makeStyles, withStyles} from "@material-ui/styles";
 import AddIcon from '@material-ui/icons/Add';
 import {
@@ -9,9 +9,10 @@ import {
     DialogContent,
     DialogTitle,
     DialogActions,
-    TextField
+    TextField,
+    Fab
 } from "@material-ui/core";
-import DeleteIcon from '@material-ui/icons/Delete';
+import CloseIcon from '@material-ui/icons/Close';
 import {TreeView, TreeItem} from "@material-ui/lab";
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
@@ -19,7 +20,7 @@ import {useSelector, useDispatch} from "react-redux";
 import ParaName from "../../../utils/ParaName";
 import QuerySelectionDialog from "./QuerySelectionDialog";
 import {setSelectedQuery, setExpandedQueryList, deleteQuery, editQueryName} from "../../../actions/metaInfoAction";
-import {useHistory} from 'react-router-dom'
+import {useHistory} from 'react-router-dom';
 import RouteName from "../../../utils/RouteName";
 import {trajectoryDelete} from "../../../actions/individualAnalysisAction/trajectoryAction";
 import {vitalSignDelete} from "../../../actions/individualAnalysisAction/vitalSignAction";
@@ -66,13 +67,20 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: 6,
         paddingBottom: 6
     },
-    hover: {
+    queryName: {
         '&:hover': {
             color: colors.indigo[400]
-        }
+        },
     },
     treeItem:{
         backgroundColor: colors.grey[400],
+    },
+    closeIcon: {
+        backgroundColor: "transparent",
+        "&:hover": {
+            backgroundColor: colors.grey[400]
+        },
+        boxShadow: "none"
     }
 }));
 
@@ -110,6 +118,7 @@ const AnalysisManagement = () => {
 function QueryTreeView() {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
 
@@ -118,6 +127,43 @@ function QueryTreeView() {
     const metaInfoMap = useSelector(state=>state.metaInfo.metaInfoMap);
     const [groupMap, individualMap] = metaInfoMapSplit(metaInfoMap);
     const individualIDList = Object.keys(individualMap).sort();
+
+
+    useEffect(()=>{
+        // 首次载入时，进行重定位
+        // 具体的说，根据selectedQuery判断URL应该有的值，如果URL不符合要求，则重定位
+        // 按照逻辑来讲，这部分代码对应的重定位应当只在第一次进入时会用到
+        if(selectedQuery!==""){
+            const queryType = metaInfoMap[selectedQuery].queryType;
+            let targetPath;
+            if(queryType===ParaName.GROUP_ANALYSIS){
+                targetPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.GROUP_ANALYSIS+"/"+selectedQuery.toString()
+            }
+            else{
+                targetPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS+"/"+selectedQuery.toString()
+            }
+            const currentPath = history.location.pathname;
+            if(targetPath!==currentPath)
+                history.push(targetPath);
+        }
+
+        // 当删除了一个query后，selectedQuery会被置空。此时，只要MetaInfo中存在值，就把selectedQuery置为最后一个query
+        if(selectedQuery==="" && Object.keys(metaInfoMap).length > 0){
+            let maxIdx = -1;
+            for (let index of Object.keys(metaInfoMap)){
+                index = Number.parseInt(index);
+                if(index>maxIdx)
+                    maxIdx=index;
+            }
+            dispatch(setSelectedQuery(maxIdx));
+            if(metaInfoMap[maxIdx].queryType===ParaName.GROUP_ANALYSIS){
+                history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.GROUP_ANALYSIS+"/"+maxIdx.toString())
+            }
+            else{
+                history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS+"/"+maxIdx.toString())
+            }
+        }
+    }, [selectedQuery, metaInfoMap]);
 
     return (
         <TreeView
@@ -163,28 +209,28 @@ const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, s
             {
                 individualIDList.map(id=>(
                     <TreeItem
-                        key={id}
-                        nodeId={id}
+                        key={Number.parseInt(id)}
+                        nodeId={Number.parseInt(id)}
                         onClick={()=>{
-                            dispatch(setSelectedQuery(id));
+                            dispatch(setSelectedQuery(Number.parseInt(id)));
                             history.push(path+"/"+id)
                         }}
-                        classes={selectedQuery===id?{content:classes.treeItem}:null}
+                        classes={selectedQuery===Number.parseInt(id)?{content:classes.treeItem}:null}
                         label={
                             <div 
                                 className={classes.itemContent}
                             >
                                 <DoubleClickToEdit
-                                    defaultValue={metaInfoMap[id].queryName}
-                                    editQuery={(value)=>dispatch(editQueryName(value,id))}
+                                    defaultValue={metaInfoMap[Number.parseInt(id)].queryName}
+                                    editQuery={(value)=>dispatch(editQueryName(value,Number.parseInt(id)))}
                                 />
-                                <DeleteIcon
-                                    className={classes.hover}
-                                    onClick={()=>{
-                                        setDeleteDialogVisible(true);
-                                        history.push(path+RouteName.BLANK)
-                                    }}
-                                />
+                                <Fab
+                                    size={'small'}
+                                    className={classes.closeIcon}>
+                                    <CloseIcon
+                                        onClick={()=>setDeleteDialogVisible(true)}
+                                    />
+                                </Fab>
                             </div>
                         }
                     >
@@ -195,7 +241,7 @@ const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, s
     )
 };
 
-const DoubleClickToEdit =({defaultValue, editQuery})=>{
+export const DoubleClickToEdit =({defaultValue, editQuery})=>{
     // 如果两次点击之间的时间间隔小于250毫秒，判定为双击，可以进行修改
     const classes = useStyles();
     const [value, setValue] = useState(defaultValue);
@@ -221,7 +267,7 @@ const DoubleClickToEdit =({defaultValue, editQuery})=>{
     };
     return(
         <Fragment>
-            <Typography className={classes.hover} onClick={handleClick} variant="h6" color="inherit">
+            <Typography className={classes.queryName} onClick={handleClick} variant="h6" color="inherit">
                 {defaultValue}
             </Typography>
             <Dialog open={isDialogOpen}>
@@ -254,10 +300,8 @@ const DoubleClickToEdit =({defaultValue, editQuery})=>{
     )
 };
 
-const DeleteDialog = ({deleteDialogVisible, setDeleteDialogVisible, selectedQuery})=>{
+export const DeleteDialog = ({deleteDialogVisible, setDeleteDialogVisible, selectedQuery})=>{
     const dispatch = useDispatch();
-    const path = RouteName.MAIN_PAGE+RouteName.ANALYSIS;
-    const history = useHistory();
 
     const handleConfirm =()=>{
         setDeleteDialogVisible(false);
@@ -269,8 +313,6 @@ const DeleteDialog = ({deleteDialogVisible, setDeleteDialogVisible, selectedQuer
         dispatch(vitalSignDelete(selectedQuery));
         dispatch(examDelete(selectedQuery));
         dispatch(modelDeleteAll(selectedQuery));
-
-        history.push(path+RouteName.BLANK)
     };
 
     return (
@@ -318,12 +360,13 @@ const GroupAnalysisList = ({groupMap, selectedQuery, setDeleteDialogVisible, met
                         defaultValue={metaInfoMap[id].queryName}
                         editQuery={(value)=>dispatch(editQueryName(value,id))}
                     />
-                    <DeleteIcon
-                        className={classes.hover}
-                        onClick={()=>{
-                            setDeleteDialogVisible(true)
-                        }}
-                    />
+                    <Fab
+                        size={'small'}
+                        className={classes.closeIcon}>
+                        <CloseIcon
+                            onClick={()=>setDeleteDialogVisible(true)}
+                        />
+                    </Fab>
                 </div>
 
             }

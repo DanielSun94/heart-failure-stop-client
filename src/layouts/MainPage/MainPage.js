@@ -84,7 +84,11 @@ const MainPage= () => {
     // 按照目前的路由设计，登出和登陆一定会造成MainPage的重加载，因此不会出现用户A退出，用户B登录，结果B看到了A的数据的情况
     // 同时，userID异步获取，可能第一次刷这个component的时候还没回来，所以我们要在userID变化时重刷，所以dependency不能设空，
     // 在一个session中userID只会被置一次，从逻辑上看，这是一个只会执行一次的effect函数
-    reloadOrResetState(currentSessionUser, token, dispatch);
+    if(currentSessionUser.toString().length>0){
+      reloadOrResetState(currentSessionUser, token, dispatch)
+    }
+
+    // 当reload State
 
   }, [currentSessionUser]);
 
@@ -129,7 +133,6 @@ const MainPage= () => {
 };
 
 const reloadOrResetState = (currentSessionUser, token, dispatch) =>{
-  if(currentSessionUser.toString().length>0) {
     let url = RouteName.B_STATE_MANAGEMENT + RouteName.B_DOWNLOAD_STATE + '?userID=' + currentSessionUser;
     let header = {'Authorization': token};
     fetch(url, {method: ParaName.GET, headers: header})
@@ -149,12 +152,12 @@ const reloadOrResetState = (currentSessionUser, token, dispatch) =>{
             dispatch(orderSetState(individual.order));
             dispatch(vitalSignSetState(individual.vitalSign));
             dispatch(modelSetState(individual.model));
+            dispatch(managementSetState(res.group.management));
             const metaInfo = res.metaInfo;
             dispatch(metaInfoSetState(metaInfo));
-            dispatch(managementSetState(res.group.management))
           }
         })
-  }
+
 };
 
 const saveState=(currentSessionUser, token, entireState)=>{
