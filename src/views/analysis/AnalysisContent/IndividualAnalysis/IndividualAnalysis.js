@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import {editQueryName} from "../../../../actions/metaInfoAction";
 import UnifiedPatientIDAndPatientBasicInfoPanel from './subview/UnifiedPatientIDAndPatientBasicInfoPanel'
 import Trajectory from './subview/Trajectory';
 import LabtestResult from './subview/LabtestResult';
@@ -22,8 +24,19 @@ const useStyles = makeStyles(theme => ({
 
 const IndividualAnalysis = () => {
     const classes = useStyles();
+    const dispatch = useDispatch();
     const {queryID} = useParams();
     const queryIDNumber = Number.parseInt(queryID);
+    const [currentQueryName, setQueryName] = useState(Number.parseInt(queryID));
+    const selectedQuery =  useSelector(state=>state.metaInfo.selectedQuery);
+    const isNameUserDefined = useSelector(state=>state.metaInfo.metaInfoMap[selectedQuery].isNameUserDefined);
+
+    useEffect(()=>{
+        // 在没有自定义名称时，采取默认查询命名策略
+        if(!isNameUserDefined){
+            dispatch(editQueryName(currentQueryName, false, Number.parseInt(queryID)));
+        }
+    }, [currentQueryName]);
 
     document.title = ParaName.HF_STOP+"个体分析";
 
@@ -34,7 +47,7 @@ const IndividualAnalysis = () => {
                     <UnifiedPatientIDAndPatientBasicInfoPanel queryID={queryIDNumber} />
                 </Grid>
                 <Grid item xl={9} lg={8} md={12} xs={12}>
-                    <Trajectory queryID={queryIDNumber}/>
+                    <Trajectory queryID={queryIDNumber} setQueryName={setQueryName}/>
                 </Grid>
                 <Grid item xs={12}>
                     <ModelPanel queryID={queryIDNumber}/>

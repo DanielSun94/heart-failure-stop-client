@@ -22,8 +22,8 @@ export function createNewQuery(queryType, affiliatedTo=null) {
     return ({type: CREATE_NEW_QUERY, queryType: queryType, affiliatedTo: affiliatedTo})
 }
 
-export function editQueryName(name, id) {
-    return ({type: EDIT_QUERY_NAME, id: id, name: name})
+export function editQueryName(name, isNameUserDefined, id) {
+    return ({type: EDIT_QUERY_NAME, id: id, name: name, isNameUserDefined: isNameUserDefined})
 }
 
 export function deleteQuery(id) {

@@ -47,7 +47,13 @@ const metaInfoReducer = (state=initStateInfo, action) => {
         case CREATE_NEW_QUERY: {
             const queryID = state.nextID;
 
-            let newQueryMetaInfo = {queryType: action.queryType, queryName: '查询'+queryID, affiliated: action.affiliatedTo, context: {}};
+            let newQueryMetaInfo = {
+                queryType: action.queryType,
+                queryName: '查询'+queryID,
+                isNameUserDefined: false,
+                affiliated: action.affiliatedTo,
+                context: {}
+            };
             const metaInfoMap = {...state.metaInfoMap};
             metaInfoMap[queryID] = newQueryMetaInfo;
 
@@ -74,7 +80,7 @@ const metaInfoReducer = (state=initStateInfo, action) => {
             }
 
             // 每当delete一个query时，重新扫描所有id，将最大id进行重置，并将selectedQuery置空
-            let currentMaxID = 1;
+            let currentMaxID = 0;
             for(let id in metaInfoMap){
                 id = Number.parseInt(id);
                 if(id>=currentMaxID)
@@ -86,6 +92,7 @@ const metaInfoReducer = (state=initStateInfo, action) => {
         case EDIT_QUERY_NAME: {
             const metaInfoMap = {...state.metaInfoMap};
             metaInfoMap[action.id]['queryName'] = action.name;
+            metaInfoMap[action.id]['isNameUserDefined'] = action.isNameUserDefined;
             return {...state, metaInfoMap: metaInfoMap}
         }
         default: return {...state}

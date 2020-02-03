@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 const QuerySelectionDialog =({openDialog, setOpenDialog})=>{
     const classes = useStyles();
     const dispatch = useDispatch();
-    const [queryType, setQueryType] = React.useState(ParaName.INDIVIDUAL_ANALYSIS);
+    const [queryType, setQueryType] = React.useState("");
 
     const queryID = useSelector(state=>state.metaInfo.nextID);
 
@@ -88,7 +88,9 @@ const QuerySelectionDialog =({openDialog, setOpenDialog})=>{
                 <Button onClick={()=>setOpenDialog(false)} color="primary">
                     取消
                 </Button>
-                <Button onClick={handleConfirm} color="primary" autoFocus>
+                <Button
+                    disabled={queryType===""}
+                    onClick={handleConfirm} color="primary" autoFocus>
                     确认
                 </Button>
             </DialogActions>

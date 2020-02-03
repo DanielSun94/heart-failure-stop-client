@@ -148,19 +148,25 @@ function QueryTreeView() {
         }
 
         // 当删除了一个query后，selectedQuery会被置空。此时，只要MetaInfo中存在值，就把selectedQuery置为最后一个query
-        if(selectedQuery==="" && Object.keys(metaInfoMap).length > 0){
-            let maxIdx = -1;
-            for (let index of Object.keys(metaInfoMap)){
-                index = Number.parseInt(index);
-                if(index>maxIdx)
-                    maxIdx=index;
-            }
-            dispatch(setSelectedQuery(maxIdx));
-            if(metaInfoMap[maxIdx].queryType===ParaName.GROUP_ANALYSIS){
-                history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.GROUP_ANALYSIS+"/"+maxIdx.toString())
+        // 如果metaInfo中没有查询了，就重定位到blank
+        if(selectedQuery===""){
+            if(Object.keys(metaInfoMap).length > 0){
+                let maxIdx = -1;
+                for (let index of Object.keys(metaInfoMap)){
+                    index = Number.parseInt(index);
+                    if(index>maxIdx)
+                        maxIdx=index;
+                }
+                dispatch(setSelectedQuery(maxIdx));
+                if(metaInfoMap[maxIdx].queryType===ParaName.GROUP_ANALYSIS){
+                    history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.GROUP_ANALYSIS+"/"+maxIdx.toString())
+                }
+                else{
+                    history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS+"/"+maxIdx.toString())
+                }
             }
             else{
-                history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS+"/"+maxIdx.toString())
+                history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.BLANK);
             }
         }
     }, [selectedQuery, metaInfoMap]);
@@ -223,7 +229,7 @@ const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, s
                             >
                                 <DoubleClickToEdit
                                     defaultValue={metaInfoMap[Number.parseInt(id)].queryName}
-                                    editQuery={(value)=>dispatch(editQueryName(value,Number.parseInt(id)))}
+                                    editQuery={(value)=>dispatch(editQueryName(value, true, Number.parseInt(id)))}
                                 />
                                 <Fab
                                     size={'small'}
@@ -248,6 +254,10 @@ export const DoubleClickToEdit =({defaultValue, editQuery})=>{
     const [value, setValue] = useState(defaultValue);
     const [isDialogOpen, setDialogOpen] = useState(false);
     const [firstClickTime, setFirstClickTime] = useState(0);
+
+    useEffect(()=>{
+        setValue(defaultValue)
+    }, [defaultValue]);
 
     const handleClick = ()=>{
         if(firstClickTime===0) {
@@ -359,7 +369,7 @@ const GroupAnalysisList = ({groupMap, selectedQuery, setDeleteDialogVisible, met
                 >
                     <DoubleClickToEdit
                         defaultValue={metaInfoMap[id].queryName}
-                        editQuery={(value)=>dispatch(editQueryName(value,id))}
+                        editQuery={(value)=>dispatch(editQueryName(value, true, Number.parseInt(id)))}
                     />
                     <Fab
                         size={'small'}

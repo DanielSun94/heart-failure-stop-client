@@ -81,7 +81,7 @@ function formatTransform(visitList){
         admissionTimeList: admissionTimeList}
 }
 
-const Trajectory = ({queryID}) => {
+const Trajectory = ({queryID, setQueryName}) => {
     // 我们希望Trajectory能够监听unifiedPatientID的变化，从而完成合适的响应
     const dispatch = useDispatch();
     const currentCorrespondingUnifiedPatientID = useSelector(state=>state.individual.trajectory[queryID].correspondingUnifiedPatientID);
@@ -89,6 +89,18 @@ const Trajectory = ({queryID}) => {
     const isUnifiedPatientIDChanged = currentCorrespondingUnifiedPatientID!==unifiedPatientID;
     const visitList = useSelector(state=>state.individual.trajectory[queryID].visitList);
     const currentVisit = useSelector(state=>state.individual.trajectory[queryID].currentVisit);
+    const localPatientID = useSelector(
+        state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].localPatientID);
+    const patientName = useSelector(state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].patientBasicInfo[ParaName.PATIENT_NAME]);
+
+    useEffect(()=>{
+        if(unifiedPatientID!==""){
+            // 自动设置默认名称
+            const name = patientName+" "+localPatientID+" "+currentVisit.hospitalName+" 第"+currentVisit.visitID+"次"+
+                currentVisit.visitType;
+            setQueryName(name)
+        }
+    },[unifiedPatientID, currentVisit, patientName]);
 
     useEffect(()=>{
         if(unifiedPatientID!==""){
@@ -160,7 +172,9 @@ const Trajectory = ({queryID}) => {
                             <TableCell className={classes.shortCell}>
                                 <Typography>入院时间:</Typography>
                             </TableCell>
-                            <TableCell className={classes.shortCell}>{detailedVisitInfo[ParaName.ADMISSION_TIME]}</TableCell>
+                            <TableCell className={classes.shortCell}>
+                                {detailedVisitInfo[ParaName.ADMISSION_TIME]}
+                            </TableCell>
                             <TableCell className={classes.shortCell}>
                                 <Typography>年龄:</Typography>
                             </TableCell>

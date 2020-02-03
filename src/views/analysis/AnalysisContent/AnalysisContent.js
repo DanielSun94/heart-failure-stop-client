@@ -91,6 +91,7 @@ const AnalysisContent = () => {
                     {
                         Object.keys(metaInfoMap).map(index =>
                             <Tab
+                                style={{textTransform: "none"}}
                                 label={
                                     <TabContent
                                         queryName={metaInfoMap[index].queryName}
@@ -134,7 +135,7 @@ const TabContent=({queryName, queryID, setDeleteDialogVisible})=>{
             <div style={{maxWidth: 234, overflow: "hidden"}}>
                 <DoubleClickToEdit
                     defaultValue={queryName}
-                    editQuery={(value)=>dispatch(editQueryName(value, queryID))}
+                    editQuery={(value)=>dispatch(editQueryName(value, true, Number.parseInt(queryID)))}
                 />
             </div>
             <Fab
