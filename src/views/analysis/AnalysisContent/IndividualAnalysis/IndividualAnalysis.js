@@ -46,12 +46,13 @@ const IndividualAnalysis = () => {
                 <Grid item lg={3} sm={4} xs={12}>
                     <UnifiedPatientIDAndPatientBasicInfoPanel queryID={queryIDNumber} />
                 </Grid>
-                <Grid item xl={9} lg={8} md={12} xs={12}>
-                    <Trajectory queryID={queryIDNumber} setQueryName={setQueryName}/>
-                </Grid>
-                <Grid item xs={12}>
+                <Grid item lg={9} sm={8} xs={12}>
                     <ModelPanel queryID={queryIDNumber}/>
                 </Grid>
+                <Grid item xl={12} lg={12} md={12} xs={12}>
+                    <Trajectory queryID={queryIDNumber} setQueryName={setQueryName}/>
+                </Grid>
+
                 <Grid item lg={12} md={12} xs={12}>
                     <LabtestResult queryID={queryIDNumber}/>
                 </Grid>

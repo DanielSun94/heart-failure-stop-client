@@ -28,7 +28,6 @@ import {
 const useStyles = makeStyles(() => ({
     root: {
         marginTop: 0,
-        height: 350
     },
     content: {
         padding: 0
@@ -102,6 +101,18 @@ const UnifiedPatientIDAndPatientBasicInfoPanel = ({queryID}) => {
                 <TableRow selected>
                     <TableCell>生日：</TableCell>
                     <TableCell>{errorFlag===FAILED_ERROR ? "发生错误" : patientBasicInfoDict[ParaName.BIRTHDAY]}</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>居住地：</TableCell>
+                    <TableCell>北京市西城区</TableCell>
+                </TableRow>
+                <TableRow selected>
+                    <TableCell>联系方式：</TableCell>
+                    <TableCell>13000000000</TableCell>
+                </TableRow>
+                <TableRow >
+                    <TableCell>职业：</TableCell>
+                    <TableCell>退休</TableCell>
                 </TableRow>
             </TableBody>
         </Table>

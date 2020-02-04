@@ -4,6 +4,7 @@ import {
     EDIT_QUERY_NAME,
     META_INFO_SET_STATE,
     SET_EXPANDED,
+    SET_QUERY_CONTEXT,
     SET_SELECTED_QUERY
 } from "../actions/metaInfoAction";
 
@@ -93,6 +94,11 @@ const metaInfoReducer = (state=initStateInfo, action) => {
             const metaInfoMap = {...state.metaInfoMap};
             metaInfoMap[action.id]['queryName'] = action.name;
             metaInfoMap[action.id]['isNameUserDefined'] = action.isNameUserDefined;
+            return {...state, metaInfoMap: metaInfoMap}
+        }
+        case SET_QUERY_CONTEXT: {
+            const metaInfoMap = {...state.metaInfoMap};
+            metaInfoMap[action.id]['context'] = action.context;
             return {...state, metaInfoMap: metaInfoMap}
         }
         default: return {...state}

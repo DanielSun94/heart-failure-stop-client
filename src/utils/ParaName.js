@@ -62,6 +62,7 @@ class ParaName{
 
     static GROUP_ANALYSIS = "groupAnalysis";
     static INDIVIDUAL_ANALYSIS = 'individualAnalysis';
+    static INDIVIDUAL_ALGORITHM = "individualAlgorithm"
 }
 
 export default ParaName;

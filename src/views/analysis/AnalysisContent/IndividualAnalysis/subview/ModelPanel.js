@@ -15,21 +15,21 @@ import {useSelector, useDispatch} from 'react-redux';
 const useStyles = makeStyles({
     root: {
         width: '100%',
-        height: 470,
+        height: 497,
     },
     container: {
         width: '100%',
-        height: 470,
+        height: 497,
         display: 'flex',
         padding: '0px 0px 0px 0px'
     },
     list: {
         width: "25%",
-        height: 417
+        height: 444
     },
     content: {
         width: "75%",
-        height: 417
+        height: 444
     }
 });
 

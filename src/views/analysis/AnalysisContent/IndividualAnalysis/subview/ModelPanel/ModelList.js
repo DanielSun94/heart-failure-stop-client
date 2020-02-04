@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.white,
         overflow: 'auto',
-        height: 417,
+        height: "100%",
         borderRightColor: colors.grey[200],
         borderRightStyle: 'solid',
         borderRightWidth: 1
@@ -39,10 +39,11 @@ const useStyles = makeStyles(theme => ({
     form:{
         paddingLeft: 16,
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginRight: -8,
     },
     modelName: {
-        paddingLeft: 24,
+        paddingLeft: 8,
         display: 'flex',
         alignItems: 'center'
     }

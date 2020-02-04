@@ -41,8 +41,8 @@ function deleteAllModel(state, queryID){
     return {...state}
 }
 
-function addSelectedModel(state, selectedModel, queryID) {
-    state[queryID].selectedModelList.push(selectedModel);
+function addSelectedModel(state, unifiedModelName, queryID) {
+    state[queryID].selectedModelList.push(unifiedModelName);
     return {...state};
 }
 
@@ -78,7 +78,7 @@ function modelRequest(state, modelCategory, modelName, modelFunction, queryID) {
         modelCategory: modelCategory,
         modelName: modelName,
         modelFunction: modelFunction,
-        result: 0,
+        result: [0],
         isFetchingData: true,
         isDataValid: false
     };
