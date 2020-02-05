@@ -28,7 +28,6 @@ export const MODEL_CATEGORY_RISK_ASSESSMENT = "riskAssessment";
 export const MODEL_CATEGORY_SURVIVAL_ANALYSIS = "survivalAnalysis";
 export const MODEL_CATEGORY_TREATMENT_RECOMMENDATION = "treatmentRecommendation";
 export const MODEL_CATEGORY_TREATMENT_COMPARISION = "treatmentComparison";
-export const MODEL_CATEGORY_DATA_IMPUTATION = "dataImputation";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -94,6 +93,7 @@ const useStyles = makeStyles(() => ({
 
 const algorithmTransfer= res =>{
     let algorithmMap = new Map();
+
     for(let item of res){
         const user = item['createUser'];
         const mainCategory = item['mainCategory'];
@@ -130,8 +130,10 @@ const SquareButton = withStyles({
 const constructAlgorithmSubList = (selectedMainCategory, selectedAlgorithmMainCategory, algorithmMap) => {
     let algorithmSubList= [];
     if(selectedMainCategory!=="NotSelected"&&selectedAlgorithmMainCategory!=="NotSelected"
-        &&selectedAlgorithmMainCategory!=="noModel"){
-        const algorithmSubKeyList = Array.from(algorithmMap.get(selectedMainCategory).get(selectedAlgorithmMainCategory)[1].keys());
+        &&selectedAlgorithmMainCategory!=="noModel"&&algorithmMap.size>0){
+        // 此处algorithmMap.size>0是为了防止fetch new list时会暂时的重置list，可能导致出错，因此加一个判断条件
+        const algorithmSubKeyList =
+            Array.from(algorithmMap.get(selectedMainCategory).get(selectedAlgorithmMainCategory)[1].keys());
         for(let item of algorithmSubKeyList){
             const modelInfo = algorithmMap.get(selectedMainCategory).get(selectedAlgorithmMainCategory)[1].get(item);
             algorithmSubList.push([modelInfo.modelChineseFunctionName, item])

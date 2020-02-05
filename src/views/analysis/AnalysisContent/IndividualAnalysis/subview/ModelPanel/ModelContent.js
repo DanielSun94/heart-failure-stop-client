@@ -48,16 +48,16 @@ const ModelContent = ({queryID}) =>{
                             unifiedModelName={item}
                         />
                     }
-                    else if (modelCategoryMap[item] === 'riskAssessment') {
+                    else if (modelCategoryMap[item] === 'progressionAnalysis') {
                         return <ProgressionAnalysisCard/>
                     }
-                    else if (modelCategoryMap[item] === 'riskAssessment') {
+                    else if (modelCategoryMap[item] === 'survivalAnalysis') {
                         return <SurvivalAnalysisCard/>
                     }
-                    else if (modelCategoryMap[item] === 'riskAssessment') {
+                    else if (modelCategoryMap[item] === 'treatmentRecommendation') {
                         return <TreatmentRecommendationCard/>
                     }
-                    else if (modelCategoryMap[item] === 'riskAssessment') {
+                    else if (modelCategoryMap[item] === 'treatmentComparison') {
                         return <TreatmentComparisonCard/>
                     }
                     else

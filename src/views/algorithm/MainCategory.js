@@ -4,6 +4,7 @@ import {
     Typography,
     List,
     ListItem,
+    colors
 } from "@material-ui/core";
 import {
     ExpansionPanelSummary,
@@ -11,7 +12,6 @@ import {
     ExpansionPanelDetails
 } from "../../components/ExpansionPanel/ExpansionPanel";
 import {
-    MODEL_CATEGORY_DATA_IMPUTATION,
     MODEL_CATEGORY_PROGRESSION_ANALYSIS,
     MODEL_CATEGORY_RISK_ASSESSMENT,
     MODEL_CATEGORY_SURVIVAL_ANALYSIS,
@@ -30,6 +30,9 @@ const useStyles = makeStyles(() => ({
         height: '100%',
         backgroundColor: 'white',
         overflow: 'auto',
+        borderRightColor: colors.grey[200],
+        borderRightStyle: 'solid',
+        borderRightWidth: 1
     }
 }));
 
@@ -79,7 +82,6 @@ const dataFormatConvert = (algorithmMap) => {
         "survivalAnalysis": [],
         "treatmentRecommendation": [],
         "treatmentComparison": [],
-        "dataImputation": []
     };
 
     for(let key in subMap){
@@ -158,18 +160,6 @@ const MainCategory =({expandPanel, setExpandPanel, selectedAlgorithm, setSelecte
                 setAlgorithmSubCategory={setAlgorithmSubCategory}
                 setSelectedAlgorithm={setSelectedAlgorithm}
                 algorithmList={subMap[MODEL_CATEGORY_TREATMENT_COMPARISION]}
-                block={block}
-            />
-            <Panel
-                pId={MODEL_CATEGORY_DATA_IMPUTATION}
-                key={MODEL_CATEGORY_DATA_IMPUTATION}
-                pTitle={'数据插补'}
-                expandPanel={expandPanel}
-                setExpandPanel={setExpandPanel}
-                selectedAlgorithm={selectedAlgorithm}
-                setAlgorithmSubCategory={setAlgorithmSubCategory}
-                setSelectedAlgorithm={setSelectedAlgorithm}
-                algorithmList={subMap[MODEL_CATEGORY_DATA_IMPUTATION]}
                 block={block}
             />
         </div>

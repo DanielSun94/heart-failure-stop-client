@@ -19,6 +19,8 @@ import UploadModelFile from "./UploadModel";
 import ModelAccessControl from "./ModelAccessControl";
 import {useDispatch, useSelector} from "react-redux";
 import {createNewModel} from "../../../../actions/algorithmManagementAction";
+import {useHistory} from 'react-router-dom'
+import RouteName from "../../../../utils/RouteName";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -188,7 +190,8 @@ const ConfirmDialog = ({confirmDialog, setConfirmDialog, setWaitDialog, modelNam
     )
 };
 
-const ExitDialog = ({changeToUpdatePage, exitDialog, setExitDialog}) => {
+const ExitDialog = ({exitDialog, setExitDialog}) => {
+    const history = useHistory();
     return(
         <Dialog
             open={exitDialog}
@@ -200,7 +203,10 @@ const ExitDialog = ({changeToUpdatePage, exitDialog, setExitDialog}) => {
                 注意，退出后会丢失当前界面中未保存的信息
             </DialogContent>
             <DialogActions>
-                <Button onClick={()=>{setExitDialog(false); changeToUpdatePage()}} color="primary" autoFocus>
+                <Button onClick={()=>{
+                    setExitDialog(false);
+                    history.push(RouteName.MAIN_PAGE+RouteName.ALGORITHM_MANAGEMENT)}
+                } color="primary" autoFocus>
                     确认
                 </Button>
                 <Button onClick={()=>{setExitDialog(false)}} color="primary" autoFocus>
@@ -211,8 +217,9 @@ const ExitDialog = ({changeToUpdatePage, exitDialog, setExitDialog}) => {
     )
 };
 
-const WaitDialog = ({waitDialog, setWaitDialog, changeToUpdatePage}) => {
+const WaitDialog = ({waitDialog, setWaitDialog}) => {
     const updateStatus = useSelector(state=>state.algorithm.createStatus);
+    const history = useHistory();
     const classes = useStyles();
 
     let content;
@@ -257,7 +264,10 @@ const WaitDialog = ({waitDialog, setWaitDialog, changeToUpdatePage}) => {
                     {content}
             </DialogContent>
             <DialogActions>
-                <Button onClick={()=>{setWaitDialog(false); changeToUpdatePage()}} color="primary" autoFocus>
+                <Button onClick={()=>{
+                    setWaitDialog(false);
+                    history.push(RouteName.MAIN_PAGE+RouteName.ALGORITHM_MANAGEMENT)
+                }} color="primary" autoFocus>
                     确认
                 </Button>
             </DialogActions>

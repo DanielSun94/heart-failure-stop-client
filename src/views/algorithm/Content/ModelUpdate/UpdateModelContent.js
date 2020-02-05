@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import PlatformSelect from './PlatformSelect';
 import AccessControl from './AccessControl';
-import ModelConfigManagement from './ModelConfigManagement';
 import ModelDocumentManagement from './ModelDocumentManagement';
 import ModelFileManagement from './ModelFileManagement';
 import PreprocessingManagement from './PreprocessingManagement';
@@ -59,10 +58,6 @@ const useStyles = makeStyles(() => ({
         width: '100%',
     },
     modelFile: {
-        height: '8%',
-        width: '100%',
-    },
-    modelConfig: {
         height: '8%',
         width: '100%',
     },
@@ -128,14 +123,6 @@ const UpdateModelContent = ({setMainCategory, setAlgorithmMainCategory, setAlgor
                         algorithmMainCategory={modelName}
                     />
                 </div>
-                <div className={classes.modelConfig}>
-                    <ModelConfigManagement
-                        mainCategory={modelCategory}
-                        algorithmSubCategory={modelFunction}
-                        algorithmMainCategory={modelName}
-                    />
-                </div>
-
                 <div className={classes.preprocessModule}>
                     <PreprocessingManagement
                         mainCategory={modelCategory}

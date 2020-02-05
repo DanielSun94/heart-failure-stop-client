@@ -64,7 +64,6 @@ const ModelList = ({queryID}) =>{
         'survivalAnalysis': [],
         'treatmentRecommendation': [],
         'treatmentComparison': [],
-        'dataImputation': [],
     };
     for(let item of allModels){
         splitList[item['mainCategory']].push(item)
@@ -121,11 +120,11 @@ const ModelListItem = ({selectedModelList, modelChineseName, modelEnglishName, m
     const dispatch=useDispatch();
     const currentUser = useSelector(state=>state.session.user.userName);
 
-    let disableFlag=false;
+    let hiddenFlag=false;
     if(accessControl==='close')
-        disableFlag=true;
+        hiddenFlag=true;
     if(accessControl==='private' && currentUser!==createUser)
-        disableFlag=true;
+        hiddenFlag=true;
 
     const unifiedModelName = modelCategory+"_"+modelEnglishName+"_"+modelEnglishFunction;
     let selectedFlag = false;
@@ -144,6 +143,7 @@ const ModelListItem = ({selectedModelList, modelChineseName, modelEnglishName, m
     };
 
     return (
+        hiddenFlag?null:
         <div className={classes.itemTuple}>
             <FormControlLabel
                 className={classes.form}
@@ -152,7 +152,6 @@ const ModelListItem = ({selectedModelList, modelChineseName, modelEnglishName, m
                     <Checkbox
                         value={unifiedModelName}
                         checked={selectedFlag}
-                        disabled={disableFlag}
                         onChange={handleChange}
                         color={'primary'}
                     />}

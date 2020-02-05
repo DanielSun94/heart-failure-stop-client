@@ -29,7 +29,6 @@ const UploadModelFile = ({handleNext, handleBack, setModelFileMap, modelMap})=>{
     const [nextStepStatus, setNextStepStatus] = useState(null);
     const [modelFile, setModelFile] = useState(modelMap['modelFile']);
     const [modelDoc, setModelDoc] = useState(modelMap['modelDoc']);
-    const [modelConfig, setModelConfig] = useState(modelMap['modelConfig']);
     const [modelPreprocess, setModelPreprocess] = useState(modelMap['modelPreprocess']);
 
 
@@ -37,15 +36,14 @@ const UploadModelFile = ({handleNext, handleBack, setModelFileMap, modelMap})=>{
             setModelFileMap({
                 modelFile: modelFile,
                 modelDoc: modelDoc,
-                modelConfig: modelConfig,
                 modelPreprocess: modelPreprocess
             });
 
-            if(modelFile&&modelDoc&&modelConfig&&modelPreprocess)
+            if(modelFile&&modelDoc&&modelPreprocess)
                 setNextStepStatus(true);
             else
                 setNextStepStatus(false);
-        }, [modelFile, modelDoc, modelConfig, modelPreprocess]);
+        }, [modelFile, modelDoc, modelPreprocess]);
 
 
     return (
@@ -55,13 +53,6 @@ const UploadModelFile = ({handleNext, handleBack, setModelFileMap, modelMap})=>{
                     fileType={MODEL_FILE}
                     setFile={setModelFile}
                     file={modelFile}
-                />
-            </div>
-            <div className={classes.item}>
-                <UploadComponent
-                    fileType={MODEL_CONFIG}
-                    setFile={setModelConfig}
-                    file={modelConfig}
                 />
             </div>
             <div className={classes.item}>

@@ -30,6 +30,9 @@ class RouteName{
     static SAVE_RESULT = '/saveResult';
     static FILTER = '/filter';
 
+    // Individual Algorithm Detail Route
+    static INDIVIDUAL_ALGORITHM_DETAIL = '/individualAlgorithmDetail';
+
     // Individual Analysis Data Route
     static INDIVIDUAL_ANALYSIS = '/individualAnalysis';
 

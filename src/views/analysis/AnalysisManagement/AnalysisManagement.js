@@ -125,7 +125,7 @@ function QueryTreeView() {
     const expandedNodeList =  useSelector(state=>state.metaInfo.expandedNodeList);
     const selectedQuery =  useSelector(state=>state.metaInfo.selectedQuery);
     const metaInfoMap = useSelector(state=>state.metaInfo.metaInfoMap);
-    const [groupMap, individualMap] = metaInfoMapSplit(metaInfoMap);
+    const [groupMap, individualMap, individualAlgorithmDetailMap] = metaInfoMapSplit(metaInfoMap);
     const individualIDList = Object.keys(individualMap).sort();
 
 
@@ -139,8 +139,11 @@ function QueryTreeView() {
             if(queryType===ParaName.GROUP_ANALYSIS){
                 targetPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.GROUP_ANALYSIS+"/"+selectedQuery.toString()
             }
-            else{
+            else if(queryType===ParaName.GROUP_ANALYSIS){
                 targetPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS+"/"+selectedQuery.toString()
+            }
+            else if(queryType===ParaName.INDIVIDUAL_ALGORITHM){
+                targetPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/"+selectedQuery.toString()
             }
             const currentPath = history.location.pathname;
             if(targetPath!==currentPath)
@@ -161,8 +164,11 @@ function QueryTreeView() {
                 if(metaInfoMap[maxIdx].queryType===ParaName.GROUP_ANALYSIS){
                     history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.GROUP_ANALYSIS+"/"+maxIdx.toString())
                 }
-                else{
+                else if(metaInfoMap[maxIdx].queryType===ParaName.INDIVIDUAL_ANALYSIS){
                     history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS+"/"+maxIdx.toString())
+                }
+                else if(metaInfoMap[maxIdx].queryType===ParaName.INDIVIDUAL_ALGORITHM){
+                    history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/"+maxIdx.toString())
                 }
             }
             else{
@@ -186,8 +192,9 @@ function QueryTreeView() {
                 metaInfoMap={metaInfoMap}
                 setDeleteDialogVisible={setDeleteDialogVisible}
             />
-            <IndividualAnalysisList
+            <IndividualAnalysisAndIndividualAlgorithmDetailList
                 individualIDList={individualIDList}
+                individualAlgorithmDetailMap={individualAlgorithmDetailMap}
                 metaInfoMap={metaInfoMap}
                 selectedQuery={selectedQuery}
                 setDeleteDialogVisible={setDeleteDialogVisible}
@@ -201,11 +208,61 @@ function QueryTreeView() {
     );
 }
 
-const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, setDeleteDialogVisible}) => {
+const IndividualAnalysisAndIndividualAlgorithmDetailList = ({individualIDList, individualAlgorithmDetailMap,
+                                    selectedQuery, metaInfoMap, setDeleteDialogVisible}) => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const history = useHistory();
-    const path = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS;
+    const individualAnalysisPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS;
+    const individualDetailPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ALGORITHM_DETAIL;
+
+    const affiliatedIndividualAlgorithmDetailList=(individualAnalysisID)=>{
+        let detailList = [];
+
+        for(const detailQueryID in individualAlgorithmDetailMap){
+            if(!individualAlgorithmDetailMap.hasOwnProperty(detailQueryID))
+                continue;
+
+            if(individualAlgorithmDetailMap[detailQueryID].affiliated===individualAnalysisID){
+                detailList.push(
+                <TreeItem
+                    key={detailQueryID}
+                    nodeId={detailQueryID}
+                    onClick={()=>{
+                        dispatch(setSelectedQuery(Number.parseInt(detailQueryID)));
+                        history.push(individualDetailPath+"/"+detailQueryID)
+                    }}
+                    classes={selectedQuery===Number.parseInt(detailQueryID)?{content:classes.treeItem}:null}
+                    label={
+                        <div
+                            className={classes.itemContent}
+                        >
+                            <DoubleClickToEdit
+                                defaultValue={metaInfoMap[Number.parseInt(detailQueryID)].queryName}
+                                editQuery={(value)=>dispatch(editQueryName(value, true,
+                                    Number.parseInt(detailQueryID)))}
+                            />
+                            <Fab
+                                size={'small'}
+                                className={classes.closeIcon}>
+                                <CloseIcon
+                                    onClick={()=>setDeleteDialogVisible(true)}
+                                />
+                            </Fab>
+                        </div>
+                    }
+                />)
+            }
+        }
+        if(detailList.length===0){
+            return null;
+        }
+        return (
+            <Fragment>
+                {detailList.map(item=>item)}
+            </Fragment>)
+    };
+
     return (
         <TreeItem style={{paddingTop: 16}} nodeId={ParaName.INDIVIDUAL_ANALYSIS} label={
             <Typography variant="h5" color="inherit">
@@ -220,7 +277,7 @@ const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, s
                         nodeId={id}
                         onClick={()=>{
                             dispatch(setSelectedQuery(Number.parseInt(id)));
-                            history.push(path+"/"+id)
+                            history.push(individualAnalysisPath+"/"+id)
                         }}
                         classes={selectedQuery===Number.parseInt(id)?{content:classes.treeItem}:null}
                         label={
@@ -241,6 +298,7 @@ const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, s
                             </div>
                         }
                     >
+                        {affiliatedIndividualAlgorithmDetailList(Number.parseInt(id))}
                     </TreeItem>
                 ))
             }
@@ -408,11 +466,11 @@ const metaInfoMapSplit = (metaInfoMap) => {
     // 将metaInfoMap中混杂在一起的个体分析和群体分析MateInfo拆分成两个单独的部分
     let individualMap = {};
     let groupMap = {};
+    let individualAlgorithmDetailMap={};
 
     for(let id in metaInfoMap){
         if(!metaInfoMap.hasOwnProperty(id))
             continue;
-
         const metaInfo = metaInfoMap[id];
         if(metaInfo.queryType===ParaName.GROUP_ANALYSIS){
             groupMap[id] = metaInfo
@@ -420,8 +478,11 @@ const metaInfoMapSplit = (metaInfoMap) => {
         else if(metaInfo.queryType===ParaName.INDIVIDUAL_ANALYSIS){
             individualMap[id] = metaInfo
         }
+        else if(metaInfo.queryType===ParaName.INDIVIDUAL_ALGORITHM){
+            individualAlgorithmDetailMap[id]=metaInfo
+        }
     }
-    return [groupMap, individualMap]
+    return [groupMap, individualMap, individualAlgorithmDetailMap]
 };
 
 

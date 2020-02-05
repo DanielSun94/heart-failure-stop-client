@@ -77,7 +77,6 @@ export function createNewModel(modelNameMap, modelFileMap, accessControl){
         formData.append('modelFunctionChinese', modelNameMap['modelChineseFunction']);
         formData.append('modelFunctionEnglish', modelNameMap['modelEnglishFunction']);
         formData.append('modelFile', modelFileMap['modelFile']);
-        formData.append('modelConfig', modelFileMap['modelConfig']);
         formData.append('modelPreprocess', modelFileMap['modelPreprocess']);
         formData.append('modelDoc', modelFileMap['modelDoc']);
         formData.append('userName', currentUser);

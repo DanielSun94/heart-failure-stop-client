@@ -19,6 +19,7 @@ import {
 import ParaName from "../../../utils/ParaName";
 import {DoubleClickToEdit, DeleteDialog} from "../AnalysisManagement/AnalysisManagement";
 import CloseIcon from '@material-ui/icons/Close';
+import IndividualAlgorithmDetail from "./IndividualAlgorithmDetail/IndividualAlgorithmDetail";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -62,12 +63,14 @@ const AnalysisContent = () => {
     }
 
     const handleChange = (event, newValue) => {
-        const queryType = metaInfoMap[newValue].queryType === ParaName.GROUP_ANALYSIS;
-        if(queryType){
+        if(metaInfoMap[newValue].queryType===ParaName.GROUP_ANALYSIS){
             history.push(path+RouteName.GROUP_ANALYSIS+"/"+newValue)
         }
-        else{
+        else if(metaInfoMap[newValue].queryType===ParaName.INDIVIDUAL_ANALYSIS){
             history.push(path+RouteName.INDIVIDUAL_ANALYSIS+"/"+newValue);
+        }
+        else if(metaInfoMap[newValue].queryType===ParaName.INDIVIDUAL_ALGORITHM){
+            history.push(path+RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/"+newValue);
         }
         dispatch(setSelectedQuery(Number.parseInt(newValue)));
     };
@@ -89,18 +92,24 @@ const AnalysisContent = () => {
                     scrollButtons="auto"
                 >
                     {
-                        Object.keys(metaInfoMap).map(index =>
-                            <Tab
-                                style={{textTransform: "none"}}
-                                label={
-                                    <TabContent
-                                        queryName={metaInfoMap[index].queryName}
-                                        queryID={index}
-                                        setDeleteDialogVisible={setDeleteDialogVisibleStatus}
-                                    />}
-                                key={index}
-                                value={index.toString()}
-                            />)
+                        //出于显示效果考虑，放弃在顶部Tab页上显示具体的算法查询
+                        Object.keys(metaInfoMap).map(index => {
+                            if(metaInfoMap[index].queryType===ParaName.INDIVIDUAL_ALGORITHM)
+                                return null;
+                            return(
+                                <Tab
+                                    style={{textTransform: "none"}}
+                                    label={
+                                        <TabContent
+                                            queryName={metaInfoMap[index].queryName}
+                                            queryID={index}
+                                            setDeleteDialogVisible={setDeleteDialogVisibleStatus}
+                                        />}
+                                    key={index}
+                                    value={index.toString()}
+                                />
+                            )
+                        })
                     }
                 </Tabs>
             </div>
@@ -110,6 +119,9 @@ const AnalysisContent = () => {
                 </Route>
                 <Route path={path+RouteName.INDIVIDUAL_ANALYSIS+"/:queryID"}>
                     <IndividualAnalysis />
+                </Route>
+                <Route path={path+RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/:queryID"}>
+                    <IndividualAlgorithmDetail />
                 </Route>
                 <Route path={path+RouteName.BLANK}>
                     <h1> 未选中数据 </h1>

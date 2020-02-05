@@ -2,12 +2,15 @@ import Button from "@material-ui/core/Button";
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import React, {useState} from "react";
 import {useDispatch} from "react-redux";
+import {useHistory} from 'react-router-dom'
 import {deleteModel} from '../../../../actions/algorithmManagementAction'
+import RouteName from "../../../../utils/RouteName";
 
 
 const DeleteModel = ({mainCategory, algorithmMainCategory, algorithmSubCategory, setMainCategory,
                          setAlgorithmMainCategory, setAlgorithmSubCategory})=>{
     const dispatch = useDispatch();
+    const history = useHistory();
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -21,6 +24,7 @@ const DeleteModel = ({mainCategory, algorithmMainCategory, algorithmSubCategory,
         setAlgorithmSubCategory("NotSelected");
         dispatch(deleteModel(mainCategory, algorithmMainCategory, algorithmSubCategory));
         setOpen(false);
+        history.push(RouteName.MAIN_PAGE+RouteName.ALGORITHM_MANAGEMENT)
     };
 
     return (
