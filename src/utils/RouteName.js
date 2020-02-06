@@ -53,7 +53,8 @@ class RouteName{
 
     // run machine learning model
     static B_MACHINE_LEARNING = "/backend/machineLearning";
-    static B_SINGLE_VISIT_INVOKE_MACHINE_LEARNING_SERVICE = "/singleVisitInvokeMachineLearningService";
+    static B_FETCH_MACHINE_LEARNING_MODEL_DATA = "/getDataForMachineLearningModelUpToOneVisit";
+    static B_EXECUTE_MODEL = "/executeModel";
 
     // Authentic Route
     static B_AUTHENTIC = "/backend/authentic";

@@ -18,7 +18,7 @@ import {labTestSetState} from "../../actions/individualAnalysisAction/labtestRes
 import {vitalSignSetState} from "../../actions/individualAnalysisAction/vitalSignAction";
 import {trajectorySetState} from "../../actions/individualAnalysisAction/trajectoryAction";
 import {patientBasicInfoSetState} from "../../actions/individualAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction";
-import {modelSetState} from "../../actions/individualAnalysisAction/modelAction";
+import {modelSetState} from "../../actions/individualAnalysisAction/individualModelAction";
 import {orderSetState} from "../../actions/individualAnalysisAction/orderAction";
 import {metaInfoSetState} from "../../actions/metaInfoAction";
 import {managementSetState} from "../../actions/groupAnalysisAction/managementAction";

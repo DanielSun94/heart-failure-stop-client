@@ -24,7 +24,8 @@ const ModelContent = ({queryID}) =>{
     const classes = useStyles();
 
     const allModels = useSelector(state=>state.algorithm.algorithmList);
-    const selectedModelList = useSelector(state=>state.individual.model[queryID].selectedModelList);
+    const selectedModelInfo = useSelector(state=>state.individual.model[queryID]['model']);
+    const selectedModelList = Object.keys(selectedModelInfo);
 
     // 将所有模型与其相应的category建立映射
     let modelCategoryMap = {};

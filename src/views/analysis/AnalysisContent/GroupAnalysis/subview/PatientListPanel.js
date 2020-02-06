@@ -24,7 +24,7 @@ import {orderInitialize} from "../../../../../actions/individualAnalysisAction/o
 import {labTestInitialize} from "../../../../../actions/individualAnalysisAction/labtestResultAction";
 import {vitalSignInitialize} from "../../../../../actions/individualAnalysisAction/vitalSignAction";
 import {examInitialize} from "../../../../../actions/individualAnalysisAction/examAction";
-import {modelInitialize} from "../../../../../actions/individualAnalysisAction/modelAction";
+import {createNewModelQueryAndInitialize} from "../../../../../actions/individualAnalysisAction/individualModelAction";
 import RouteName from "../../../../../utils/RouteName";
 
 const columns = [
@@ -90,7 +90,7 @@ const PatientListPanel =({queryID, toggleFilter})=>{
         dispatch(labTestInitialize(nextID));
         dispatch(vitalSignInitialize(nextID));
         dispatch(examInitialize(nextID));
-        dispatch(modelInitialize(nextID));
+        dispatch(createNewModelQueryAndInitialize(nextID));
 
         // 2. 更改名称
         dispatch(editQueryName("查询"+nextID+"_附属于"+name, nextID));

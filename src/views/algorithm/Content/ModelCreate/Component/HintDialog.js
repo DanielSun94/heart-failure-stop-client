@@ -13,7 +13,6 @@ import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import {
     MODEL_FILE,
     MODEL_DOC,
-    MODEL_CONFIG,
     MODEL_PREPROCESS
 } from "../../../../../actions/algorithmManagementAction"
 
@@ -39,7 +38,6 @@ const HintDialog = ({fileType}) => {
         case MODEL_FILE: content=infoMap.updateModelFile; break;
         case MODEL_PREPROCESS: content=infoMap.updateModelPreprocess; break;
         case MODEL_DOC: content=infoMap.updateModelDoc; break;
-        case MODEL_CONFIG: content=infoMap.updateDataConfig; break;
         default: content="NO DATA";
     }
 

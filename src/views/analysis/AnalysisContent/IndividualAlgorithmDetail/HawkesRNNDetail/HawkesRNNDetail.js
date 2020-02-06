@@ -1,7 +1,7 @@
 import React from 'react'
 
-const HawkesRNNDetail =({queryID})=>{
-    return <h1>HawkesRNNPage</h1>
+const HawkesRNNDetail =()=>{
+    return <h4>HawkesRNNDetail</h4>
 };
 
 export default HawkesRNNDetail;

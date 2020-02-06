@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import modelReducer from './modelReducer';
+import modelReducer from './individualModelReducer';
 import trajectoryReducer from './trajectoryReducer';
 import unifiedPatientIDAndPatientBasicInfoReducer from './unifiedPatientIDAndPatientBasicInfoReducer';
 import examReducer from './examReducer';

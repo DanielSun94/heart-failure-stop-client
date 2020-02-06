@@ -4,7 +4,7 @@ import {useSelector} from "react-redux";
 import {IconButton, Tooltip} from "@material-ui/core";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import React from "react";
-import {MODEL_CONFIG, MODEL_DOC, MODEL_FILE, MODEL_PREPROCESS} from "../../../../../actions/algorithmManagementAction";
+import {MODEL_DOC, MODEL_FILE, MODEL_PREPROCESS} from "../../../../../actions/algorithmManagementAction";
 
 const downloadInfoMap = {
     updateModelFile: {toolTipTitle: "下载模型", downloadPath: RouteName.B_DOWNLOAD_MODEL_FILE, fileName: 'model.zip'},
@@ -23,7 +23,6 @@ const DownloadComponent = ({mainCategory, algorithmMainCategory, algorithmSubCat
         case MODEL_FILE: content=downloadInfoMap.updateModelFile; break;
         case MODEL_PREPROCESS: content=downloadInfoMap.updateModelPreprocess; break;
         case MODEL_DOC: content=downloadInfoMap.updateModelDoc; break;
-        case MODEL_CONFIG: content=downloadInfoMap.updateDataConfig; break;
         default: content="NO DATA";
     }
 

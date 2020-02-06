@@ -1,6 +1,6 @@
 import {useDispatch} from "react-redux";
 import {
-    FILE_NAME_ERROR, MODEL_CONFIG, MODEL_DOC,
+    FILE_NAME_ERROR, MODEL_DOC,
     MODEL_FILE, MODEL_PREPROCESS,
     modelUpdatePost,
     updateModelUpdateInfo
@@ -34,7 +34,6 @@ const UploadComponent = ({mainCategory, algorithmMainCategory, algorithmSubCateg
         case MODEL_FILE: content=uploadInfoMap.updateModelFile; break;
         case MODEL_PREPROCESS: content=uploadInfoMap.updateModelPreprocess; break;
         case MODEL_DOC: content=uploadInfoMap.updateModelDoc; break;
-        case MODEL_CONFIG: content=uploadInfoMap.updateDataConfig; break;
         default: content="NO DATA";
     }
 

@@ -28,7 +28,7 @@ import {unifiedIdAndBasicInfoDelete} from "../../../actions/individualAnalysisAc
 import {orderDelete} from "../../../actions/individualAnalysisAction/orderAction";
 import {examDelete} from "../../../actions/individualAnalysisAction/examAction";
 import {labTestDelete} from "../../../actions/individualAnalysisAction/labtestResultAction";
-import {modelDeleteAll} from "../../../actions/individualAnalysisAction/modelAction";
+import {deleteModelQuery} from "../../../actions/individualAnalysisAction/individualModelAction";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -381,7 +381,7 @@ export const DeleteDialog = ({deleteDialogVisible, setDeleteDialogVisible, selec
         dispatch(labTestDelete(selectedQuery));
         dispatch(vitalSignDelete(selectedQuery));
         dispatch(examDelete(selectedQuery));
-        dispatch(modelDeleteAll(selectedQuery));
+        dispatch(deleteModelQuery(selectedQuery));
     };
 
     return (

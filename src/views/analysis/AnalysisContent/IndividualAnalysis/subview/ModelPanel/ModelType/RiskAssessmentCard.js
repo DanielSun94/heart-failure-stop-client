@@ -1,8 +1,7 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import {useSelector, useDispatch} from 'react-redux';
 import {useHistory} from 'react-router-dom';
-import { modelFetchPost} from "../../../../../../../actions/individualAnalysisAction/modelAction";
 import {
     Card,
     CircularProgress,
@@ -14,6 +13,7 @@ import {editQueryName} from "../../../../../../../actions/metaInfoAction";
 import {createNewQuery} from "../../../../../../../actions/metaInfoAction";
 import ParaName from "../../../../../../../utils/ParaName";
 import RouteName from "../../../../../../../utils/RouteName";
+import {updateModelUpdateInfo} from "../../../../../../../actions/algorithmManagementAction";
 
 const useStyles = makeStyles({
     root: {
@@ -57,42 +57,17 @@ const RiskAssessmentCard = ({unifiedModelName, queryID}) =>{
 
     const metaInfoMap = useSelector(state=>state.metaInfo.metaInfoMap);
     const newQueryID =  useSelector(state=>state.metaInfo.nextID);
-    const currentVisit = useSelector(state=>state.individual.trajectory[queryID].currentVisit);
-    const unifiedPatientID = useSelector(state=>state.individual.unifiedPatientIDAndPatientBasicInfo[queryID].unifiedPatientID);
-    const visitIdentifier = {...currentVisit, unifiedPatientID: unifiedPatientID};
-
-    // 检查是不是在没有进行任何查询时提交的调用模型申请
-    let checkFlag = false;
-    if(unifiedPatientID&&unifiedPatientID.length>0&&currentVisit.visitID&&currentVisit.visitID.length>0
-        &&currentVisit.visitType&&currentVisit.visitType.length>0&&currentVisit.hospitalCode&&currentVisit.hospitalCode.length>0
-    )
-        checkFlag=true;
-
-    // 获取计算结果
-    // unifiedModelName由模型大类，模型名称，模型功能三部分组成，每部分中间使用下划线表明
-    const splitModelNameList = unifiedModelName.split('_');
-    useEffect(()=>{
-        if(checkFlag){
-            dispatch(modelFetchPost(
-                visitIdentifier,
-                splitModelNameList[0],
-                splitModelNameList[1],
-                splitModelNameList[2],
-                queryID
-            ))
-        }
-    }, [queryID, currentVisit]);
 
     // 当模型数据获取完毕时更新
     let result = 0;
     let isDataValid = false;
     let isFetchingData = false;
     let modelColor = 'black';
-    let modelDetail = useSelector(state=>state.individual.model[queryID].modelDetail[unifiedModelName]);
+    let modelDetail = useSelector(state=>state.individual.model[queryID]['model'][unifiedModelName]);
     if(modelDetail!==undefined){
-        result = modelDetail.result[0]*100;
-        isDataValid = modelDetail.isDataValid;
-        isFetchingData = modelDetail.isFetchingData;
+        result = modelDetail.output[0]*100;
+        isDataValid = modelDetail.isInputsValid&&modelDetail.isOutputValid;
+        isFetchingData = modelDetail.isFetchingInputs||modelDetail.isFetchingOutput;
         modelColor = result > 60?'red':'black';
     }
 
@@ -135,7 +110,7 @@ const RiskAssessmentCard = ({unifiedModelName, queryID}) =>{
             dispatch(editQueryName(
                 modelChineseName+' '+modelChineseFunctionName, false, newQueryID));
             history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+
-                RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/"+newQueryID)
+                RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/"+newQueryID);
             dispatch(setSelectedQuery(Number.parseInt(newQueryID)));
         }
     };

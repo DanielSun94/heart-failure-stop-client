@@ -12,7 +12,6 @@ export const FILE_NAME_ERROR = "FILE_NAME_ERROR";
 export const NOT_UPLOAD = "NOT_UPLOAD";
 
 export const MODEL_FILE = "MODEL_FILE";
-export const MODEL_CONFIG = "MODEL_CONFIG";
 export const MODEL_DOC = "MODEL_DOC";
 export const MODEL_PREPROCESS = "MODEL_PREPROCESS";
 export const ACCESS_CONTROL = "ACCESS_CONTROL";

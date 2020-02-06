@@ -1,25 +1,24 @@
 import {
+    ACCESS_CONTROL,
     ALGORITHM_LIST_RECEIVE_FAILED_POSTS,
     ALGORITHM_LIST_RECEIVE_SUCCESS_POSTS,
     ALGORITHM_LIST_REQUEST_POSTS,
-    MODEL_UPDATE_INFO_INITIALIZE,
-    UPDATE_MODEL_UPDATE_INFO,
-    MODEL_CONFIG,
-    MODEL_DOC,
-    MODEL_FILE,
-    MODEL_PLATFORM,
-    MODEL_PREPROCESS,
-    ACCESS_CONTROL,
-    MODEL_UPDATE_FAILED,
-    MODEL_UPDATE_SUCCESS,
-    MODEL_UPDATE_REQUEST,
+    CREATE_NEW_MODEL_FAILED,
+    CREATE_NEW_MODEL_REQUEST,
+    CREATE_NEW_MODEL_SUCCESS,
     RESET,
+    MODEL_UPDATE_SUCCESS,
+    MODEL_UPDATE_FAILED,
+    MODEL_UPDATE_REQUEST,
+    UPDATE_MODEL_UPDATE_INFO,
     GET_MODEL_INFO_FAILED,
     GET_MODEL_INFO_REQUEST,
     GET_MODEL_INFO_SUCCESS,
-    CREATE_NEW_MODEL_FAILED,
-    CREATE_NEW_MODEL_REQUEST,
-    CREATE_NEW_MODEL_SUCCESS
+    MODEL_UPDATE_INFO_INITIALIZE,
+    MODEL_DOC,
+    MODEL_FILE,
+    MODEL_PLATFORM,
+    MODEL_PREPROCESS
 } from "../actions/algorithmManagementAction"
 
 const initialState = {
@@ -27,7 +26,6 @@ const initialState = {
     // format; modelName: updateFlag
     modelInfo: {},
     updateModelFile:{},
-    updateModelConfig:{},
     updateModelDoc:{},
     updatePreprocess:{},
     updateAccessControl:{},
@@ -62,14 +60,7 @@ const algorithmReducer = (state = initialState, action) => {
                 updatePlatForm: action.content.updatePlatForm};
         }
         case UPDATE_MODEL_UPDATE_INFO: {
-            if(action.infoCategory===MODEL_CONFIG){
-                let newMap = {...state.updateModelConfig};
-                newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
-                return {
-                    ...state,
-                    updateModelConfig: newMap};
-            }
-            else if(action.infoCategory===MODEL_DOC){
+            if(action.infoCategory===MODEL_DOC){
                 let newMap = {...state.updateModelDoc};
                 newMap[action.unifiedName] = [action.infoType, action.updateInfoTime];
                 return {

@@ -7,10 +7,10 @@ import {useParams} from "react-router-dom";
 const unifiedModelNameDetailPageMap =(unifiedModelName, queryID)=> {
     let returnComponent;
     switch (unifiedModelName) {
-        case 'oneYearNYHAClass1':
+        case 'riskAssessment_HawkesRNNEnglishName_oneYearNYHAClass4':
             returnComponent=<HawkesRNNDetail queryID={queryID}/>;break;
-        case 'oneYearNYHAClass2':
-            returnComponent=<HawkesRNNDetail queryID={queryID}/>;break;
+        case 'riskAssessment_HawkesRNNEnglishName_oneYearNYHAClass3':
+            returnComponent= <h3>该算法细节页面尚未完成，无法提供</h3>; break;
         default :
             returnComponent= <h3>该算法细节页面尚未完成，无法提供</h3>
     }

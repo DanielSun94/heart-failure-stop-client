@@ -3,7 +3,6 @@ import {makeStyles} from "@material-ui/styles";
 import HintDialog from "./HintDialog";
 import UploadInfoComponent from "./UploadInfoComponent";
 import {
-    MODEL_CONFIG,
     MODEL_PREPROCESS,
     MODEL_DOC,
     MODEL_FILE,
@@ -70,7 +69,6 @@ const UploadComponent = ({fileType, setFile, file}) => {
         case MODEL_FILE: content=uploadInfoMap.updateModelFile; break;
         case MODEL_PREPROCESS: content=uploadInfoMap.updateModelPreprocess; break;
         case MODEL_DOC: content=uploadInfoMap.updateModelDoc; break;
-        case MODEL_CONFIG: content=uploadInfoMap.updateDataConfig; break;
         default: content="NO DATA";
     }
 
