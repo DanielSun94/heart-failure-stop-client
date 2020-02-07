@@ -70,7 +70,7 @@ function executeModelSuccess(state, unifiedModelName, data, queryID) {
         isOutputValid: true,
         isFetchingOutput: false,
         output: data['outputs'],
-        otherInputsInfo: otherInfo
+        otherOutputInfo: otherInfo
     };
     return {...state}
 }

@@ -80,5 +80,30 @@ const pinyinSort = (listToSort) => {
     })
 };
 
+const getModelChineseName =(allModelInfoList, unifiedModelName)=>{
+    for(const item of allModelInfoList){
+        const modelCategory = item.mainCategory;
+        const modelEnglishName = item.modelEnglishName;
+        const modelEnglishFunctionName = item.modelEnglishFunctionName;
+        const modelChineseName = item.modelChineseName;
+        const modelChineseFunctionName = item.modelChineseFunctionName;
+        const currentUnifiedModelName = modelCategory+'_'+modelEnglishName+'_'+modelEnglishFunctionName;
+        if(currentUnifiedModelName===unifiedModelName){
+            let modelCategoryChinese;
+            switch (modelCategory) {
+                case 'riskAssessment': modelCategoryChinese='风险分析';break;
+                case 'progressionAnalysis': modelCategoryChinese='演变过程';break;
+                case 'survivalAnalysis': modelCategoryChinese='生存分析';break;
+                case 'treatmentRecommendation': modelCategoryChinese='干预推荐';break;
+                case 'treatmentComparison': modelCategoryChinese='干预比较';break;
+                default: modelCategoryChinese=""; break;
+            }
+            return [modelCategoryChinese, modelChineseName, modelChineseFunctionName]
+        }
+    }
+    return ["", "", ""];
+};
 
-export {queryParamsTrans, monthAndDateTrans, monthAndDateAndTimeTrans, pinYinFilter, pinyinSort, filter};
+
+export {queryParamsTrans, monthAndDateTrans, monthAndDateAndTimeTrans, pinYinFilter, pinyinSort, filter,
+    getModelChineseName};

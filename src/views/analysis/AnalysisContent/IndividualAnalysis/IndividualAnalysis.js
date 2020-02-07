@@ -27,9 +27,8 @@ const IndividualAnalysis = () => {
     const dispatch = useDispatch();
     const {queryID} = useParams();
     const queryIDNumber = Number.parseInt(queryID);
-    const [currentQueryName, setQueryName] = useState(Number.parseInt(queryID));
-    const selectedQuery =  useSelector(state=>state.metaInfo.selectedQuery);
-    const isNameUserDefined = useSelector(state=>state.metaInfo.metaInfoMap[selectedQuery].isNameUserDefined);
+    const [currentQueryName, setQueryName] = useState(useSelector(state=>state.metaInfo.metaInfoMap[queryIDNumber].queryName));
+    const isNameUserDefined = useSelector(state=>state.metaInfo.metaInfoMap[queryIDNumber].isNameUserDefined);
 
     useEffect(()=>{
         // 在没有自定义名称时，采取默认查询命名策略

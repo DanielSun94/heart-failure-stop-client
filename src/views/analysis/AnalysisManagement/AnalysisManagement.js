@@ -20,7 +20,7 @@ import {useSelector, useDispatch} from "react-redux";
 import ParaName from "../../../utils/ParaName";
 import QuerySelectionDialog from "./QuerySelectionDialog";
 import {setSelectedQuery, setExpandedQueryList, deleteQuery, editQueryName} from "../../../actions/metaInfoAction";
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import RouteName from "../../../utils/RouteName";
 import {trajectoryDelete} from "../../../actions/individualAnalysisAction/trajectoryAction";
 import {vitalSignDelete} from "../../../actions/individualAnalysisAction/vitalSignAction";
@@ -84,6 +84,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const ANALYSIS = 'analysis';
+const ALGORITHM_DETAIL = 'algorithmDetail';
+
 const AnalysisManagement = () => {
     const classes = useStyles();
     const [openDialog, setOpenDialog] = useState(false);
@@ -125,28 +128,25 @@ function QueryTreeView() {
     const expandedNodeList =  useSelector(state=>state.metaInfo.expandedNodeList);
     const selectedQuery =  useSelector(state=>state.metaInfo.selectedQuery);
     const metaInfoMap = useSelector(state=>state.metaInfo.metaInfoMap);
-    const [groupMap, individualMap, individualAlgorithmDetailMap] = metaInfoMapSplit(metaInfoMap);
+    const [groupMap, individualMap] = metaInfoMapSplit(metaInfoMap);
     const individualIDList = Object.keys(individualMap).sort();
 
 
     useEffect(()=>{
-        // 首次载入时，进行重定位
+        // 首次载入时，进行重定位以显示内容
         // 具体的说，根据selectedQuery判断URL应该有的值，如果URL不符合要求，则重定位
-        // 按照逻辑来讲，这部分代码对应的重定位应当只在第一次进入时会用到
+        // 按照逻辑来讲，这部分代码对应的重定位应当只在第一次进入时会真正起作用
+        const currentPath = history.location.pathname;
         if(selectedQuery!==""){
             const queryType = metaInfoMap[selectedQuery].queryType;
-            let targetPath;
+            let targetPath="";
             if(queryType===ParaName.GROUP_ANALYSIS){
                 targetPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.GROUP_ANALYSIS+"/"+selectedQuery.toString()
             }
-            else if(queryType===ParaName.GROUP_ANALYSIS){
+            else if(queryType===ParaName.INDIVIDUAL_ANALYSIS){
                 targetPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS+"/"+selectedQuery.toString()
             }
-            else if(queryType===ParaName.INDIVIDUAL_ALGORITHM){
-                targetPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/"+selectedQuery.toString()
-            }
-            const currentPath = history.location.pathname;
-            if(targetPath!==currentPath)
+            if(currentPath.indexOf(targetPath)===-1)
                 history.push(targetPath);
         }
 
@@ -166,9 +166,6 @@ function QueryTreeView() {
                 }
                 else if(metaInfoMap[maxIdx].queryType===ParaName.INDIVIDUAL_ANALYSIS){
                     history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS+"/"+maxIdx.toString())
-                }
-                else if(metaInfoMap[maxIdx].queryType===ParaName.INDIVIDUAL_ALGORITHM){
-                    history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/"+maxIdx.toString())
                 }
             }
             else{
@@ -192,11 +189,10 @@ function QueryTreeView() {
                 metaInfoMap={metaInfoMap}
                 setDeleteDialogVisible={setDeleteDialogVisible}
             />
-            <IndividualAnalysisAndIndividualAlgorithmDetailList
+            <IndividualAnalysisList
                 individualIDList={individualIDList}
-                individualAlgorithmDetailMap={individualAlgorithmDetailMap}
                 metaInfoMap={metaInfoMap}
-                selectedQuery={selectedQuery}
+                selectedQuery={selectedQuery.toString()}
                 setDeleteDialogVisible={setDeleteDialogVisible}
             />
             <DeleteDialog
@@ -208,51 +204,78 @@ function QueryTreeView() {
     );
 }
 
-const IndividualAnalysisAndIndividualAlgorithmDetailList = ({individualIDList, individualAlgorithmDetailMap,
-                                    selectedQuery, metaInfoMap, setDeleteDialogVisible}) => {
+const modelNameGenerate =(allModelInfoList)=>{
+    const nameMap = {};
+    for(const item of allModelInfoList){
+        const modelCategory = item.mainCategory;
+        const modelEnglishName = item.modelEnglishName;
+        const modelEnglishFunctionName = item.modelEnglishFunctionName;
+        const modelChineseName = item.modelChineseName;
+        const modelChineseFunctionName = item.modelChineseFunctionName;
+        const unifiedModelName = modelCategory+'_'+modelEnglishName+'_'+modelEnglishFunctionName;
+        nameMap[unifiedModelName] = modelChineseName+' '+modelChineseFunctionName
+    }
+    return nameMap;
+};
+
+const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, setDeleteDialogVisible}) => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const history = useHistory();
     const individualAnalysisPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS;
-    const individualDetailPath = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ALGORITHM_DETAIL;
+    const modelInfo = useSelector(state=>state.individual.model);
+    const allModelInfoList = useSelector(state=>state.algorithm.algorithmList);
+    const nameMap = modelNameGenerate(allModelInfoList);
 
-    const affiliatedIndividualAlgorithmDetailList=(individualAnalysisID)=>{
+    // 此处有一个需求，要分得清楚tab页变化是由本component变化导致的，还是由外部变化导致的（content中的tab）
+    // 因为如果是外部变化导致的，要把tab自动重设为main，而不能是detail
+    // 为此，专门设立一个state判断，如果是外部点击造成的query变化，会造成参数和state不同
+    const [selectedQueryInternal, setQueryInternal] = useState(Number.parseInt(selectedQuery));
+    const [selectedTabType, setTabType] = useState(ANALYSIS);
+
+    // 监听外部的，直接跳到detailTab的请求
+    const currentPath = history.location.pathname;
+    useEffect(()=>{
+        if(currentPath.indexOf('individualAnalysis/'+selectedQuery+'/')>0) {
+            setTabType(ALGORITHM_DETAIL);
+        }
+    },[currentPath]);
+
+    useEffect(()=>{
+        if(selectedQueryInternal!==Number.parseInt(selectedQuery)){
+            setQueryInternal(Number.parseInt(selectedQuery));
+            setTabType(ANALYSIS)
+        }
+    }, [selectedQuery]);
+
+    const affiliatedIndividualAlgorithmDetailList=(queryID)=>{
+        const selectedModelList = Object.keys(modelInfo[queryID]['model']);
         let detailList = [];
 
-        for(const detailQueryID in individualAlgorithmDetailMap){
-            if(!individualAlgorithmDetailMap.hasOwnProperty(detailQueryID))
-                continue;
-
-            if(individualAlgorithmDetailMap[detailQueryID].affiliated===individualAnalysisID){
-                detailList.push(
+        for(const unifiedModelName of selectedModelList){
+            detailList.push(
                 <TreeItem
-                    key={detailQueryID}
-                    nodeId={detailQueryID}
+                    key={queryID+'_'+unifiedModelName}
+                    nodeId={queryID+'_'+unifiedModelName}
                     onClick={()=>{
-                        dispatch(setSelectedQuery(Number.parseInt(detailQueryID)));
-                        history.push(individualDetailPath+"/"+detailQueryID)
+                        setTabType(ALGORITHM_DETAIL);
+                        setQueryInternal(queryID);
+                        dispatch(setSelectedQuery(Number.parseInt(queryID)));
+                        history.push(individualAnalysisPath+"/"+queryID+'/'+unifiedModelName)
                     }}
-                    classes={selectedQuery===Number.parseInt(detailQueryID)?{content:classes.treeItem}:null}
+                    classes={(
+                        selectedTabType===ALGORITHM_DETAIL&&queryID===Number.parseInt(selectedQuery)
+                        &&(history.location.pathname.indexOf(unifiedModelName)>0)
+                    )?
+                        {content:classes.treeItem}:null}
                     label={
                         <div
                             className={classes.itemContent}
                         >
-                            <DoubleClickToEdit
-                                defaultValue={metaInfoMap[Number.parseInt(detailQueryID)].queryName}
-                                editQuery={(value)=>dispatch(editQueryName(value, true,
-                                    Number.parseInt(detailQueryID)))}
-                            />
-                            <Fab
-                                size={'small'}
-                                className={classes.closeIcon}>
-                                <CloseIcon
-                                    onClick={()=>setDeleteDialogVisible(true)}
-                                />
-                            </Fab>
+                            {nameMap[unifiedModelName]}
                         </div>
                     }
                 />)
-            }
         }
         if(detailList.length===0){
             return null;
@@ -277,9 +300,11 @@ const IndividualAnalysisAndIndividualAlgorithmDetailList = ({individualIDList, i
                         nodeId={id}
                         onClick={()=>{
                             dispatch(setSelectedQuery(Number.parseInt(id)));
+                            setTabType(ANALYSIS);
+                            setQueryInternal(id);
                             history.push(individualAnalysisPath+"/"+id)
                         }}
-                        classes={selectedQuery===Number.parseInt(id)?{content:classes.treeItem}:null}
+                        classes={selectedTabType===ANALYSIS&&selectedQuery===id.toString()?{content:classes.treeItem}:null}
                         label={
                             <div 
                                 className={classes.itemContent}
@@ -466,7 +491,6 @@ const metaInfoMapSplit = (metaInfoMap) => {
     // 将metaInfoMap中混杂在一起的个体分析和群体分析MateInfo拆分成两个单独的部分
     let individualMap = {};
     let groupMap = {};
-    let individualAlgorithmDetailMap={};
 
     for(let id in metaInfoMap){
         if(!metaInfoMap.hasOwnProperty(id))
@@ -478,11 +502,8 @@ const metaInfoMapSplit = (metaInfoMap) => {
         else if(metaInfo.queryType===ParaName.INDIVIDUAL_ANALYSIS){
             individualMap[id] = metaInfo
         }
-        else if(metaInfo.queryType===ParaName.INDIVIDUAL_ALGORITHM){
-            individualAlgorithmDetailMap[id]=metaInfo
-        }
     }
-    return [groupMap, individualMap, individualAlgorithmDetailMap]
+    return [groupMap, individualMap]
 };
 
 

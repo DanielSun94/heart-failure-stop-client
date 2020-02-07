@@ -12,6 +12,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import {useSelector} from 'react-redux';
 import {createNewQuery} from "../../../actions/metaInfoAction";
+import {useHistory} from 'react-router-dom'
 import ParaName from "../../../utils/ParaName";
 import {useDispatch} from 'react-redux';
 import {setSelectedQuery} from "../../../actions/metaInfoAction";
@@ -23,6 +24,7 @@ import {vitalSignInitialize} from "../../../actions/individualAnalysisAction/vit
 import {orderInitialize} from "../../../actions/individualAnalysisAction/orderAction";
 import {createNewModelQueryAndInitialize} from "../../../actions/individualAnalysisAction/individualModelAction";
 import {initializeManagementQuery} from "../../../actions/groupAnalysisAction/managementAction";
+import RouteName from "../../../utils/RouteName";
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -33,6 +35,7 @@ const useStyles = makeStyles(theme => ({
 const QuerySelectionDialog =({openDialog, setOpenDialog})=>{
     const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
     const [queryType, setQueryType] = React.useState("");
 
     const queryID = useSelector(state=>state.metaInfo.nextID);
@@ -50,10 +53,12 @@ const QuerySelectionDialog =({openDialog, setOpenDialog})=>{
             dispatch(vitalSignInitialize(queryID));
             dispatch(examInitialize(queryID));
             dispatch(createNewModelQueryAndInitialize(queryID));
+            history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS+'/'+queryID)
         }
         else if(queryType===ParaName.GROUP_ANALYSIS){
             dispatch(createNewQuery(ParaName.GROUP_ANALYSIS));
             dispatch(initializeManagementQuery(queryID));
+            history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.GROUP_ANALYSIS+'/'+queryID)
         }
         else {
             console.log('error')

@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {useHistory} from 'react-router-dom';
 import {
     Card,
@@ -8,12 +8,7 @@ import {
     Typography,
     Button
 } from '@material-ui/core'
-import {setQueryContext, setSelectedQuery} from "../../../../../../../actions/metaInfoAction";
-import {editQueryName} from "../../../../../../../actions/metaInfoAction";
-import {createNewQuery} from "../../../../../../../actions/metaInfoAction";
-import ParaName from "../../../../../../../utils/ParaName";
 import RouteName from "../../../../../../../utils/RouteName";
-import {updateModelUpdateInfo} from "../../../../../../../actions/algorithmManagementAction";
 
 const useStyles = makeStyles({
     root: {
@@ -52,11 +47,7 @@ const useStyles = makeStyles({
 
 const RiskAssessmentCard = ({unifiedModelName, queryID}) =>{
     const classes = useStyles();
-    const dispatch = useDispatch();
     const history = useHistory();
-
-    const metaInfoMap = useSelector(state=>state.metaInfo.metaInfoMap);
-    const newQueryID =  useSelector(state=>state.metaInfo.nextID);
 
     // 当模型数据获取完毕时更新
     let result = 0;
@@ -83,36 +74,9 @@ const RiskAssessmentCard = ({unifiedModelName, queryID}) =>{
         }
     }
 
-    // 模型上下文信息，正常情况下，上下文信息应当只包括unifiedModelName
-    // 用于告诉page到底应该渲染什么页面
-    // 其余的信息都从queryID直接查看state的内容得到
-    const context = {
-        unifiedModelName: unifiedModelName,
-    };
-
-    const createIndividualAlgorithmPage=()=>{
-        // 当细节page没有被创建过时，创建并跳转。如果已经创建过了，则直接跳转
-        let isCreatedAlready = -1;
-        for(const key in metaInfoMap){
-            if(!metaInfoMap.hasOwnProperty(key))
-                continue;
-            if(metaInfoMap[key].affiliated===queryID&&metaInfoMap[key].context.unifiedModelName===unifiedModelName)
-                isCreatedAlready=key;
-        }
-        if(isCreatedAlready>0){
-            history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+
-                RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/"+isCreatedAlready);
-            dispatch(setSelectedQuery(Number.parseInt(isCreatedAlready)));
-        }
-        else{
-            dispatch(createNewQuery(ParaName.INDIVIDUAL_ALGORITHM, queryID));
-            dispatch(setQueryContext(context, newQueryID));
-            dispatch(editQueryName(
-                modelChineseName+' '+modelChineseFunctionName, false, newQueryID));
-            history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+
-                RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/"+newQueryID);
-            dispatch(setSelectedQuery(Number.parseInt(newQueryID)));
-        }
+    const jumpToDetailPage=()=>{
+        history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+
+            RouteName.INDIVIDUAL_ANALYSIS+"/"+queryID+'/'+unifiedModelName);
     };
 
     return (
@@ -122,7 +86,7 @@ const RiskAssessmentCard = ({unifiedModelName, queryID}) =>{
                     style={{
                         height:'100%', width: '100%', textAlign: 'left'
                     }}
-                    onClick={createIndividualAlgorithmPage}
+                    onClick={jumpToDetailPage}
                 >
                     {((!isFetchingData)&&isDataValid) ? (
                         <div className={classes.result}>

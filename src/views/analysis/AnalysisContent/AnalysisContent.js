@@ -63,14 +63,12 @@ const AnalysisContent = () => {
     }
 
     const handleChange = (event, newValue) => {
+        // 按照当前设计，content处的Tab栏只涉及对GroupAnalysis和IndividualAnalysis的分析
         if(metaInfoMap[newValue].queryType===ParaName.GROUP_ANALYSIS){
             history.push(path+RouteName.GROUP_ANALYSIS+"/"+newValue)
         }
         else if(metaInfoMap[newValue].queryType===ParaName.INDIVIDUAL_ANALYSIS){
             history.push(path+RouteName.INDIVIDUAL_ANALYSIS+"/"+newValue);
-        }
-        else if(metaInfoMap[newValue].queryType===ParaName.INDIVIDUAL_ALGORITHM){
-            history.push(path+RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/"+newValue);
         }
         dispatch(setSelectedQuery(Number.parseInt(newValue)));
     };
@@ -117,11 +115,11 @@ const AnalysisContent = () => {
                 <Route path={path+RouteName.GROUP_ANALYSIS+"/:queryID"}>
                     <GroupAnalysis />
                 </Route>
+                <Route path={path+RouteName.INDIVIDUAL_ANALYSIS+"/:queryID/:unifiedModelName"}>
+                    <IndividualAlgorithmDetail />
+                </Route>
                 <Route path={path+RouteName.INDIVIDUAL_ANALYSIS+"/:queryID"}>
                     <IndividualAnalysis />
-                </Route>
-                <Route path={path+RouteName.INDIVIDUAL_ALGORITHM_DETAIL+"/:queryID"}>
-                    <IndividualAlgorithmDetail />
                 </Route>
                 <Route path={path+RouteName.BLANK}>
                     <h1> 未选中数据 </h1>
