@@ -15,6 +15,7 @@ export const DELETE_SELECTED_MODEL = "DELETE_SELECTED_MODEL";
 export const DELETE_QUERY = "DELETE_QUERY";
 export const CREATE_NEW_MODEL_QUERY = "CREATE_NEW_MODEL_QUERY";
 export const SET_VISIT = "SET_VISIT";
+export const EDIT_INPUTS = "EDIT_INPUTS";
 
 export function setVisit(unifiedPatientID, hospitalCode, visitType, visitID, queryID){
     return {type: SET_VISIT, id: queryID, unifiedPatientID: unifiedPatientID, hospitalCode: hospitalCode,
@@ -23,13 +24,10 @@ export function setVisit(unifiedPatientID, hospitalCode, visitType, visitID, que
 
 export function getModelDataAndExecuteModel(modelCategory, modelName, modelFunction, unifiedPatientID, hospitalCode,
                                             visitType, visitID, queryID){
-    const unifiedModelName = modelCategory+"_"+modelName+"_"+modelFunction;
-    return (dispatch, getState)=>{
+    return (dispatch)=>{
         return dispatch(getModelData(modelCategory, modelName, modelFunction, unifiedPatientID, hospitalCode, visitType,
             visitID, queryID)).then(()=>{
-                const data = getState().individual.model[queryID].model[unifiedModelName].inputs;
-                const dataJson = JSON.stringify({"inputs": data});
-                return dispatch(executeModel(modelCategory, modelName, modelFunction, dataJson, queryID))
+                return dispatch(executeModel(modelCategory, modelName, modelFunction, queryID))
         })
     }
 }
@@ -52,11 +50,12 @@ function getModelData(modelCategory, modelName, modelFunction, unifiedPatientID,
     }
 }
 
-export function executeModel(modelCategory, modelName, modelFunction, data, queryID) {
+export function executeModel(modelCategory, modelName, modelFunction, queryID) {
     const unifiedModelName = modelCategory+"_"+modelName+"_"+modelFunction;
     return function (dispatch, getState) {
         dispatch(executeModelRequest(unifiedModelName, queryID));
-
+        let data = getState().individual.model[queryID]['model'][unifiedModelName]['inputs'];
+        data = JSON.stringify({"inputs": data});
         let url = RouteName.B_MACHINE_LEARNING + RouteName.B_EXECUTE_MODEL;
         let token = getState().session.authenticToken;
         let header = {'Authorization': token};
@@ -72,6 +71,10 @@ export function executeModel(modelCategory, modelName, modelFunction, data, quer
                 error => {console.log(error); dispatch(executeModelFailed(unifiedModelName, queryID))})
             .then(result => dispatch(executeModelSuccess(unifiedModelName, result, queryID)))
     }
+}
+
+export function editInputs(unifiedModelName, newInputs, queryID) {
+    return {type: EDIT_INPUTS, id: queryID, unifiedModelName: unifiedModelName, newInputs: newInputs}
 }
 
 function fetchModelDataRequest(unifiedModelName, queryID) {

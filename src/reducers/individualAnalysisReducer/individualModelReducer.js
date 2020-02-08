@@ -10,7 +10,8 @@ import {
     DELETE_SELECTED_MODEL,
     DELETE_QUERY,
     CREATE_NEW_MODEL_QUERY,
-    SET_VISIT
+    SET_VISIT,
+    EDIT_INPUTS
 } from '../../actions/individualAnalysisAction/individualModelAction';
 
 const initStateInfo = {
@@ -33,9 +34,15 @@ const individualModelReducer = (state=initStateInfo, action) => {
         case CREATE_NEW_MODEL_QUERY: {return createNewModelQuery(state, action.id)}
         case SET_VISIT: {return setVisit(state, action.unifiedPatientID, action.hospitalCode, action.visitType,
             action.visitID, action.id)}
+        case EDIT_INPUTS: {return setNewInputs(state, action.unifiedModelName, action.newInputs, action.id)}
         default: return state;
     }
 };
+
+function setNewInputs(state, unifiedModelName, newInputs, queryID) {
+    state[queryID]['model'][unifiedModelName]['inputs'] = newInputs;
+    return {...state}
+}
 
 function setVisit(state, unifiedPatientID, hospitalCode, visitType, visitID, queryID) {
     state[queryID] = {
@@ -99,6 +106,7 @@ function fetchModelDataSuccess(state, data, unifiedModelName, queryID) {
     // 根据约定，data的内容可以自定，但是必须包括一个'inputs'key，对应的格式的对象可以序列化（JSON）后直接传到tf server中进行计算
     // 其余的key所对应的信息均填入otherInputsInfo
     const otherInfo = {...data};
+    otherInfo['originInputs'] = otherInfo['inputs']
     delete otherInfo['inputs'];
 
     state[queryID]['model'][unifiedModelName]={

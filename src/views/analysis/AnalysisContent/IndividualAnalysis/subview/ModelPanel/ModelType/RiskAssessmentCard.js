@@ -74,9 +74,12 @@ const RiskAssessmentCard = ({unifiedModelName, queryID}) =>{
         }
     }
 
-    const jumpToDetailPage=()=>{
-        history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+
-            RouteName.INDIVIDUAL_ANALYSIS+"/"+queryID+'/'+unifiedModelName);
+    const jumpToDetailPage=()=> {
+        //仅在载入完毕后允许跳转
+        if (isDataValid) {
+            history.push(RouteName.MAIN_PAGE + RouteName.ANALYSIS +
+                RouteName.INDIVIDUAL_ANALYSIS + "/" + queryID + '/' + unifiedModelName);
+        }
     };
 
     return (
@@ -86,7 +89,9 @@ const RiskAssessmentCard = ({unifiedModelName, queryID}) =>{
                     style={{
                         height:'100%', width: '100%', textAlign: 'left'
                     }}
-                    onClick={jumpToDetailPage}
+                    onClick={
+                        jumpToDetailPage
+                    }
                 >
                     {((!isFetchingData)&&isDataValid) ? (
                         <div className={classes.result}>

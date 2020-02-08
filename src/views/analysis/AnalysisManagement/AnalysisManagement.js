@@ -20,7 +20,7 @@ import {useSelector, useDispatch} from "react-redux";
 import ParaName from "../../../utils/ParaName";
 import QuerySelectionDialog from "./QuerySelectionDialog";
 import {setSelectedQuery, setExpandedQueryList, deleteQuery, editQueryName} from "../../../actions/metaInfoAction";
-import {useHistory, useParams} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import RouteName from "../../../utils/RouteName";
 import {trajectoryDelete} from "../../../actions/individualAnalysisAction/trajectoryAction";
 import {vitalSignDelete} from "../../../actions/individualAnalysisAction/vitalSignAction";
@@ -125,7 +125,6 @@ function QueryTreeView() {
 
     const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
 
-    const expandedNodeList =  useSelector(state=>state.metaInfo.expandedNodeList);
     const selectedQuery =  useSelector(state=>state.metaInfo.selectedQuery);
     const metaInfoMap = useSelector(state=>state.metaInfo.metaInfoMap);
     const [groupMap, individualMap] = metaInfoMapSplit(metaInfoMap);
@@ -179,7 +178,7 @@ function QueryTreeView() {
             className={classes.treeView}
             defaultCollapseIcon={<ArrowDropDownIcon />}
             defaultExpandIcon={<ArrowRightIcon />}
-            expanded={expandedNodeList.map(item=>item.toString())}
+            expanded={[ParaName.INDIVIDUAL_ANALYSIS, ParaName.GROUP_ANALYSIS, ...Object.keys(metaInfoMap)]}
             defaultEndIcon={<div style={{ width: 24 }}/>}
             onNodeToggle={(event, nodes)=>(dispatch(setExpandedQueryList(nodes)))}
         >
@@ -258,10 +257,14 @@ const IndividualAnalysisList = ({individualIDList, selectedQuery, metaInfoMap, s
                     key={queryID+'_'+unifiedModelName}
                     nodeId={queryID+'_'+unifiedModelName}
                     onClick={()=>{
-                        setTabType(ALGORITHM_DETAIL);
-                        setQueryInternal(queryID);
-                        dispatch(setSelectedQuery(Number.parseInt(queryID)));
-                        history.push(individualAnalysisPath+"/"+queryID+'/'+unifiedModelName)
+                        //仅在数据载入完毕时跳转
+                        const outputStatus = modelInfo[queryID]['model'][unifiedModelName].isOutputValid;
+                        if(outputStatus){
+                            setTabType(ALGORITHM_DETAIL);
+                            setQueryInternal(queryID);
+                            dispatch(setSelectedQuery(Number.parseInt(queryID)));
+                            history.push(individualAnalysisPath+"/"+queryID+'/'+unifiedModelName);
+                        }
                     }}
                     classes={(
                         selectedTabType===ALGORITHM_DETAIL&&queryID===Number.parseInt(selectedQuery)
