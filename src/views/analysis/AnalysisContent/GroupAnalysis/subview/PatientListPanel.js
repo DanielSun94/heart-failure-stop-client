@@ -12,7 +12,6 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import {
     createNewQuery,
     editQueryName,
-    setExpandedQueryList,
     setSelectedQuery
 } from "../../../../../actions/metaInfoAction";
 import ParaName from "../../../../../utils/ParaName";

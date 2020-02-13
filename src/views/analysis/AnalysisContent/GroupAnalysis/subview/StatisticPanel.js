@@ -18,7 +18,7 @@ const StatisticPanel =({queryID, toggleFilter})=>{
                     style={{paddingTop: 18, paddingLeft: 12}}
                     color={'primary'}
                     onClick={()=>{
-                        dispatch(createNewQuery(ParaName.GROUP_ANALYSIS, queryID));
+                        dispatch(createNewQuery(ParaName.GROUP_ANALYSIS, null));
                         dispatch(initializeManagementQuery(nextID));
                     }}
                 >

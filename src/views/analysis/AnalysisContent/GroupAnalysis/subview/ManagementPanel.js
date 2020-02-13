@@ -1,14 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Tabs,
     Tab,
-    Divider,
+    Button,
     colors
 } from '@material-ui/core';
 import {useSelector, useDispatch} from 'react-redux';
 import {changeManagementQueryTab} from "../../../../../actions/groupAnalysisAction/managementAction";
-import FilterPanel from "./FilterPanel";
+import FilterDialog from "./FilterDialog";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -40,6 +40,7 @@ const ManagementPanel =({queryID, setToggleFilter, toggleFilter})=>{
     const dispatch = useDispatch();
 
     const selectedTab = useSelector(state=>state.group.management[queryID].selectedTab);
+    const [openDialog, setDialogVisible] = useState(false);
 
     const notSelectStyle =
         {minHeight:42, maxWidth: 500, width: '100%', borderRightColor: colors.grey[200],
@@ -64,8 +65,25 @@ const ManagementPanel =({queryID, setToggleFilter, toggleFilter})=>{
                 </Tabs>
             </div>
             <div className={classes.filterPanel}>
-                <FilterPanel queryID={queryID} setToggleFilter={setToggleFilter} toggleFilter={toggleFilter}/>
+                <span style={{paddingTop: 18, paddingLeft: 12}}>过滤器</span>
+                <span style={{paddingTop: 18, paddingLeft: 12}}>To Be Done</span>
+                <Button
+                    style={{paddingTop: 18, paddingLeft: 12}}
+                    color={'primary'}
+                    onClick={()=>{
+                        setToggleFilter(!toggleFilter);
+                        setDialogVisible(true);
+                        dispatch(changeManagementQueryTab("filter", queryID))
+                    }}
+                >
+                    过滤器重设
+                </Button>
             </div>
+            <FilterDialog
+                queryID={queryID}
+                openDialog={openDialog}
+                setDialogVisible={setDialogVisible}
+            />
         </div>
     )
 };

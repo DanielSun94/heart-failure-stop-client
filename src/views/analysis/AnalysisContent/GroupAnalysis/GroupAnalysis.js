@@ -42,9 +42,10 @@ const GroupAnalysis = () =>{
             </div>
             <div className={classes.analysisPanel}>
                 {
-                    selectedTab==='statistic'?
-                        <StatisticPanel toggleFilter={toggleFilter} queryID={queryIDNumber}/>:
-                        <PatientListPanel toggleFilter={toggleFilter} queryID={queryIDNumber}/>
+                    selectedTab==='statistic'&& <StatisticPanel toggleFilter={toggleFilter} queryID={queryIDNumber}/>
+                }
+                {
+                    selectedTab==='patientList'&& <PatientListPanel toggleFilter={toggleFilter} queryID={queryIDNumber}/>
                 }
             </div>
         </div>
