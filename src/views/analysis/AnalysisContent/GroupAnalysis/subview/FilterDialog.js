@@ -19,7 +19,6 @@ import ExamFilter from "./filter/ExamFilter";
 import HospitalFilter from "./filter/HospitalFilter";
 import LabTestFilter from "./filter/LabTestFilter";
 import LengthOfStayFilter from "./filter/LengthOfStayFilter";
-import MainDiagnosisFilter from "./filter/MainDiagnosisFilter";
 import MedicineFilter from "./filter/MedicineFilter";
 import ModelFilter from "./filter/ModelFilter";
 import OperationFilter from "./filter/OperationFilter";
@@ -28,6 +27,7 @@ import VitalSignFilter from "./filter/VitalSignFilter";
 import ParaName from "../../../../../utils/ParaName";
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
+
 const useStyles = makeStyles(() => ({
     root: {
         width: 1200,
@@ -45,7 +45,6 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
     const classes = useStyles();
     const [index, setIndex] = useState(0);
     const [filter, setFilter] = useState({});
-    const [constraintType, setConstraintType] = useState('add');
     const [filterType, setFilterType] = useState("");
 
     const addConstraint = (newConstraint) =>{
@@ -140,6 +139,7 @@ const FilterTuple =({idx, type, content, editFunc, deleteFunc})=>{
             <SpecificFilterSelector
                 filterType={dialogType}
                 setFilterType={setDialogType}
+                content={content}
                 index={idx}
                 editConstraint={editFunc}
                 constraintType={'edit'}
@@ -185,7 +185,7 @@ const AddFilter =({setFilterType})=>{
             >
                 <List dense={true}>
                     <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.ADMISSION_TIME)}>
-                        <ListItemText primary={"住院日过滤器"}/>
+                        <ListItemText primary={"入院时间过滤器"}/>
                     </ListItem>
                     <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.AGE)}>
                         <ListItemText primary={"年龄过滤器"}/>
@@ -229,7 +229,7 @@ const AddFilter =({setFilterType})=>{
     )
 };
 
-const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editConstraint, constraintType, index})=>{
+const SpecificFilterSelector=({filterType, setFilterType, content, addConstraint, editConstraint, constraintType, index})=>{
     return (
         <div>
             {ParaName.AGE===filterType&&
@@ -239,6 +239,7 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 addConstraint={addConstraint}
                 editConstraint={editConstraint}
                 constraintType={constraintType}
+                previousContent={content}
                 index={index}
             />}
             {ParaName.ADMISSION_TIME===filterType&&
@@ -248,6 +249,7 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 addConstraint={addConstraint}
                 editConstraint={editConstraint}
                 constraintType={constraintType}
+                previousContent={content}
                 index={index}
             />}
             {ParaName.BIRTHDAY===filterType&&
@@ -255,6 +257,7 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 openDialog={filterType}
                 setOpenDialog={setFilterType}
                 addConstraint={addConstraint}
+                previousContent={content}
                 editConstraint={editConstraint}
                 constraintType={constraintType}
                 index={index}
@@ -264,9 +267,11 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 openDialog={filterType}
                 setOpenDialog={setFilterType}
                 addConstraint={addConstraint}
+                previousContent={content}
                 editConstraint={editConstraint}
                 constraintType={constraintType}
                 index={index}
+                diagnosisType={ParaName.DIAGNOSIS}
             />
             }
             {ParaName.EXAM===filterType&&
@@ -276,6 +281,7 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 addConstraint={addConstraint}
                 editConstraint={editConstraint}
                 constraintType={constraintType}
+                previousContent={content}
                 index={index}
             />
             }
@@ -284,6 +290,7 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 openDialog={filterType}
                 setOpenDialog={setFilterType}
                 addConstraint={addConstraint}
+                previousContent={content}
                 editConstraint={editConstraint}
                 constraintType={constraintType}
                 index={index}
@@ -295,6 +302,7 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 setOpenDialog={setFilterType}
                 addConstraint={addConstraint}
                 editConstraint={editConstraint}
+                previousContent={content}
                 constraintType={constraintType}
                 index={index}
             />
@@ -305,17 +313,20 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 setOpenDialog={setFilterType}
                 addConstraint={addConstraint}
                 editConstraint={editConstraint}
+                previousContent={content}
                 constraintType={constraintType}
                 index={index}
             />
             }
             {ParaName.MAIN_DIAGNOSIS===filterType&&
-            <MainDiagnosisFilter
+            <DiagnosisFilter
                 openDialog={filterType}
                 setOpenDialog={setFilterType}
                 addConstraint={addConstraint}
+                previousContent={content}
                 editConstraint={editConstraint}
                 constraintType={constraintType}
+                diagnosisType={ParaName.MAIN_DIAGNOSIS}
                 index={index}
             />
             }
@@ -323,6 +334,7 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
             <MedicineFilter
                 openDialog={filterType}
                 setOpenDialog={setFilterType}
+                previousContent={content}
                 addConstraint={addConstraint}
                 editConstraint={editConstraint}
                 constraintType={constraintType}
@@ -337,6 +349,7 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 editConstraint={editConstraint}
                 constraintType={constraintType}
                 index={index}
+                previousContent={content}
             />
             }
             {ParaName.OPERATION===filterType&&
@@ -345,6 +358,7 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 setOpenDialog={setFilterType}
                 addConstraint={addConstraint}
                 editConstraint={editConstraint}
+                previousContent={content}
                 constraintType={constraintType}
                 index={index}
             />
@@ -357,6 +371,7 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 editConstraint={editConstraint}
                 constraintType={constraintType}
                 index={index}
+                previousContent={content}
             />
             }
             {ParaName.VITAL_SIGN===filterType&&
@@ -367,6 +382,7 @@ const SpecificFilterSelector=({filterType, setFilterType, addConstraint, editCon
                 editConstraint={editConstraint}
                 constraintType={constraintType}
                 index={index}
+                previousContent={content}
             />
             }
         </div>
