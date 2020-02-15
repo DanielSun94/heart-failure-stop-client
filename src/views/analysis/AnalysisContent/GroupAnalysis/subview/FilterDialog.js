@@ -27,6 +27,7 @@ import VitalSignFilter from "./filter/VitalSignFilter";
 import ParaName from "../../../../../utils/ParaName";
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
+import {diagnosisJson} from "./filter/diagnosisMap";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -40,6 +41,12 @@ const useStyles = makeStyles(() => ({
         "&:hover": {backgroundColor: colors.grey[200]}
     }
 }));
+
+const list = JSON.parse(diagnosisJson());
+const diagnosisMap = {};
+for(const item of list){
+    diagnosisMap[item[0]] = item[1]
+}
 
 const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
     const classes = useStyles();
@@ -125,11 +132,36 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
 
 const FilterTuple =({idx, type, content, editFunc, deleteFunc})=>{
     const [dialogType, setDialogType] = useState(null);
+
+    let contentString='';
+    switch (type) {
+        case ParaName.MAIN_DIAGNOSIS: {
+            contentString += "主诊断包括:";
+            for (let i = 1; i < content.length; i++) {
+                contentString += diagnosisMap[content[i]];
+                if (i !== content.length - 1) {
+                    contentString += " 或 "
+                }
+            }
+            break;
+        }
+        case ParaName.DIAGNOSIS: {
+            contentString+="诊断包括:";
+            for(let i=1; i<content.length; i++) {
+                contentString += diagnosisMap[content[i]];
+                if (i !== content.length - 1) {
+                    contentString += " 或 "
+                }
+            }
+            break;
+        }
+        default: break;
+    }
     return (
         <div>
             <div>{idx}</div>
             <div>{type}</div>
-            <div>{content}</div>
+            <div>{contentString}</div>
             <EditIcon
                 onClick={()=>setDialogType(type)}
             />
