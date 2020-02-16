@@ -8,8 +8,7 @@ import {
     DialogTitle,
     Button,
     Typography,
-    Checkbox,
-    TextField
+    Checkbox
 } from '@material-ui/core';
 import {diagnosisJson, mainDiagnosisJson} from "./diagnosisMap";
 import ParaName from "../../../../../../utils/ParaName";
@@ -175,6 +174,8 @@ const DiagnosisFilter = ({openDialog, setOpenDialog, addConstraint, editConstrai
 };
 
 const Item=({index, data, style})=>{
+    // 注意，此处必须使用style参数（并在下面的渲染中使用），不然会出错
+
     const icdCode = data[0][index][0];
     const name = data[0][index][1];
     const selectedDiagnosisList = data[1];

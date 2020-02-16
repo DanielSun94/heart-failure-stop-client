@@ -28,13 +28,14 @@ import ParaName from "../../../../../utils/ParaName";
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
 import {diagnosisJson} from "./filter/diagnosisMap";
+import {medicineJson} from "./filter/medicineMap";
+import {operationJson} from "./filter/operationMap";
 
 const useStyles = makeStyles(() => ({
     root: {
         width: 1200,
         height: 600,
         overflow: 'auto',
-        display:'flex',
     },
     paperWidthSm: {maxWidth: 1200},
     listItem: {
@@ -42,10 +43,20 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const list = JSON.parse(diagnosisJson());
+const diagnosisList = JSON.parse(diagnosisJson());
 const diagnosisMap = {};
-for(const item of list){
+for(const item of diagnosisList){
     diagnosisMap[item[0]] = item[1]
+}
+const medicineList = JSON.parse(medicineJson());
+const medicineMap = {};
+for(const item of medicineList){
+    medicineMap[item[0]] = item[1]
+}
+const operationList = JSON.parse(operationJson());
+const operationMap = {};
+for(const item of operationList){
+    operationMap[item[0]] = item[1]
 }
 
 const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
@@ -155,10 +166,117 @@ const FilterTuple =({idx, type, content, editFunc, deleteFunc})=>{
             }
             break;
         }
+        case ParaName.ADMISSION_TIME: {
+            contentString+= "入院时间";
+            if(content[1]!=="-1"&&content[2]!=="-1"){
+                contentString+="在"+content[1]+"至"+content[2]+"之间";
+            }
+            else if(content[1]!=="-1"){
+                contentString+="在"+content[1]+"之后";
+            }
+            else if(content[2]!=="-1"){
+                contentString+="再"+content[2]+"之前";
+            }
+            break;
+        }
+        case ParaName.AGE:{
+            contentString+= "年龄";
+            if(content[1]!==-1&&content[2]!==-1){
+                contentString+="在"+content[1]+"至"+content[2]+"岁间";
+            }
+            else if(content[1]!==-1){
+                contentString+="大于"+content[1]+"岁";
+            }
+            else if(content[2]!==-1){
+                contentString+="小于"+content[2]+"岁";
+            }
+            break;
+        }
+        case ParaName.BIRTHDAY: {
+            contentString+= "生日";
+            if(content[1]!=="-1"&&content[2]!=="-1"){
+                contentString+="在"+content[1]+"至"+content[2]+"之间";
+            }
+            else if(content[1]!=="-1"){
+                contentString+="在"+content[1]+"之后";
+            }
+            else if(content[2]!=="-1"){
+                contentString+="再"+content[2]+"之前";
+            }
+            break;
+        }
+        case ParaName.EXAM: {
+            contentString+= content[1];
+            if(content[2]!==-1&&content[3]!==-1){
+                contentString+="在"+content[2]+"至"+content[3]+"间";
+            }
+            else if(content[2]!==-1){
+                contentString+="大于"+content[2];
+            }
+            else if(content[3]!==-1){
+                contentString+="小于"+content[2];
+            }
+            break;
+        }
+        case ParaName.HOSPITAL: {
+            contentString += "医院: ";
+            for(let i=1; i<content.length; i++) {
+                contentString += content[i][1];
+                if (i !== content.length - 1) {
+                    contentString += " 或 "
+                }
+            }
+            break;
+        }
+        case ParaName.LAB_TEST:{
+            // item = ["labTest", code, numerical, value1, value2, name, unit] or
+            // item = ["labTest", code, categorical, value, name, unit]
+            contentString += "实验室检查: ";
+            if(content[2]==='numerical'){
+                contentString+=content[5]+": "+content[3]+' 至 '+content[4]+' '+content[6]
+            }
+            if(content[2]==='categorical'){
+                contentString+=content[4]+" "+content[3]
+            }
+            break;
+        }
+        case ParaName.LOS:{
+            contentString+= "住院日";
+            if(content[1]!==-1&&content[2]!==-1){
+                contentString+="在"+content[1]+"至"+content[2]+"天间";
+            }
+            else if(content[1]!==-1){
+                contentString+="大于"+content[1]+"天";
+            }
+            else if(content[2]!==-1){
+                contentString+="小于"+content[2]+"天";
+            }
+            break;
+        }
+        case ParaName.MEDICINE:{
+            contentString+= "使用药物: ";
+            for(let i=1; i<content.length; i++) {
+                contentString += medicineMap[content[i]];
+                if (i !== content.length - 1) {
+                    contentString += " 或 "
+                }
+            }
+            break;
+        }
+        case ParaName.OPERATION:{
+            contentString+= "手术: ";
+            for(let i=1; i<content.length; i++) {
+                contentString += operationMap[content[i]];
+                if (i !== content.length - 1) {
+                    contentString += " 或 "
+                }
+            }
+            break;
+        }
         default: break;
     }
     return (
-        <div>
+        <div >
             <div>{idx}</div>
             <div>{type}</div>
             <div>{contentString}</div>
@@ -236,6 +354,9 @@ const AddFilter =({setFilterType})=>{
                     </ListItem>
                     <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.LAB_TEST)}>
                         <ListItemText primary={"实验室检查过滤器"}/>
+                    </ListItem>
+                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.LOS)}>
+                        <ListItemText primary={"住院日过滤器"}/>
                     </ListItem>
                     <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.MAIN_DIAGNOSIS)}>
                         <ListItemText primary={"主诊断过滤器"}/>

@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const AgeFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, index, constraintType}) =>{
+const AgeFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, index, constraintType,
+                       previousContent}) =>{
     // item = ["age", int low_threshold, int high_threshold]
     // 在添加条件时，idx应当为空，当修改时，才需要idx
     const classes = useStyles();
@@ -44,6 +45,13 @@ const AgeFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, in
     const [lowThreshold, setLowThreshold] = useState("");
     const [highThreshold, setHighThreshold] = useState("");
     const [inputLegal, setInput] = useState(false);
+
+    useEffect(()=>{
+        if(constraintType==='edit'){
+            setLowThreshold(previousContent[1]!==-1?previousContent[1].toString():"");
+            setHighThreshold(previousContent[2]!==-1?previousContent[2].toString():"")
+        }
+    },[]);
 
     useEffect(()=>{
         // 检查输入是否合法
