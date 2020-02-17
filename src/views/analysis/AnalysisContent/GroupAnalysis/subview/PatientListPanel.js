@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -25,29 +25,7 @@ import {vitalSignInitialize} from "../../../../../actions/individualAnalysisActi
 import {examInitialize} from "../../../../../actions/individualAnalysisAction/examAction";
 import {createNewModelQueryAndInitialize} from "../../../../../actions/individualAnalysisAction/individualModelAction";
 import RouteName from "../../../../../utils/RouteName";
-
-const columns = [
-    { id: 'id', label: '病人ID', minWidth: 100 },
-    { id: 'hospitalName', label: '医院名称', minWidth: 100 },
-    { id: 'visitType', label: '入院类型', minWidth: 100},
-    { id: 'visitID', label: '入院ID', minWidth: 100},
-    { id: 'name', label: '姓名', minWidth: 100},
-    { id: 'sex', label: '性别', minWidth: 100},
-    { id: 'age', label: '年龄', minWidth: 100},
-    { id: 'mainDiagnosis', label: '主诊断', minWidth: 100},
-    { id: 'lengthOfStay', label: '住院日', minWidth: 100},
-    { id: 'admissionTime', label: '入院时间', minWidth: 100},
-    { id: 'detail', label: '具体分析', minWidth: 100},
-];
-
-function createData(id, hospitalName, visitType, visitID, name, sex, age, mainDiagnosis, lengthOfStay, admissionTime) {
-    return {id, hospitalName, visitType, visitID, name, sex, age, mainDiagnosis, lengthOfStay, admissionTime};
-}
-
-const rows = [
-    createData('S112395129', '解放军总医院', "住院", "10", "张三", "男", "50",
-        "心力衰竭", "10", "2018-01-01"),
-];
+import {getVisitInfo} from "../../../../../actions/groupAnalysisAction/managementAction";
 
 const useStyles = makeStyles({
     root: {
@@ -58,6 +36,19 @@ const useStyles = makeStyles({
     },
 });
 
+const columns = [
+    { id: 'localPatientID', label: '病人ID', minWidth: 100 },
+    { id: 'hospitalName', label: '医院名称', minWidth: 100 },
+    { id: 'visitType', label: '入院类型', minWidth: 100},
+    { id: 'visitID', label: '入院ID', minWidth: 100},
+    { id: 'name', label: '姓名', minWidth: 100},
+    { id: 'sex', label: '性别', minWidth: 100},
+    { id: 'age', label: '年龄', minWidth: 100},
+    { id: 'mainDiagnosis', label: '主诊断', minWidth: 100},
+    { id: 'los', label: '住院日', minWidth: 100},
+    { id: 'admissionTime', label: '入院时间', minWidth: 100},
+    { id: 'detail', label: '具体分析', minWidth: 100},
+];
 
 
 const PatientListPanel =({queryID, toggleFilter})=>{
@@ -66,18 +57,22 @@ const PatientListPanel =({queryID, toggleFilter})=>{
     const history = useHistory();
     const nextID = useSelector(state=>state.metaInfo.nextID);
     const queryName = useSelector(state=>state.metaInfo.metaInfoMap[queryID].queryName);
+    const isDataOutOfDate = useSelector(state=>state.group.management[queryID].visitInfo.isDataOutOfDate);
+    const page = useSelector(state=>state.group.management[queryID].visitInfo.page);
+    const pageSize = useSelector(state=>state.group.management[queryID].visitInfo.pageSize);
+    const filter = useSelector(state=>state.group.management[queryID].filter);
+    const visitCount = useSelector(state=>state.group.management[queryID].visitInfo.visitCount);
+    const visitInfo = useSelector(state=>state.group.management[queryID].visitInfo.data);
 
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = event => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    };
+    useEffect(()=>{
+        // isDataOutOfDate只在一种情况下为true，就是刚向服务器提交新的过滤器，服务器确认查询完毕时
+        // 此时patientListPanel是过时的，自动触发更新请求
+        if(isDataOutOfDate){
+            const startIndex = (page-1)*pageSize;
+            const endIndex = page*pageSize;
+            dispatch(getVisitInfo(filter, startIndex, endIndex, queryID))
+        }
+    },[isDataOutOfDate]);
 
     const handleClickJumpIcon=(localPatientID, hospitalCode, visitType, visitID, name, queryID)=>{
         // 本函数包含如下几个功能
@@ -103,8 +98,6 @@ const PatientListPanel =({queryID, toggleFilter})=>{
 
         // 5. 获取新个体query的数据信息，并设置访问为目标访问
         dispatch(fetchAndSetIndividualAnalysisInfo(localPatientID, hospitalCode, visitType, visitID, nextID));
-
-
     };
 
     return (
@@ -126,7 +119,7 @@ const PatientListPanel =({queryID, toggleFilter})=>{
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
+                        {visitInfo.map(row => {
                             return (
                                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                                     {columns.map(column => {
@@ -153,13 +146,13 @@ const PatientListPanel =({queryID, toggleFilter})=>{
                 </Table>
             </TableContainer>
             <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                rowsPerPageOptions={[20]}
                 component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
+                count={visitCount}
+                rowsPerPage={pageSize}
                 page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
+                onChangePage={()=>{}}
+                onChangeRowsPerPage={()=>{}}
             />
         </Fragment>
     );

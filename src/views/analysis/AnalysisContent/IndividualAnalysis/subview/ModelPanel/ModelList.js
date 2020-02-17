@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { makeStyles } from '@material-ui/styles';
 import {useSelector, useDispatch} from 'react-redux';
 import {
@@ -15,8 +15,6 @@ import {
 import {
     addSelectedModel,
     deleteSelectedModel,
-    getModelDataAndExecuteModel,
-    setVisit
 } from "../../../../../../actions/individualAnalysisAction/individualModelAction";
 
 const useStyles = makeStyles(theme => ({

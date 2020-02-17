@@ -10,7 +10,7 @@ import {
     Typography,
     Checkbox
 } from '@material-ui/core';
-import {diagnosisJson, mainDiagnosisJson} from "./diagnosisMap";
+import {diagnosisJson, mainDiagnosisJson} from "../../../../../../utils/diagnosisMap";
 import ParaName from "../../../../../../utils/ParaName";
 import { makeStyles } from '@material-ui/core/styles';
 import { FixedSizeList } from 'react-window';

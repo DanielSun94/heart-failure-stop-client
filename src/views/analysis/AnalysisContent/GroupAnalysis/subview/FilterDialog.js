@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     colors,
@@ -10,7 +10,11 @@ import {
     DialogContent,
     DialogTitle,
     Button,
-    Popover} from '@material-ui/core';
+    Card,
+    Popover,
+    Typography
+} from '@material-ui/core';
+import {useDispatch, useSelector} from 'react-redux'
 import AgeFilter from "./filter/AgeFilter";
 import AdmissionTimeFilter from "./filter/AdmissionTimeFilter";
 import BirthdayFilter from "./filter/BirthdayFilter";
@@ -27,9 +31,12 @@ import VitalSignFilter from "./filter/VitalSignFilter";
 import ParaName from "../../../../../utils/ParaName";
 import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
-import {diagnosisJson} from "./filter/diagnosisMap";
-import {medicineJson} from "./filter/medicineMap";
-import {operationJson} from "./filter/operationMap";
+import {diagnosisJson} from "../../../../../utils/diagnosisMap";
+import {medicineJson} from "../../../../../utils/medicineMap";
+import {operationJson} from "../../../../../utils/operationMap";
+import VisitTypeFilter from "./filter/VisitTypeFilter";
+import {changeManagementQueryFilter,
+queryDataAccordingToFilter} from "../../../../../actions/groupAnalysisAction/managementAction";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -39,6 +46,15 @@ const useStyles = makeStyles(() => ({
     },
     paperWidthSm: {maxWidth: 1200},
     listItem: {
+        "&:hover": {backgroundColor: colors.grey[200]}
+    },
+    filterItem: {
+        marginTop: 20,
+        width: 1100,
+        minHeight: 50,
+        display: 'flex',
+    },
+    icon: {
         "&:hover": {backgroundColor: colors.grey[200]}
     }
 }));
@@ -59,11 +75,35 @@ for(const item of operationList){
     operationMap[item[0]] = item[1]
 }
 
+const codeMap = {
+    [ParaName.MACHINE_LEARNING]: "模型",
+    [ParaName.ADMISSION_TIME]: "入院时间",
+    [ParaName.DIAGNOSIS]: "诊断",
+    [ParaName.MAIN_DIAGNOSIS]: '主诊断',
+    [ParaName.BIRTHDAY]: "生日",
+    [ParaName.VITAL_SIGN]: "生理指标",
+    [ParaName.VISIT_TYPE]: "入院类型",
+    [ParaName.OPERATION]: "手术",
+    [ParaName.MEDICINE]: "药物",
+    [ParaName.EXAM]: "检查",
+    [ParaName.LAB_TEST]: "检验",
+    [ParaName.HOSPITAL]: "医院",
+    [ParaName.AGE]: "年龄",
+    [ParaName.LOS]: "住院日",
+    [ParaName.SEX]: "性别"
+};
+
 const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
     const classes = useStyles();
+    const dispatch = useDispatch();
     const [index, setIndex] = useState(0);
     const [filter, setFilter] = useState({});
     const [filterType, setFilterType] = useState("");
+    const previousFilter = useSelector(state=>state.group.management[queryID].filter);
+
+    useEffect(()=>{
+        setFilter(previousFilter);
+    }, []);
 
     const addConstraint = (newConstraint) =>{
         const temp = {...filter};
@@ -110,7 +150,6 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
                         <FilterTuple
                             key={idx}
                             idx={idx}
-                            type={filter[idx][0]}
                             content={filter[idx]}
                             editFunc={editConstraint}
                             deleteFunc={deleteConstraint}
@@ -122,7 +161,8 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
                 <Button variant={'outlined'}
                         onClick={()=> {
                             setDialogVisible(false);
-                            submitFilterAndGetData();
+                            dispatch(changeManagementQueryFilter(filter, queryID));
+                            dispatch(queryDataAccordingToFilter(filter, queryID))
                         }}
                         color="primary">
                     确认
@@ -141,11 +181,49 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
     )
 };
 
-const FilterTuple =({idx, type, content, editFunc, deleteFunc})=>{
+const FilterTuple =({idx, content, editFunc, deleteFunc})=>{
+    const classes = useStyles();
+    const type = content[0];
     const [dialogType, setDialogType] = useState(null);
+    const contentString = filterContentToString(content);
+    return (
+        <Card className={classes.filterItem}>
+            <div style={{marginLeft: 10, width: 290, display: 'flex', alignItems: "center"}}>
+                <Typography>{"筛选器类型: "+codeMap[type]}</Typography>
+            </div>
+            <div style={{width: 680, display: 'flex', alignItems: "center"}}>
+                {contentString}
+            </div>
+            <div style={{marginLeft: 10, width: 50, height:50, display: 'flex', alignItems: "center"}}>
+                <EditIcon
+                    fontSize={"inherit"}
+                    className={classes.icon}
+                    onClick={()=>setDialogType(type)}
+                />
+            </div>
+            <div style={{marginLeft: 10, width: 50, height:50, display: 'flex', alignItems: "center"}}>
+                <CloseIcon
+                    fontSize={"inherit"}
+                    className={classes.icon}
+                    onClick={()=>deleteFunc(idx)}
+                />
+            </div>
 
+            <SpecificFilterSelector
+                filterType={dialogType}
+                setFilterType={setDialogType}
+                content={content}
+                index={idx}
+                editConstraint={editFunc}
+                constraintType={'edit'}
+            />
+        </Card>
+    )
+};
+
+const filterContentToString =(content)=>{
     let contentString='';
-    switch (type) {
+    switch (content[0]) {
         case ParaName.MAIN_DIAGNOSIS: {
             contentString += "主诊断包括:";
             for (let i = 1; i < content.length; i++) {
@@ -273,29 +351,43 @@ const FilterTuple =({idx, type, content, editFunc, deleteFunc})=>{
             }
             break;
         }
+        case ParaName.SEX:{
+            contentString+= "性别: "+content[1]==='male'?"男":"女";
+            break;
+        }
+        case ParaName.VISIT_TYPE:{
+            contentString+= "入院类型: "+content[1];
+            break;
+        }
+        case ParaName.VITAL_SIGN:{
+            contentString+= "主要生理指标: "+content[4];
+            if(content[2]!==-1&&content[3]!==-1){
+                contentString+="在"+content[2]+"至"+content[3]+content[5]+"间";
+            }
+            else if(content[2]!==-1){
+                contentString+="大于"+content[1]+content[5];
+            }
+            else if(content[3]!==-1){
+                contentString+="小于"+content[2]+content[5];
+            }
+            break;
+        }
+        case ParaName.MACHINE_LEARNING:{
+            contentString+= "模型: "+content[5];
+            if(content[3]!==-1&&content[4]!==-1){
+                contentString+="风险在"+content[3]+"%至"+content[4]+"%间";
+            }
+            else if(content[3]!==-1){
+                contentString+="风险大于"+content[3]+"%";
+            }
+            else if(content[4]!==-1){
+                contentString+="风险小于"+content[4]+"%"
+            }
+            break;
+        }
         default: break;
     }
-    return (
-        <div >
-            <div>{idx}</div>
-            <div>{type}</div>
-            <div>{contentString}</div>
-            <EditIcon
-                onClick={()=>setDialogType(type)}
-            />
-            <CloseIcon
-                onClick={()=>deleteFunc(idx)}
-            />
-            <SpecificFilterSelector
-                filterType={dialogType}
-                setFilterType={setDialogType}
-                content={content}
-                index={idx}
-                editConstraint={editFunc}
-                constraintType={'edit'}
-            />
-        </div>
-    )
+    return contentString;
 };
 
 const AddFilter =({setFilterType})=>{
@@ -334,47 +426,95 @@ const AddFilter =({setFilterType})=>{
                 }}
             >
                 <List dense={true}>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.ADMISSION_TIME)}>
-                        <ListItemText primary={"入院时间过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.ADMISSION_TIME);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.ADMISSION_TIME]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.AGE)}>
-                        <ListItemText primary={"年龄过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.AGE);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.AGE]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.BIRTHDAY)}>
-                        <ListItemText primary={"生日过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.BIRTHDAY);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.BIRTHDAY]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.DIAGNOSIS)}>
-                        <ListItemText primary={"诊断过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.DIAGNOSIS);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.DIAGNOSIS]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.EXAM)}>
-                        <ListItemText primary={"检查过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.EXAM);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.EXAM]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.HOSPITAL)}>
-                        <ListItemText primary={"医院过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.HOSPITAL);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.HOSPITAL]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.LAB_TEST)}>
-                        <ListItemText primary={"实验室检查过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.LAB_TEST);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.LAB_TEST]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.LOS)}>
-                        <ListItemText primary={"住院日过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.LOS);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.LOS]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.MAIN_DIAGNOSIS)}>
-                        <ListItemText primary={"主诊断过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.MAIN_DIAGNOSIS);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.MAIN_DIAGNOSIS]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.MEDICINE)}>
-                        <ListItemText primary={"药物过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.MACHINE_LEARNING);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.MACHINE_LEARNING]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.MODEL)}>
-                        <ListItemText primary={"模型过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.MACHINE_LEARNING);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.MACHINE_LEARNING]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.OPERATION)}>
-                        <ListItemText primary={"手术过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.OPERATION);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.OPERATION]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.SEX)}>
-                        <ListItemText primary={"性别过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.SEX);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.SEX]+"过滤器"}/>
                     </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>setFilterType(ParaName.VITAL_SIGN)}>
-                        <ListItemText primary={"生理指标过滤器"}/>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.VITAL_SIGN);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.VITAL_SIGN]+"过滤器"}/>
+                    </ListItem>
+                    <ListItem className={classes.listItem} onClick={()=>{
+                        setFilterType(ParaName.VISIT_TYPE);
+                        handleClose()
+                    }}>
+                        <ListItemText primary={codeMap[ParaName.VISIT_TYPE]+"过滤器"}/>
                     </ListItem>
                 </List>
             </Popover>
@@ -494,7 +634,7 @@ const SpecificFilterSelector=({filterType, setFilterType, content, addConstraint
                 index={index}
             />
             }
-            {ParaName.MODEL===filterType&&
+            {ParaName.MACHINE_LEARNING===filterType&&
             <ModelFilter
                 openDialog={filterType}
                 setOpenDialog={setFilterType}
@@ -527,7 +667,7 @@ const SpecificFilterSelector=({filterType, setFilterType, content, addConstraint
                 previousContent={content}
             />
             }
-            {ParaName.VITAL_SIGN===filterType&&
+            {ParaName.VITAL_SIGN === filterType &&
             <VitalSignFilter
                 openDialog={filterType}
                 setOpenDialog={setFilterType}
@@ -537,6 +677,17 @@ const SpecificFilterSelector=({filterType, setFilterType, content, addConstraint
                 index={index}
                 previousContent={content}
             />
+            }
+            {ParaName.VISIT_TYPE===filterType&&
+                <VisitTypeFilter
+                openDialog={filterType}
+                setOpenDialog={setFilterType}
+                addConstraint={addConstraint}
+                editConstraint={editConstraint}
+                constraintType={constraintType}
+                index={index}
+                previousContent={content}
+                />
             }
         </div>
     )

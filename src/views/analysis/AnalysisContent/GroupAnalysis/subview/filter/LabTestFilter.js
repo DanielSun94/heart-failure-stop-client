@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Dialog, DialogActions, DialogContent, DialogTitle, Button, Radio, Typography} from '@material-ui/core';
 import ParaName from "../../../../../../utils/ParaName";
 import { makeStyles } from '@material-ui/core/styles'
-import {labTestJson, representativeLabTestJson} from "./labTestMap";
+import {labTestJson, representativeLabTestJson} from "../../../../../../utils/labTestMap";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {filter} from "../../../../../../utils/queryUtilFunction";
@@ -136,7 +136,9 @@ const LabTestFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint
             // 上下限必须是浮点数，上限比下限大，未设置时自动设为-1
             const reg = /^(-?\d+)(\.\d+)?$/
             if(reg.test(lowThreshold)&&reg.test(highThreshold)){
-                valueStatus=true
+                if(parseFloat(lowThreshold)<parseFloat(highThreshold)) {
+                    valueStatus = true
+                }
             }
             if(reg.test(lowThreshold)&&highThreshold===""){
                 valueStatus=true

@@ -86,6 +86,11 @@ class RouteName{
     static B_STATE_MANAGEMENT = "/backend/stateManagement";
     static B_UPDATE_STATE = "/uploadState";
     static B_DOWNLOAD_STATE = "/downloadState";
+
+    // group analysis
+    static B_GROUP_ANALYSIS_DATA = "/backend/data/groupAnalysis";
+    static B_QUERY_WITH_FILTER = "/queryWithFilter";
+    static B_GET_VISIT_INFO = "/getVisitInfo"
 }
 
 export default RouteName;

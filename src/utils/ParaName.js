@@ -51,6 +51,7 @@ class ParaName{
     static USER_AFFILIATED_HOSPITAL_CODE = 'userAffiliatedHospitalCode';
     static VISIT_NO ='visitNo';
     static VITAL_SIGN = "vitalSign";
+    static MACHINE_LEARNING = "machineLearning";
 
     static GET = "GET";
     static POST = "POST";

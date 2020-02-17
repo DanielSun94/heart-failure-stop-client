@@ -11,7 +11,7 @@ import {
     Checkbox,
     Tooltip
 } from '@material-ui/core';
-import {operationJson, representativeOperationJson} from "./operationMap";
+import {operationJson, representativeOperationJson} from "../../../../../../utils/operationMap";
 import ParaName from "../../../../../../utils/ParaName";
 import { makeStyles } from '@material-ui/core/styles';
 import { FixedSizeList } from 'react-window';
