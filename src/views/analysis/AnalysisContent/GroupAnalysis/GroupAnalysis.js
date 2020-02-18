@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import ParaName from '../../../../utils/ParaName'
+import {colors} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import {useSelector} from 'react-redux';
 import StatisticPanel from "./subview/StatisticPanel";
@@ -12,17 +13,20 @@ const useStyles = makeStyles(() => ({
         width: "100%",
         height: '100%',
         display:'flex',
+        overflow: 'auto',
+        flexDirection: "column"
     },
     managementPanel: {
-        width: "20%",
-        minimumWidth: '280',
-        maxHeight: "100%",
-        overflow: 'auto',
+        width: "100%",
+        height: 85,
+        borderBottomColor: colors.grey[200],
+        borderBottomStyle: 'solid',
+        borderBottomWidth: 1
     },
     analysisPanel: {
-        width: "80%",
-        height: "100%",
-        overflow: 'auto',
+        width: "100%",
+        height: "calc(100%-85px)",
+        overflow: 'auto'
     },
 }));
 
@@ -33,19 +37,17 @@ const GroupAnalysis = () =>{
     const queryIDNumber = Number.parseInt(queryID);
     const selectedTab = useSelector(state=>state.group.management[queryID].selectedTab);
 
-    const [toggleFilter, setToggleFilter] = useState(false);
-
     return (
         <div className={classes.root}>
             <div className={classes.managementPanel}>
-                <ManagementPanel setToggleFilter={setToggleFilter} toggleFilter={toggleFilter} queryID={queryIDNumber}/>
+                <ManagementPanel queryID={queryIDNumber}/>
             </div>
             <div className={classes.analysisPanel}>
                 {
-                    selectedTab==='statistic'&& <StatisticPanel toggleFilter={toggleFilter} queryID={queryIDNumber}/>
+                    selectedTab==='statistic'&& <StatisticPanel queryID={queryIDNumber}/>
                 }
                 {
-                    selectedTab==='patientList'&& <PatientListPanel toggleFilter={toggleFilter} queryID={queryIDNumber}/>
+                    selectedTab==='patientList'&& <PatientListPanel queryID={queryIDNumber}/>
                 }
             </div>
         </div>

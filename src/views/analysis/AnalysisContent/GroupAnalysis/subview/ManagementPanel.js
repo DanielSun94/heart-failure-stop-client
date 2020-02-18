@@ -7,44 +7,46 @@ import {
     colors
 } from '@material-ui/core';
 import {useSelector, useDispatch} from 'react-redux';
+import FilterDialog, {filterContentToString} from "./FilterDialog";
 import {changeManagementQueryTab} from "../../../../../actions/groupAnalysisAction/managementAction";
-import FilterDialog from "./FilterDialog";
 
 const useStyles = makeStyles(() => ({
     root: {
         width: "100%",
-        height: '100%',
         display:'flex',
-        flexDirection: 'column',
-        overflow: 'auto'
     },
     selectionPanel: {
-        width: '100%',
+        width: 200,
         height: 85,
-        borderBottomColor: colors.grey[200],
-        borderBottomStyle: 'solid',
-        borderBottomWidth: 1
     },
     filterPanel: {
-        width: '100%',
-        height: window.innerHeight-86,
-        overflow: 'auto',
-        borderRightColor: colors.grey[200],
-        borderRightStyle: 'solid',
-        borderRightWidth: 1
+        width: "calc(100% - 200px)",
+        display: 'flex'
     },
 }));
 
-const ManagementPanel =({queryID, setToggleFilter, toggleFilter})=>{
+const ManagementPanel =({queryID})=>{
     const classes = useStyles();
     const dispatch = useDispatch();
 
     const selectedTab = useSelector(state=>state.group.management[queryID].selectedTab);
     const [openDialog, setDialogVisible] = useState(false);
+    const filter = useSelector(state=>state.group.management[queryID].filter);
 
     const notSelectStyle =
         {minHeight:42, maxWidth: 500, width: '100%', borderRightColor: colors.grey[200],
         borderRightStyle: 'solid', borderRightWidth: 1};
+
+    const filterToString =(filter)=>{
+        let str = "";
+        for(const index in filter){
+            if(filter.hasOwnProperty(index)){
+                str += filterContentToString(filter[index])+";     "
+            }
+        }
+        return str
+    };
+
     return (
         <div className={classes.root}>
             <div className={classes.selectionPanel}>
@@ -65,15 +67,18 @@ const ManagementPanel =({queryID, setToggleFilter, toggleFilter})=>{
                 </Tabs>
             </div>
             <div className={classes.filterPanel}>
-                <span style={{paddingTop: 18, paddingLeft: 12}}>过滤器</span>
-                <span style={{paddingTop: 18, paddingLeft: 12}}>To Be Done</span>
+                <div style={{width: "90%", display: 'flex', alignItems: 'center'}}>
+                    <span style={{width: 150, marginLeft: 20}}>过滤器</span>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        {filterToString(filter)}
+                    </div>
+                </div>
+
                 <Button
                     style={{paddingTop: 18, paddingLeft: 12}}
                     color={'primary'}
                     onClick={()=>{
-                        setToggleFilter(!toggleFilter);
                         setDialogVisible(true);
-                        dispatch(changeManagementQueryTab("filter", queryID))
                     }}
                 >
                     过滤器重设

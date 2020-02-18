@@ -97,7 +97,9 @@ const BirthdayFilter = ({openDialog, setOpenDialog, addConstraint, editConstrain
                                 shrink: true,
                             }}
                             onChange={(event)=>{
-                                setStartTime(event.target.value)
+                                if(event.target.value!==""){
+                                    setStartTime(event.target.value);
+                                }
                             }}
                         />
                     </form>
@@ -114,7 +116,9 @@ const BirthdayFilter = ({openDialog, setOpenDialog, addConstraint, editConstrain
                                 shrink: true,
                             }}
                             onChange={(event)=>{
-                                setEndTime(event.target.value);
+                                if(event.target.value!==""){
+                                    setEndTime(event.target.value);
+                                }
                             }}
                         />
                     </form>

@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        overflow: 'auto',
+        overflow: 'auto'
     },
     tabContent: {
         display: 'flex',

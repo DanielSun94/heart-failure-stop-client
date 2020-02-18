@@ -18,7 +18,7 @@ function monthAndDateTrans(globalDate, type='chinese'){
     }
 }
 
-function monthAndDateAndTimeTrans(globalDate){
+function monthAndDateAndTimeTrans(globalDate, dense=false){
     const time = new Date(globalDate);
     const year = time.getFullYear();
     const month = time.getMonth()+1 >= 10 ? time.getMonth()+1 :'0'+(time.getMonth()+1);
@@ -26,7 +26,12 @@ function monthAndDateAndTimeTrans(globalDate){
     const hour = time.getHours() >= 10 ? time.getHours() :'0'+time.getHours();
     const minute = time.getMinutes() >= 10 ? time.getMinutes() :'0'+time.getMinutes();
     const second = time.getSeconds() >= 10 ? time.getSeconds() :'0'+time.getSeconds();
-    return year+"/"+month + '/' + date + ' ' + hour +':'+minute+":"+second;
+    if(dense){
+        return year + month + date + hour + minute + second;
+    }
+    else {
+        return year + "/" + month + '/' + date + ' ' + hour + ':' + minute + ":" + second;
+    }
 }
 
 const pinYinFilter = (listToFilter, text, textDefaultValue) => {

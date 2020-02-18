@@ -92,7 +92,9 @@ const AdmissionTimeFilter = ({openDialog, setOpenDialog, addConstraint, editCons
                                 shrink: true,
                             }}
                             onChange={(event)=>{
-                                setStartTime(event.target.value)
+                                if(event.target.value!==""){
+                                    setStartTime(event.target.value);
+                                }
                             }}
                         />
                     </form>
@@ -109,7 +111,9 @@ const AdmissionTimeFilter = ({openDialog, setOpenDialog, addConstraint, editCons
                                 shrink: true,
                             }}
                             onChange={(event)=>{
-                                setEndTime(event.target.value);
+                                if(event.target.value!==""){
+                                    setEndTime(event.target.value);
+                                }
                             }}
                         />
                     </form>

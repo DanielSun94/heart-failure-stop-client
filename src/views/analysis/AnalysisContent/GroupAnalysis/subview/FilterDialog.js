@@ -99,11 +99,21 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
     const [index, setIndex] = useState(0);
     const [filter, setFilter] = useState({});
     const [filterType, setFilterType] = useState("");
+    const [canConfirm, setCanConfirm] = useState(false);
     const previousFilter = useSelector(state=>state.group.management[queryID].filter);
 
     useEffect(()=>{
         setFilter(previousFilter);
     }, []);
+
+    useEffect(()=>{
+        if(Object.keys(filter).length===0){
+            setCanConfirm(false)
+        }
+        else {
+            setCanConfirm(true)
+        }
+    },[filter]);
 
     const addConstraint = (newConstraint) =>{
         const temp = {...filter};
@@ -122,10 +132,6 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
         const temp = {...filter};
         temp[index] = newConstraint;
         setFilter({...temp})
-    };
-
-    const submitFilterAndGetData = () =>{
-        // dispatch(...)
     };
 
     const filterKeys = Object.keys(filter);
@@ -164,6 +170,7 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
                             dispatch(changeManagementQueryFilter(filter, queryID));
                             dispatch(queryDataAccordingToFilter(filter, queryID))
                         }}
+                        disabled={!canConfirm}
                         color="primary">
                     确认
                 </Button>
@@ -189,7 +196,7 @@ const FilterTuple =({idx, content, editFunc, deleteFunc})=>{
     return (
         <Card className={classes.filterItem}>
             <div style={{marginLeft: 10, width: 290, display: 'flex', alignItems: "center"}}>
-                <Typography>{"筛选器类型: "+codeMap[type]}</Typography>
+                <Typography>{"过滤器类型: "+codeMap[type]}</Typography>
             </div>
             <div style={{width: 680, display: 'flex', alignItems: "center"}}>
                 {contentString}
@@ -208,7 +215,6 @@ const FilterTuple =({idx, content, editFunc, deleteFunc})=>{
                     onClick={()=>deleteFunc(idx)}
                 />
             </div>
-
             <SpecificFilterSelector
                 filterType={dialogType}
                 setFilterType={setDialogType}
@@ -221,7 +227,7 @@ const FilterTuple =({idx, content, editFunc, deleteFunc})=>{
     )
 };
 
-const filterContentToString =(content)=>{
+export const filterContentToString =(content)=>{
     let contentString='';
     switch (content[0]) {
         case ParaName.MAIN_DIAGNOSIS: {
@@ -352,7 +358,7 @@ const filterContentToString =(content)=>{
             break;
         }
         case ParaName.SEX:{
-            contentString+= "性别: "+content[1]==='male'?"男":"女";
+            contentString+= "性别: "+((content[1]==='male')?"男":"女");
             break;
         }
         case ParaName.VISIT_TYPE:{
@@ -479,12 +485,6 @@ const AddFilter =({setFilterType})=>{
                         handleClose()
                     }}>
                         <ListItemText primary={codeMap[ParaName.MAIN_DIAGNOSIS]+"过滤器"}/>
-                    </ListItem>
-                    <ListItem className={classes.listItem} onClick={()=>{
-                        setFilterType(ParaName.MACHINE_LEARNING);
-                        handleClose()
-                    }}>
-                        <ListItemText primary={codeMap[ParaName.MACHINE_LEARNING]+"过滤器"}/>
                     </ListItem>
                     <ListItem className={classes.listItem} onClick={()=>{
                         setFilterType(ParaName.MACHINE_LEARNING);

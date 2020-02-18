@@ -1,31 +1,32 @@
 import React from 'react';
-import ParaName from '../../../../../utils/ParaName'
-import { Button } from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
-import {createNewQuery} from "../../../../../actions/metaInfoAction";
-import {initializeManagementQuery} from "../../../../../actions/groupAnalysisAction/managementAction";
+import {SexPanel} from "./statisticCharts/SexPanel";
+import { makeStyles } from '@material-ui/core/styles'
 
-const StatisticPanel =({queryID, toggleFilter})=>{
-    const dispatch = useDispatch();
-    const nextID = useSelector(state=>state.metaInfo.nextID);
+const useStyles = makeStyles(() => ({
+    root: {
+        width: "100%",
+        height: "100%",
+        minHeight: 950,
+        overflow: 'auto',
+        display: 'flex'
+    },
+    sexPanel: {
+        width: 400,
+        height: 400,
+        marginTop: 20,
+        marginLeft: 20
+    }
+}));
 
+const StatisticPanel =({queryID})=>{
+    const classes = useStyles();
     return (
-        toggleFilter&&(
-            <div>
-                <h4 style={{paddingTop: 18, paddingLeft: 12}}>StatisticPanel To Be Done</h4>
-                <h4 style={{paddingTop: 18, paddingLeft: 12}}>当前Panel :{queryID}</h4>
-                <Button
-                    style={{paddingTop: 18, paddingLeft: 12}}
-                    color={'primary'}
-                    onClick={()=>{
-                        dispatch(createNewQuery(ParaName.GROUP_ANALYSIS, null));
-                        dispatch(initializeManagementQuery(nextID));
-                    }}
-                >
-                    创建嵌套组
-                </Button>
+        <div className={classes.root}>
+            <div className={classes.sexPanel}>
+                <SexPanel queryID={queryID}/>
             </div>
-        )
+        </div>
     )
 };
 

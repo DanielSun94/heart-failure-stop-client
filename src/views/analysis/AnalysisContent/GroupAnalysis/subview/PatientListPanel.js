@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect} from 'react';
+import React, {useEffect, Fragment} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -16,6 +16,7 @@ import {
 } from "../../../../../actions/metaInfoAction";
 import ParaName from "../../../../../utils/ParaName";
 import {useHistory} from 'react-router-dom';
+import {CircularProgress} from "@material-ui/core"
 import {fetchAndSetIndividualAnalysisInfo} from "../../../../../actions/groupAnalysisAction/contentAction";
 import {unifiedIdAndBasicInfoInitialize} from "../../../../../actions/individualAnalysisAction/unifiedPatientIDAndPatientBasicInfoAction";
 import {trajectoryInitialize} from "../../../../../actions/individualAnalysisAction/trajectoryAction";
@@ -25,39 +26,38 @@ import {vitalSignInitialize} from "../../../../../actions/individualAnalysisActi
 import {examInitialize} from "../../../../../actions/individualAnalysisAction/examAction";
 import {createNewModelQueryAndInitialize} from "../../../../../actions/individualAnalysisAction/individualModelAction";
 import RouteName from "../../../../../utils/RouteName";
-import {getVisitInfo} from "../../../../../actions/groupAnalysisAction/managementAction";
+import {getVisitInfo, setPage} from "../../../../../actions/groupAnalysisAction/managementAction";
 
 const useStyles = makeStyles({
     root: {
         width: '100%',
-    },
-    container: {
-        maxHeight: 440,
+        height: '100%',
+        overflow: "auto"
     },
 });
 
 const columns = [
     { id: 'localPatientID', label: '病人ID', minWidth: 100 },
-    { id: 'hospitalName', label: '医院名称', minWidth: 100 },
+    { id: 'hospitalName', label: '医院名称', minWidth: 150 },
     { id: 'visitType', label: '入院类型', minWidth: 100},
-    { id: 'visitID', label: '入院ID', minWidth: 100},
+    { id: 'visitID', label: '入院ID', minWidth: 80},
     { id: 'name', label: '姓名', minWidth: 100},
-    { id: 'sex', label: '性别', minWidth: 100},
-    { id: 'age', label: '年龄', minWidth: 100},
-    { id: 'mainDiagnosis', label: '主诊断', minWidth: 100},
-    { id: 'los', label: '住院日', minWidth: 100},
-    { id: 'admissionTime', label: '入院时间', minWidth: 100},
+    { id: 'sex', label: '性别', minWidth: 80},
+    { id: 'age', label: '年龄', minWidth: 80},
+    { id: 'mainDiagnosis', label: '主诊断', minWidth: 100, maxWidth: 250},
+    { id: 'los', label: '住院日', minWidth: 80},
+    { id: 'admissionTime', label: '入院时间', minWidth: 150},
     { id: 'detail', label: '具体分析', minWidth: 100},
 ];
 
 
-const PatientListPanel =({queryID, toggleFilter})=>{
+const PatientListPanel =({queryID})=>{
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
     const nextID = useSelector(state=>state.metaInfo.nextID);
-    const queryName = useSelector(state=>state.metaInfo.metaInfoMap[queryID].queryName);
     const isDataOutOfDate = useSelector(state=>state.group.management[queryID].visitInfo.isDataOutOfDate);
+    const isDataValid = useSelector(state=>state.group.management[queryID].visitInfo.isDataValid);
     const page = useSelector(state=>state.group.management[queryID].visitInfo.page);
     const pageSize = useSelector(state=>state.group.management[queryID].visitInfo.pageSize);
     const filter = useSelector(state=>state.group.management[queryID].filter);
@@ -65,19 +65,17 @@ const PatientListPanel =({queryID, toggleFilter})=>{
     const visitInfo = useSelector(state=>state.group.management[queryID].visitInfo.data);
 
     useEffect(()=>{
-        // isDataOutOfDate只在一种情况下为true，就是刚向服务器提交新的过滤器，服务器确认查询完毕时
-        // 此时patientListPanel是过时的，自动触发更新请求
-        if(isDataOutOfDate){
-            const startIndex = (page-1)*pageSize;
-            const endIndex = page*pageSize;
-            dispatch(getVisitInfo(filter, startIndex, endIndex, queryID))
+        if(isDataOutOfDate&&isDataValid){
+            const startIndex = page*pageSize;
+            const endIndex = (page+1)*pageSize;
+            dispatch(getVisitInfo(startIndex, endIndex, queryID))
         }
-    },[isDataOutOfDate]);
+    },[isDataOutOfDate, isDataValid]);
 
-    const handleClickJumpIcon=(localPatientID, hospitalCode, visitType, visitID, name, queryID)=>{
+    const handleClickJumpIcon=(localPatientID, hospitalCode, visitType, visitID)=>{
         // 本函数包含如下几个功能
         // 1. 创建新query并初始化
-        dispatch(createNewQuery(ParaName.INDIVIDUAL_ANALYSIS, Number.parseInt(queryID)));
+        dispatch(createNewQuery(ParaName.INDIVIDUAL_ANALYSIS));
         dispatch(unifiedIdAndBasicInfoInitialize(nextID));
         dispatch(trajectoryInitialize(nextID));
         dispatch(orderInitialize(nextID));
@@ -87,7 +85,7 @@ const PatientListPanel =({queryID, toggleFilter})=>{
         dispatch(createNewModelQueryAndInitialize(nextID));
 
         // 2. 更改名称
-        dispatch(editQueryName("查询"+nextID+"_附属于"+name, nextID));
+        dispatch(editQueryName("查询"+nextID, false, nextID));
 
         // 3. 自动跳转
         const path = RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.INDIVIDUAL_ANALYSIS+'/'+nextID;
@@ -100,61 +98,76 @@ const PatientListPanel =({queryID, toggleFilter})=>{
         dispatch(fetchAndSetIndividualAnalysisInfo(localPatientID, hospitalCode, visitType, visitID, nextID));
     };
 
+    const filterSize = Object.keys(filter).length===0;
+    const showCircularProgress = filterSize||isDataValid;
+
     return (
-        toggleFilter&&
-        <Fragment>
-            <TableContainer className={classes.container}>
-                <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
-                        <TableRow>
-                            {columns.map(column => (
-                                <TableCell
-                                    key={column.id}
-                                    align={column.align}
-                                    style={{ minWidth: column.minWidth }}
-                                >
-                                    {column.label}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {visitInfo.map(row => {
-                            return (
-                                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                    {columns.map(column => {
-                                        const value = row[column.id];
-                                        return (
-                                            value?(
-                                                <TableCell key={column.id} align={column.align}>
-                                                    {column.format && typeof value === 'number' ? column.format(value) : value}
-                                                </TableCell>):null
-                                        );
-                                    })}
-                                    <TableCell key={'jumpToIndividualAnalysis'}>
-                                        <DescriptionIcon
-                                            onClick={()=>{
-                                                handleClickJumpIcon('S112395129', '1',
-                                                    '住院', '9', queryName, queryID)
-                                            }}
-                                        />
-                                    </TableCell>
+        <div className={classes.root}>
+            {(!showCircularProgress)&&
+            <div
+                style={{width: "100%", height: 500, display: 'flex', alignItems: 'center',justifyContent: 'center'}}>
+                <CircularProgress/>
+            </div>}
+            {showCircularProgress&&(
+                <Fragment>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    {columns.map(column => (
+                                        <TableCell
+                                            key={column.id}
+                                            style={{ minWidth: column.minWidth }}
+                                        >
+                                            {column.label}
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[20]}
-                component="div"
-                count={visitCount}
-                rowsPerPage={pageSize}
-                page={page}
-                onChangePage={()=>{}}
-                onChangeRowsPerPage={()=>{}}
-            />
-        </Fragment>
+                            </TableHead>
+                            <TableBody>
+                                {visitInfo.map(row => {
+                                    return (
+                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                            {columns.map(column => {
+                                                const value = row[column.id];
+                                                return (
+                                                    value?(
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {column.format && typeof value === 'number' ? column.format(value) : value}
+                                                        </TableCell>):null
+                                                );
+                                            })}
+                                            <TableCell key={'jumpToIndividualAnalysis'}>
+                                                <DescriptionIcon
+                                                    onClick={()=>{
+                                                        handleClickJumpIcon(row.localPatientID, row.hospitalCode,
+                                                            row.visitType, row.visitID)
+                                                    }}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[20]}
+                        component="div"
+                        count={visitCount}
+                        rowsPerPage={pageSize}
+                        page={page}
+                        onChangePage={(event, nextPage)=>{
+                            const startIndex = nextPage*pageSize;
+                            const endIndex = (nextPage+1)*pageSize;
+                            dispatch(setPage(nextPage, queryID));
+                            dispatch(getVisitInfo(startIndex, endIndex, queryID))
+                        }}
+                    />
+                </Fragment>
+            )}
+        </div>
+
     );
 };
 

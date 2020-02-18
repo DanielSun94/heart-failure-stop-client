@@ -8,7 +8,11 @@ import {
     QUERY_DATA_FAILED,
     GET_VISIT_INFO_POST,
     GET_VISIT_INFO_SUCCESS,
-    GET_VISIT_INFO_FAILED
+    GET_VISIT_INFO_FAILED,
+    SET_PAGE,
+    SEX_INFO_REQUEST_SUCCESS,
+    SEX_INFO_REQUEST_FAILED,
+    SEX_INFO_REQUEST_POST
 } from "../../actions/groupAnalysisAction/managementAction";
 
 const initStateInfo = {};
@@ -24,14 +28,58 @@ const managementReducer = (state=initStateInfo, action) => {
         case GET_VISIT_INFO_POST: return getVisitInfoPost(state, action.queryID);
         case GET_VISIT_INFO_FAILED: return getVisitInfoFailed(state, action.queryID);
         case GET_VISIT_INFO_SUCCESS: return getVisitInfoSuccess(state, action.result, action.queryID);
+        case SET_PAGE: return setPage(state, action.queryID, action.page);
+        case SEX_INFO_REQUEST_POST: return sexInfoRequestPost(state, action.queryID);
+        case SEX_INFO_REQUEST_SUCCESS: return sexInfoRequestSuccess(state, action.result, action.queryID);
+        case SEX_INFO_REQUEST_FAILED: return sexInfoRequestFailed(state, action.queryID);
         default: return {...state};
     }
 };
+
+function sexInfoRequestFailed(state, queryID) {
+    state[queryID].statistics.sex={
+        ...state[queryID].statistics.sex,
+        isFetchingData: false,
+        isDataValid: false,
+    };
+    return {...state}
+}
+
+function sexInfoRequestSuccess(state, result, queryID) {
+    state[queryID].statistics.sex={
+        ...state[queryID].statistics.sex,
+        isFetchingData: false,
+        isDataOutOfDate: false,
+        isDataValid: true,
+        male: result['male'],
+        female: result['female']
+    };
+    return {...state}
+}
+
+function sexInfoRequestPost(state, queryID) {
+    state[queryID].statistics.sex={
+        ...state[queryID].statistics.sex,
+        isFetchingData: true,
+        male: 0,
+        female: 0
+    };
+    return {...state}
+}
+
+function setPage(state, queryID, page) {
+    state[queryID].visitInfo={
+        ...state[queryID].visitInfo,
+        page: page
+    };
+    return {...state}
+}
 
 function getVisitInfoPost(state, queryID){
     state[queryID].visitInfo={
         ...state[queryID].visitInfo,
         isFetchingData: true,
+        isDataOutOfDate: true
     };
     return {...state}
 }
@@ -40,7 +88,7 @@ function getVisitInfoSuccess(state, result, queryID){
     state[queryID].visitInfo={
         ...state[queryID].visitInfo,
         isFetchingData: false,
-        isDataValid: true,
+        isDataOutOfDate: false,
         data: result
     };
     return {...state}
@@ -56,31 +104,27 @@ function getVisitInfoFailed(state, queryID){
 
 function queryDataPost(state, queryID){
     state[queryID].statistics={
-        isFetchingData: false,
-        isDataValid: false,
-        isDataOutOfDate: false,
-        data: {}
+        sex:{
+            ...state[queryID].statistics.sex,
+            isDataOutOfDate: true,
+        }
     };
     state[queryID].visitInfo={
         visitCount: -1,
-        page: 1,
+        page: 0,
         pageSize: 20,
-        isFetchingData: false,
+        isFetchingData: true,
         isDataValid: false,
-        isDataOutOfDate: false,
+        isDataOutOfDate: true,
         data: []
     };
     return {...state}
 }
 
 function queryDataSuccess(state, result, queryID){
-    state[queryID].statistics={
-        ...state[queryID].statistics,
-        isDataOutOfDate: true,
-    };
     state[queryID].visitInfo={
         ...state[queryID].visitInfo,
-        isDataOutOfDate: true,
+        isDataValid: true,
         visitCount: parseInt(result)
     };
     return {...state}
@@ -96,15 +140,26 @@ function managementSetState(newState){
 
 function initialize(state, queryID){
     state[queryID] = {
-        selectedTab: 'statistic',
+        selectedTab: 'patientList',
         filter: {},
         statistics: {
-            isFetchingData: false,
-            isDataValid: false,
-            isDataOutOfDate: false,
-            data: {}
+            // 此处的三个标识符
+            // isFetching代表是否在获取数据
+            // isDataOutOfDate代表当前列表是否过时
+            // isDataValid则服务器是否返回了正确的统计结果
+            sex:{
+                isFetchingData: false,
+                isDataValid: false,
+                isDataOutOfDate: false,
+                male: 0,
+                female: 0
+            }
         },
         visitInfo: {
+            // 此处的三个标识符
+            // isFetching代表是否在获取数据
+            // isDataOutOfDate代表当前列表是否过时
+            // isDataValid则代表当前服务器端是否准备完毕
             visitCount: -1,
             page: 1,
             pageSize: 20,

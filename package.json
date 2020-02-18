@@ -68,7 +68,8 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "uuid": "^3.4.0",
-    "validate.js": "^0.13.1"
+    "validate.js": "^0.13.1",
+    "victory": "^34.0.0"
   },
   "devDependencies": {
     "eslint": "^6.6.0",

@@ -90,7 +90,8 @@ class RouteName{
     // group analysis
     static B_GROUP_ANALYSIS_DATA = "/backend/data/groupAnalysis";
     static B_QUERY_WITH_FILTER = "/queryWithFilter";
-    static B_GET_VISIT_INFO = "/getVisitInfo"
+    static B_GET_VISIT_INFO = "/getVisitInfo";
+    static B_GET_SEX_INFO = "/getSexInfo"
 }
 
 export default RouteName;

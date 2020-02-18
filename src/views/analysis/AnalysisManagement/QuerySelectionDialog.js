@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
     Button,
     DialogActions,
@@ -11,7 +11,7 @@ import {
     DialogContent} from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import {useSelector} from 'react-redux';
-import {createNewQuery} from "../../../actions/metaInfoAction";
+import {createNewQuery, editQueryName} from "../../../actions/metaInfoAction";
 import {useHistory} from 'react-router-dom'
 import ParaName from "../../../utils/ParaName";
 import {useDispatch} from 'react-redux';
@@ -24,6 +24,7 @@ import {vitalSignInitialize} from "../../../actions/individualAnalysisAction/vit
 import {orderInitialize} from "../../../actions/individualAnalysisAction/orderAction";
 import {createNewModelQueryAndInitialize} from "../../../actions/individualAnalysisAction/individualModelAction";
 import {initializeManagementQuery} from "../../../actions/groupAnalysisAction/managementAction";
+import {monthAndDateAndTimeTrans} from "../../../utils/queryUtilFunction";
 import RouteName from "../../../utils/RouteName";
 
 const useStyles = makeStyles(theme => ({
@@ -36,7 +37,7 @@ const QuerySelectionDialog =({openDialog, setOpenDialog})=>{
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const [queryType, setQueryType] = React.useState("");
+    const [queryType, setQueryType] = useState(ParaName.INDIVIDUAL_ANALYSIS);
 
     const queryID = useSelector(state=>state.metaInfo.nextID);
 
@@ -57,6 +58,8 @@ const QuerySelectionDialog =({openDialog, setOpenDialog})=>{
         }
         else if(queryType===ParaName.GROUP_ANALYSIS){
             dispatch(createNewQuery(ParaName.GROUP_ANALYSIS));
+            dispatch(editQueryName("群体分析 "+monthAndDateAndTimeTrans(new Date(), true),
+                false, queryID));
             dispatch(initializeManagementQuery(queryID));
             history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.GROUP_ANALYSIS+'/'+queryID)
         }
@@ -78,11 +81,13 @@ const QuerySelectionDialog =({openDialog, setOpenDialog})=>{
                                 onChange={(event)=>setQueryType(event.target.value)}>
                         <FormControlLabel
                             value={ParaName.INDIVIDUAL_ANALYSIS}
+                            checked={queryType===ParaName.INDIVIDUAL_ANALYSIS}
                             control={<Radio color={'primary'} />}
                             label="个体分析"
                         />
                         <FormControlLabel
                             value={ParaName.GROUP_ANALYSIS}
+                            checked={queryType===ParaName.GROUP_ANALYSIS}
                             control={<Radio color={'primary'}/>}
                             label="群体分析"
                         />
