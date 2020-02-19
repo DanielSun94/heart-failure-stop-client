@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 const ExamFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, index, constraintType,
                         previousContent}) =>{
     const classes = useStyles();
-    // item = ["exam", "type", int low_threshold, int high_threshold]
+    // item = [isInherit, "exam", "type", int low_threshold, int high_threshold]
     // 目前Exam Filter只支持对超声心动图的查询，等待后期数据能支持了，再加入其他的
     const [examType, setExamType] = useState("");
     const [lowThreshold, setLowThreshold] = useState("");
@@ -50,9 +50,9 @@ const ExamFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, i
 
     useEffect(()=>{
         if(constraintType==='edit'){
-            setExamType(previousContent[1]);
-            setLowThreshold(previousContent[2].toString());
-            setHighThreshold(previousContent[3].toString());
+            setExamType(previousContent[2]);
+            setLowThreshold(previousContent[3].toString());
+            setHighThreshold(previousContent[4].toString());
         }
     },[]);
 
@@ -141,10 +141,10 @@ const ExamFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, i
                             let low = lowThreshold===""?-1:Number.parseInt(lowThreshold);
                             let high = highThreshold===""?-1:Number.parseInt(highThreshold);
                             if(constraintType==="add"){
-                                addConstraint([ParaName.EXAM, examType, low, high])
+                                addConstraint([false, ParaName.EXAM, examType, low, high])
                             }
                             else if(constraintType==="edit"){
-                                editConstraint(index, [ParaName.EXAM, examType, low, high])
+                                editConstraint(index, [false, ParaName.EXAM, examType, low, high])
                             }
                             setOpenDialog(null)
                         }}

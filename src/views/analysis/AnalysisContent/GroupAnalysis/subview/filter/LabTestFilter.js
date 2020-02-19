@@ -39,8 +39,8 @@ const useStyles = makeStyles((theme) => ({
 
 const LabTestFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, index, constraintType,
                            previousContent}) =>{
-    // item = ["labTest", code, numerical, value1, value2, name, unit] or
-    // item = ["labTest", code, categorical, value, name, unit]
+    // item = [isInherit, "labTest", code, numerical, value1, value2, name, unit] or
+    // item = [isInherit, "labTest", code, categorical, value, name, unit]
     // dataType = {categorical, numerical}
     // 目前只支持数值型实验室检查，也就是dataType必须是numerical
 
@@ -76,20 +76,20 @@ const LabTestFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint
         setLegalLabTestList(list);
 
         if(constraintType==='edit'){
-            if(previousContent&&previousContent[2]==='categorical'){
-                setAutocomplete(previousContent[4]);
-                setSelectedLabTest(previousContent[1]);
-                setSelectedLabTestType(previousContent[2]);
-                setCategoryValue(previousContent[3]);
-                setSelectedLabTestUnit(previousContent[5])
-            }
-            if(previousContent&&previousContent[2]==='numerical'){
+            if(previousContent&&previousContent[3]==='categorical'){
                 setAutocomplete(previousContent[5]);
-                setSelectedLabTest(previousContent[1]);
-                setSelectedLabTestType(previousContent[2]);
-                setLowThreshold(previousContent[3]);
-                setHighThreshold(previousContent[4]);
+                setSelectedLabTest(previousContent[2]);
+                setSelectedLabTestType(previousContent[3]);
+                setCategoryValue(previousContent[4]);
                 setSelectedLabTestUnit(previousContent[6])
+            }
+            if(previousContent&&previousContent[3]==='numerical'){
+                setAutocomplete(previousContent[6]);
+                setSelectedLabTest(previousContent[2]);
+                setSelectedLabTestType(previousContent[3]);
+                setLowThreshold(previousContent[4]);
+                setHighThreshold(previousContent[5]);
+                setSelectedLabTestUnit(previousContent[7])
             }
         }
     }, []);
@@ -97,21 +97,21 @@ const LabTestFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint
     const handleConfirm=()=>{
         if(constraintType==="add"){
             if(selectedLabTestType==='categorical'){
-                addConstraint([ParaName.LAB_TEST, selectedLabTest, selectedLabTestType, categoryValue,
+                addConstraint([false, ParaName.LAB_TEST, selectedLabTest, selectedLabTestType, categoryValue,
                     autocompleteValue, selectedLabTestUnit])
             }
             if(selectedLabTestType==='numerical') {
-                addConstraint([ParaName.LAB_TEST, selectedLabTest, selectedLabTestType, lowThreshold, highThreshold,
+                addConstraint([false, ParaName.LAB_TEST, selectedLabTest, selectedLabTestType, lowThreshold, highThreshold,
                     autocompleteValue, selectedLabTestUnit])
             }
         }
         else if(constraintType==="edit"){
             if(selectedLabTestType==='categorical'){
-                editConstraint(index, [ParaName.LAB_TEST, selectedLabTest, selectedLabTestType, categoryValue,
+                editConstraint(index, [false, ParaName.LAB_TEST, selectedLabTest, selectedLabTestType, categoryValue,
                     autocompleteValue, selectedLabTestUnit])
             }
             if(selectedLabTestType==='numerical') {
-                editConstraint(index, [ParaName.LAB_TEST, selectedLabTest, selectedLabTestType, lowThreshold, highThreshold,
+                editConstraint(index, [false, ParaName.LAB_TEST, selectedLabTest, selectedLabTestType, lowThreshold, highThreshold,
                     autocompleteValue, selectedLabTestUnit])
             }
         }

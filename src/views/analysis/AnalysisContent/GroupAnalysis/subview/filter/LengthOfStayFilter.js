@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 const LengthOfStayFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, index, constraintType,
                                 previousContent}) =>{
-    // item = ["los", int low_threshold, int high_threshold]
+    // item = [isInherit, "los", int low_threshold, int high_threshold]
     // 在添加条件时，idx应当为空，当修改时，才需要idx
     const classes = useStyles();
 
@@ -48,8 +48,8 @@ const LengthOfStayFilter = ({openDialog, setOpenDialog, addConstraint, editConst
 
     useEffect(()=>{
         if(constraintType==='edit'){
-            setLowThreshold(previousContent[1]!==-1?previousContent[1].toString():"");
-            setHighThreshold(previousContent[2]!==-1?previousContent[2].toString():"")
+            setLowThreshold(previousContent[2]!==-1?previousContent[2].toString():"");
+            setHighThreshold(previousContent[3]!==-1?previousContent[3].toString():"")
         }
     },[]);
 
@@ -121,10 +121,10 @@ const LengthOfStayFilter = ({openDialog, setOpenDialog, addConstraint, editConst
                             let low = lowThreshold===""?-1:Number.parseInt(lowThreshold);
                             let high = highThreshold===""?-1:Number.parseInt(highThreshold);
                             if(constraintType==="add"){
-                                addConstraint([ParaName.LOS, low, high])
+                                addConstraint([false, ParaName.LOS, low, high])
                             }
                             else if(constraintType==="edit"){
-                                editConstraint(index, [ParaName.LOS, low, high])
+                                editConstraint(index, [false, ParaName.LOS, low, high])
                             }
                             setOpenDialog(null)
                         }}

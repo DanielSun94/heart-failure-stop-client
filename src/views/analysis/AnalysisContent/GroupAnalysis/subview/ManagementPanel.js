@@ -32,6 +32,8 @@ const ManagementPanel =({queryID})=>{
     const selectedTab = useSelector(state=>state.group.management[queryID].selectedTab);
     const [openDialog, setDialogVisible] = useState(false);
     const filter = useSelector(state=>state.group.management[queryID].filter);
+    // 只有顶级查询允许重设过滤器
+    const isTopLayer = useSelector(state=>state.metaInfo.metaInfoMap[queryID].affiliated);
 
     const notSelectStyle =
         {minHeight:42, maxWidth: 500, width: '100%', borderRightColor: colors.grey[200],
@@ -77,6 +79,7 @@ const ManagementPanel =({queryID})=>{
                 <Button
                     style={{paddingTop: 18, paddingLeft: 12}}
                     color={'primary'}
+                    disabled={(isTopLayer !== null)}
                     onClick={()=>{
                         setDialogVisible(true);
                     }}

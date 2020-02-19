@@ -27,12 +27,12 @@ const SexFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, in
                        previousContent}) =>{
     const classes = useStyles();
 
-    // item = ["sex", "male"/"female"]
+    // item = [isInherit, "sex", "male"/"female"]
     const [sex, setSex] = useState('male');
 
     useEffect(()=>{
         if(constraintType==='edit'){
-            setSex(previousContent[1])
+            setSex(previousContent[2])
         }
     },[]);
 
@@ -77,10 +77,10 @@ const SexFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, in
                 <Button variant={'outlined'}
                         onClick={()=> {
                             if(constraintType==="add"){
-                                addConstraint([ParaName.SEX, sex])
+                                addConstraint([false, ParaName.SEX, sex])
                             }
                             else if(constraintType==="edit"){
-                                editConstraint(index, [ParaName.SEX, sex])
+                                editConstraint(index, [false, ParaName.SEX, sex])
                             }
                             setOpenDialog(null)
                         }}

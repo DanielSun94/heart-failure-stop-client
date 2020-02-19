@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
 
 const MedicineFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, index, constraintType
                             , previousContent}) =>{
-    // item = ["medicine", featureCode1, feature2,...]
+    // item = [isInherit, "medicine", featureCode1, feature2,...]
     const classes = useStyles();
 
     const [representativeMedicineList, cantUse1] = useState([]);
@@ -36,7 +36,7 @@ const MedicineFilter = ({openDialog, setOpenDialog, addConstraint, editConstrain
     const [legalMedicineList, setLegalMedicineList] = useState([]);
     const [pinyinCode, setPinyin] = useState('');
     const [selectedMedicineList, setSelectedMedicineList] = useState(
-        previousContent?previousContent.slice(1):[]
+        previousContent?previousContent.slice(2):[]
     );
 
     useEffect(()=>{
@@ -81,10 +81,10 @@ const MedicineFilter = ({openDialog, setOpenDialog, addConstraint, editConstrain
 
     const handleConfirm=()=>{
         if(constraintType==="add"){
-            addConstraint([ParaName.MEDICINE, ...selectedMedicineList])
+            addConstraint([false, ParaName.MEDICINE, ...selectedMedicineList])
         }
         else if(constraintType==="edit"){
-            editConstraint(index, [ParaName.MEDICINE, ...selectedMedicineList])
+            editConstraint(index, [false, ParaName.MEDICINE, ...selectedMedicineList])
         }
         setOpenDialog(null)
     };

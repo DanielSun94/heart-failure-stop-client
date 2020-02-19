@@ -1,7 +1,8 @@
-import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import {SexPanel} from "./statisticCharts/SexPanel";
 import { makeStyles } from '@material-ui/core/styles'
+import {queryDataAccordingToFilter} from "../../../../../actions/groupAnalysisAction/managementAction";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -21,6 +22,15 @@ const useStyles = makeStyles(() => ({
 
 const StatisticPanel =({queryID})=>{
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const isDataOutOfDate = useSelector(state=>state.group.management[queryID].isDataOutOfDate);
+    const filter = useSelector(state=>state.group.management[queryID].filter);
+
+    useEffect(()=>{
+        if(isDataOutOfDate){
+            dispatch(queryDataAccordingToFilter(filter, queryID))
+        }
+    },[isDataOutOfDate]);
     return (
         <div className={classes.root}>
             <div className={classes.sexPanel}>

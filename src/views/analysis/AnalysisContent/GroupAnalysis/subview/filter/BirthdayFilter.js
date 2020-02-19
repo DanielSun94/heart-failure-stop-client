@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 
 const BirthdayFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, index, constraintType,
                             previousContent}) =>{
-    // item = ["birthday", String low_threshold, String high_threshold]
+    // item = [isInherit, "birthday", String low_threshold, String high_threshold]
     // string format: "yyyy-MM-dd", "-1" if not set.
     // 前端中，不设置-1这个值，当不设定时,默认设置为1990和2050年两个最大的值
     const classes = useStyles();
@@ -57,8 +57,8 @@ const BirthdayFilter = ({openDialog, setOpenDialog, addConstraint, editConstrain
     if (month < 10) {month ="0" + month;}
     if (day < 10) {day ="0" + day;}
 
-    const [startTime, setStartTime] = useState(previousContent?previousContent[1]:"1990-01-01");
-    const [endTime, setEndTime] = useState(previousContent?previousContent[2]:year+"-"+ month+"-"+day);
+    const [startTime, setStartTime] = useState(previousContent?previousContent[2]:"1990-01-01");
+    const [endTime, setEndTime] = useState(previousContent?previousContent[3]:year+"-"+ month+"-"+day);
     const [inputLegal, setInput] = useState(false);
 
     useEffect(()=>{
@@ -131,10 +131,10 @@ const BirthdayFilter = ({openDialog, setOpenDialog, addConstraint, editConstrain
                 <Button variant={'outlined'}
                         onClick={()=> {
                             if(constraintType==="add"){
-                                addConstraint([ParaName.BIRTHDAY, startTime, endTime])
+                                addConstraint([false, ParaName.BIRTHDAY, startTime, endTime])
                             }
                             else if(constraintType==="edit"){
-                                editConstraint(index, [ParaName.BIRTHDAY, startTime, endTime])
+                                editConstraint(index, [false, ParaName.BIRTHDAY, startTime, endTime])
                             }
                             setOpenDialog(null)
                         }}

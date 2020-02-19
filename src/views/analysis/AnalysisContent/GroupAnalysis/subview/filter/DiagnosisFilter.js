@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
 
 const DiagnosisFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, index, constraintType,
                              diagnosisType, previousContent}) =>{
-    // item = [type, diagnosisCode1, diagnosisCode2, ...]
+    // item = [isInherit, type, diagnosisCode1, diagnosisCode2, ...]
     // type = {"mainDiagnosis", "diagnosis"}
     const classes = useStyles();
 
@@ -37,7 +37,7 @@ const DiagnosisFilter = ({openDialog, setOpenDialog, addConstraint, editConstrai
     const [legalDiagnosisList, setLegalDiagnosisList] = useState([]);
     const [pinyinCode, setPinyin] = useState('');
     const [selectedDiagnosisList, setSelectedDiagnosisList] = useState(
-        previousContent?previousContent.slice(1):[]
+        previousContent?previousContent.slice(2):[]
     );
 
     useEffect(()=>{
@@ -82,10 +82,10 @@ const DiagnosisFilter = ({openDialog, setOpenDialog, addConstraint, editConstrai
 
     const handleConfirm=()=>{
         if(constraintType==="add"){
-            addConstraint([diagnosisType, ...selectedDiagnosisList])
+            addConstraint([false, diagnosisType, ...selectedDiagnosisList])
         }
         else if(constraintType==="edit"){
-            editConstraint(index, [diagnosisType, ...selectedDiagnosisList])
+            editConstraint(index, [false, diagnosisType, ...selectedDiagnosisList])
         }
         setOpenDialog(null)
     };

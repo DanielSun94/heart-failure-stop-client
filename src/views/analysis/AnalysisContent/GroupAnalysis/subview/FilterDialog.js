@@ -12,6 +12,7 @@ import {
     Button,
     Card,
     Popover,
+    IconButton,
     Typography
 } from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux'
@@ -54,9 +55,6 @@ const useStyles = makeStyles(() => ({
         minHeight: 50,
         display: 'flex',
     },
-    icon: {
-        "&:hover": {backgroundColor: colors.grey[200]}
-    }
 }));
 
 const diagnosisList = JSON.parse(diagnosisJson());
@@ -100,13 +98,25 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
     const [filter, setFilter] = useState({});
     const [filterType, setFilterType] = useState("");
     const [canConfirm, setCanConfirm] = useState(false);
-    const previousFilter = useSelector(state=>state.group.management[queryID].filter);
+    const metaInfoMap = useSelector(state=>state.metaInfo.metaInfoMap);
+    const management = useSelector(state=>state.group.management);
+    const previousFilter = management[queryID].filter;
 
     useEffect(()=>{
         setFilter(previousFilter);
-    }, []);
+        let maxId=-1;
+        for(const key in previousFilter){
+            if(previousFilter.hasOwnProperty(key)){
+                if(key>=maxId){
+                    maxId=parseInt(key)
+                }
+            }
+        }
+        setIndex(maxId+1)
+    }, [queryID, previousFilter]);
 
     useEffect(()=>{
+        // 当过滤器为空时，禁止提交
         if(Object.keys(filter).length===0){
             setCanConfirm(false)
         }
@@ -132,6 +142,60 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
         const temp = {...filter};
         temp[index] = newConstraint;
         setFilter({...temp})
+    };
+
+    const handleConfirm =()=>{
+        // 不仅要对本级进行重设，也要对下级进行重设，下级按照排列，必然是子查询index大于父查询
+        // 寻找列表
+        const indexList = [queryID];
+        const sortedIndexList = Object.keys(metaInfoMap).sort();
+        for(const item of sortedIndexList){
+            if(metaInfoMap[item].queryType===ParaName.GROUP_ANALYSIS){
+                if(parseInt(item)<=parseInt(queryID)){continue}
+                for(const query of indexList){
+                    if(query===metaInfoMap[item].affiliated){indexList.push(parseInt(item));}
+                }
+            }
+        }
+        // 链式传递筛选器
+        for(const index in indexList){
+            if(!indexList.hasOwnProperty(index)){
+                continue
+            }
+            const intIndex = parseInt(index);
+            if(intIndex===0){
+                dispatch(changeManagementQueryFilter(filter, indexList[intIndex]));
+                dispatch(queryDataAccordingToFilter(filter, indexList[intIndex]))
+            }
+            else{
+                const previousQueryID = metaInfoMap[indexList[intIndex]].affiliated;
+                const previousFilter = management[previousQueryID].filter;
+                const currentFilter = management[indexList[intIndex]].filter;
+                // 将上一级的filter完整复制到下一级，并把所有isInherited改为true
+                // 此处为了防止问题，需要进行一次对象复制
+                const newFilter = {...previousFilter};
+                let nextIndex = -1;
+                for(const key in newFilter){
+                    if(newFilter.hasOwnProperty(key)){
+                        const tuple =[...newFilter[key]];
+                        tuple[0]=true;
+                        newFilter[key]=tuple
+                        if(parseInt(key)>=nextIndex){nextIndex=parseInt(key)+1}
+                    }
+                }
+                // 复制下一级的非inherited 条件，注意index冲突
+                for(const key in currentFilter){
+                    if(currentFilter.hasOwnProperty(key)){
+                        if(currentFilter[key][0]===false){
+                            newFilter[nextIndex] = currentFilter[key];
+                            nextIndex+=1
+                        }
+                    }
+                }
+                dispatch(changeManagementQueryFilter(newFilter, indexList[intIndex]));
+            }
+        }
+        setDialogVisible(false);
     };
 
     const filterKeys = Object.keys(filter);
@@ -165,11 +229,7 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
             </DialogContent>
             <DialogActions>
                 <Button variant={'outlined'}
-                        onClick={()=> {
-                            setDialogVisible(false);
-                            dispatch(changeManagementQueryFilter(filter, queryID));
-                            dispatch(queryDataAccordingToFilter(filter, queryID))
-                        }}
+                        onClick={handleConfirm}
                         disabled={!canConfirm}
                         color="primary">
                     确认
@@ -190,7 +250,8 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
 
 const FilterTuple =({idx, content, editFunc, deleteFunc})=>{
     const classes = useStyles();
-    const type = content[0];
+    const type = content[1];
+    const isInherit = content[0];
     const [dialogType, setDialogType] = useState(null);
     const contentString = filterContentToString(content);
     return (
@@ -202,18 +263,24 @@ const FilterTuple =({idx, content, editFunc, deleteFunc})=>{
                 {contentString}
             </div>
             <div style={{marginLeft: 10, width: 50, height:50, display: 'flex', alignItems: "center"}}>
-                <EditIcon
-                    fontSize={"inherit"}
-                    className={classes.icon}
-                    onClick={()=>setDialogType(type)}
-                />
+                <IconButton
+                    disabled={isInherit}
+                >
+                    <EditIcon
+                        fontSize={"inherit"}
+                        onClick={()=>setDialogType(type)}
+                    />
+                </IconButton>
             </div>
             <div style={{marginLeft: 10, width: 50, height:50, display: 'flex', alignItems: "center"}}>
-                <CloseIcon
-                    fontSize={"inherit"}
-                    className={classes.icon}
-                    onClick={()=>deleteFunc(idx)}
-                />
+                <IconButton
+                    disabled={isInherit}
+                >
+                    <CloseIcon
+                        fontSize={"inherit"}
+                        onClick={()=>deleteFunc(idx)}
+                    />
+                </IconButton>
             </div>
             <SpecificFilterSelector
                 filterType={dialogType}
@@ -229,10 +296,10 @@ const FilterTuple =({idx, content, editFunc, deleteFunc})=>{
 
 export const filterContentToString =(content)=>{
     let contentString='';
-    switch (content[0]) {
+    switch (content[1]) {
         case ParaName.MAIN_DIAGNOSIS: {
             contentString += "主诊断包括:";
-            for (let i = 1; i < content.length; i++) {
+            for (let i = 2; i < content.length; i++) {
                 contentString += diagnosisMap[content[i]];
                 if (i !== content.length - 1) {
                     contentString += " 或 "
@@ -242,7 +309,7 @@ export const filterContentToString =(content)=>{
         }
         case ParaName.DIAGNOSIS: {
             contentString+="诊断包括:";
-            for(let i=1; i<content.length; i++) {
+            for(let i=2; i<content.length; i++) {
                 contentString += diagnosisMap[content[i]];
                 if (i !== content.length - 1) {
                     contentString += " 或 "
@@ -252,53 +319,53 @@ export const filterContentToString =(content)=>{
         }
         case ParaName.ADMISSION_TIME: {
             contentString+= "入院时间";
-            if(content[1]!=="-1"&&content[2]!=="-1"){
-                contentString+="在"+content[1]+"至"+content[2]+"之间";
-            }
-            else if(content[1]!=="-1"){
-                contentString+="在"+content[1]+"之后";
+            if(content[2]!=="-1"&&content[3]!=="-1"){
+                contentString+="在"+content[2]+"至"+content[3]+"之间";
             }
             else if(content[2]!=="-1"){
-                contentString+="再"+content[2]+"之前";
+                contentString+="在"+content[3]+"之后";
+            }
+            else if(content[3]!=="-1"){
+                contentString+="再"+content[4]+"之前";
             }
             break;
         }
         case ParaName.AGE:{
             contentString+= "年龄";
-            if(content[1]!==-1&&content[2]!==-1){
-                contentString+="在"+content[1]+"至"+content[2]+"岁间";
-            }
-            else if(content[1]!==-1){
-                contentString+="大于"+content[1]+"岁";
+            if(content[2]!==-1&&content[2]!==-1){
+                contentString+="在"+content[2]+"至"+content[3]+"岁间";
             }
             else if(content[2]!==-1){
-                contentString+="小于"+content[2]+"岁";
+                contentString+="大于"+content[2]+"岁";
+            }
+            else if(content[3]!==-1){
+                contentString+="小于"+content[3]+"岁";
             }
             break;
         }
         case ParaName.BIRTHDAY: {
             contentString+= "生日";
-            if(content[1]!=="-1"&&content[2]!=="-1"){
-                contentString+="在"+content[1]+"至"+content[2]+"之间";
-            }
-            else if(content[1]!=="-1"){
-                contentString+="在"+content[1]+"之后";
+            if(content[2]!=="-1"&&content[3]!=="-1"){
+                contentString+="在"+content[2]+"至"+content[3]+"之间";
             }
             else if(content[2]!=="-1"){
-                contentString+="再"+content[2]+"之前";
+                contentString+="在"+content[2]+"之后";
+            }
+            else if(content[3]!=="-1"){
+                contentString+="再"+content[3]+"之前";
             }
             break;
         }
         case ParaName.EXAM: {
-            contentString+= content[1];
-            if(content[2]!==-1&&content[3]!==-1){
-                contentString+="在"+content[2]+"至"+content[3]+"间";
-            }
-            else if(content[2]!==-1){
-                contentString+="大于"+content[2];
+            contentString+= content[2];
+            if(content[3]!==-1&&content[4]!==-1){
+                contentString+="在"+content[3]+"至"+content[4]+"间";
             }
             else if(content[3]!==-1){
-                contentString+="小于"+content[2];
+                contentString+="大于"+content[3];
+            }
+            else if(content[4]!==-1){
+                contentString+="小于"+content[4];
             }
             break;
         }
@@ -313,33 +380,31 @@ export const filterContentToString =(content)=>{
             break;
         }
         case ParaName.LAB_TEST:{
-            // item = ["labTest", code, numerical, value1, value2, name, unit] or
-            // item = ["labTest", code, categorical, value, name, unit]
             contentString += "实验室检查: ";
-            if(content[2]==='numerical'){
-                contentString+=content[5]+": "+content[3]+' 至 '+content[4]+' '+content[6]
+            if(content[3]==='numerical'){
+                contentString+=content[6]+": "+content[4]+' 至 '+content[5]+' '+content[7]
             }
-            if(content[2]==='categorical'){
-                contentString+=content[4]+" "+content[3]
+            if(content[3]==='categorical'){
+                contentString+=content[5]+" "+content[4]
             }
             break;
         }
         case ParaName.LOS:{
             contentString+= "住院日";
-            if(content[1]!==-1&&content[2]!==-1){
-                contentString+="在"+content[1]+"至"+content[2]+"天间";
-            }
-            else if(content[1]!==-1){
-                contentString+="大于"+content[1]+"天";
+            if(content[2]!==-1&&content[3]!==-1){
+                contentString+="在"+content[2]+"至"+content[3]+"天间";
             }
             else if(content[2]!==-1){
-                contentString+="小于"+content[2]+"天";
+                contentString+="大于"+content[2]+"天";
+            }
+            else if(content[3]!==-1){
+                contentString+="小于"+content[3]+"天";
             }
             break;
         }
         case ParaName.MEDICINE:{
             contentString+= "使用药物: ";
-            for(let i=1; i<content.length; i++) {
+            for(let i=2; i<content.length; i++) {
                 contentString += medicineMap[content[i]];
                 if (i !== content.length - 1) {
                     contentString += " 或 "
@@ -349,7 +414,7 @@ export const filterContentToString =(content)=>{
         }
         case ParaName.OPERATION:{
             contentString+= "手术: ";
-            for(let i=1; i<content.length; i++) {
+            for(let i=2; i<content.length; i++) {
                 contentString += operationMap[content[i]];
                 if (i !== content.length - 1) {
                     contentString += " 或 "
@@ -358,36 +423,36 @@ export const filterContentToString =(content)=>{
             break;
         }
         case ParaName.SEX:{
-            contentString+= "性别: "+((content[1]==='male')?"男":"女");
+            contentString+= "性别: "+((content[2]==='male')?"男":"女");
             break;
         }
         case ParaName.VISIT_TYPE:{
-            contentString+= "入院类型: "+content[1];
+            contentString+= "入院类型: "+content[2];
             break;
         }
         case ParaName.VITAL_SIGN:{
-            contentString+= "主要生理指标: "+content[4];
-            if(content[2]!==-1&&content[3]!==-1){
-                contentString+="在"+content[2]+"至"+content[3]+content[5]+"间";
-            }
-            else if(content[2]!==-1){
-                contentString+="大于"+content[1]+content[5];
+            contentString+= "主要生理指标: "+content[5];
+            if(content[3]!==-1&&content[4]!==-1){
+                contentString+="在"+content[3]+"至"+content[4]+content[6]+"间";
             }
             else if(content[3]!==-1){
-                contentString+="小于"+content[2]+content[5];
+                contentString+="大于"+content[3]+content[6];
+            }
+            else if(content[4]!==-1){
+                contentString+="小于"+content[4]+content[6];
             }
             break;
         }
         case ParaName.MACHINE_LEARNING:{
-            contentString+= "模型: "+content[5];
-            if(content[3]!==-1&&content[4]!==-1){
-                contentString+="风险在"+content[3]+"%至"+content[4]+"%间";
-            }
-            else if(content[3]!==-1){
-                contentString+="风险大于"+content[3]+"%";
+            contentString+= "模型: "+content[6];
+            if(content[4]!==-1&&content[5]!==-1){
+                contentString+="风险在"+content[4]+"%至"+content[5]+"%间";
             }
             else if(content[4]!==-1){
-                contentString+="风险小于"+content[4]+"%"
+                contentString+="风险大于"+content[4]+"%";
+            }
+            else if(content[5]!==-1){
+                contentString+="风险小于"+content[5]+"%"
             }
             break;
         }

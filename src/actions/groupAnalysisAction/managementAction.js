@@ -4,6 +4,7 @@ import ParaName from "../../utils/ParaName";
 export const INITIALIZE_MANAGEMENT_QUERY = "INITIALIZE_MANAGEMENT_QUERY";
 export const CHANGE_QUERY_TAB = "CHANGE_QUERY_TAB";
 export const CHANGE_FILTER = "CHANGE_FILTER";
+export const DELETE_QUERY = "DELETE_QUERY";
 export const MANAGEMENT_SET_STATE = "MANAGEMENT_SET_STATE";
 export const QUERY_DATA_POST = "QUERY_DATA_POST";
 export const QUERY_DATA_SUCCESS = "QUERY_DATA_SUCCESS";
@@ -15,6 +16,10 @@ export const SET_PAGE = "SET_PAGE";
 export const SEX_INFO_REQUEST_POST = "SEX_INFO_REQUEST_POST";
 export const SEX_INFO_REQUEST_SUCCESS = "SEX_INFO_REQUEST_SUCCESS";
 export const SEX_INFO_REQUEST_FAILED = "SEX_INFO_REQUEST_FAILED";
+
+export function deleteGroupAnalysisQuery(queryID) {
+    return {type: DELETE_QUERY, queryID: queryID}
+}
 
 function sexInfoRequest(queryID) {
     return {type: SEX_INFO_REQUEST_POST, queryID: queryID}
@@ -131,29 +136,67 @@ function queryDataFailed(queryID){
     return {type: QUERY_DATA_FAILED, queryID: queryID}
 }
 
-export function queryDataAccordingToFilter(newFilter, queryID) {
-    return function(dispatch, getState) {
-        const currentUser = getState().session.user.userName;
-        dispatch(queryDataPost(queryID));
-        let url = RouteName.B_GROUP_ANALYSIS_DATA + RouteName.B_QUERY_WITH_FILTER;
-        let token = getState().session.authenticToken;
-        let header = {'Authorization': token};
+export function queryDataAccordingToFilter(filter, queryID, fatherQueryID=null, newCondition=null) {
+    // 如果没有定义父查询，则直接进行查询，如果定义了，请求父查询的结果
+    if(fatherQueryID===null) {
+        return function (dispatch, getState) {
+            const currentUser = getState().session.user.userName;
+            dispatch(queryDataPost(queryID));
+            let url = RouteName.B_GROUP_ANALYSIS_DATA + RouteName.B_QUERY_WITH_FILTER;
+            let token = getState().session.authenticToken;
+            let header = {'Authorization': token};
 
-        // 把前端的filter转换为后端所需的形式:
-        const filter = {'filter': []};
-        for(const index in newFilter){
-            if(newFilter.hasOwnProperty(index)){
-                filter['filter'].push(newFilter[index])
+            // 把前端的filter转换为后端所需的形式:
+            const filterStr = {'filter': []};
+            for (const index in filter) {
+                if (filter.hasOwnProperty(index)) {
+                    filterStr['filter'].push(filter[index])
+                }
             }
-        }
-        let formData = new FormData();
-        formData.append('queryID', queryID);
-        formData.append('userName', currentUser);
-        formData.append('filter', JSON.stringify(filter));
+            let formData = new FormData();
+            formData.append('queryID', queryID);
+            formData.append('userName', currentUser);
+            formData.append('filter', JSON.stringify(filterStr));
 
-        return fetch(url, {method: ParaName.POST, headers: header, body: formData})
-            .then(res => res.json(),
-                error => {console.log(error); dispatch(queryDataFailed(queryID))})
-            .then(res => dispatch(queryDataSuccess(res['response'], queryID)))
+            return fetch(url, {method: ParaName.POST, headers: header, body: formData})
+                .then(res => res.json(),
+                    error => {
+                        console.log(error);
+                        dispatch(queryDataFailed(queryID))
+                    })
+                .then(res => dispatch(queryDataSuccess(res['response'], queryID)))
+        }
+    }
+    else{
+        // 如果定义了，需要根据父查询的结果进行查询，根据当前设计，这需要放入父节点的过滤器
+        return function (dispatch, getState) {
+            const currentUser = getState().session.user.userName;
+            dispatch(queryDataPost(queryID));
+            let url = RouteName.B_GROUP_ANALYSIS_DATA + RouteName.B_QUERY_WITH_FATHER_QUERY_AND_NEW_CONDITION;
+            let token = getState().session.authenticToken;
+            let header = {'Authorization': token};
+
+            // 把前端的filter转换为后端所需的形式:
+            const filterStr = {'filter': []};
+            for (const index in filter) {
+                if (filter.hasOwnProperty(index)) {
+                    filterStr['filter'].push(filter[index])
+                }
+            }
+            let formData = new FormData();
+            formData.append('queryID', queryID);
+            formData.append('fatherQueryID', fatherQueryID);
+            formData.append('userName', currentUser);
+            formData.append('filter', JSON.stringify(filterStr));
+            formData.append("newCondition", JSON.stringify({'filter': [newCondition]}));
+
+            return fetch(url, {method: ParaName.POST, headers: header, body: formData})
+                .then(res => res.json(),
+                    error => {
+                        console.log(error);
+                        dispatch(queryDataFailed(queryID))
+                    })
+                .then(res => dispatch(queryDataSuccess(res['response'], queryID)))
+        }
     }
 }

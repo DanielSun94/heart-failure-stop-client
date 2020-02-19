@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
 
 const OperationFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, index, constraintType
                             , previousContent}) =>{
-    // item = [type, operationCode1, operationCode2, ...]
+    // item = [isInherit, type, operationCode1, operationCode2, ...]
     // code follows ICD-9-CM3 procedure coding standard (default using first four digits)
     const classes = useStyles();
 
@@ -38,7 +38,7 @@ const OperationFilter = ({openDialog, setOpenDialog, addConstraint, editConstrai
     const [legalOperationList, setLegalOperationList] = useState([]);
     const [pinyinCode, setPinyin] = useState('');
     const [selectedOperationList, setSelectedOperationList] = useState(
-        previousContent?previousContent.slice(1):[]
+        previousContent?previousContent.slice(2):[]
     );
 
     useEffect(()=>{
@@ -83,10 +83,10 @@ const OperationFilter = ({openDialog, setOpenDialog, addConstraint, editConstrai
 
     const handleConfirm=()=>{
         if(constraintType==="add"){
-            addConstraint([ParaName.OPERATION, ...selectedOperationList])
+            addConstraint([false, ParaName.OPERATION, ...selectedOperationList])
         }
         else if(constraintType==="edit"){
-            editConstraint(index, [ParaName.OPERATION, ...selectedOperationList])
+            editConstraint(index, [false, ParaName.OPERATION, ...selectedOperationList])
         }
         setOpenDialog(null)
     };

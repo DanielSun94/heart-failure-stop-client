@@ -26,7 +26,7 @@ import {vitalSignInitialize} from "../../../../../actions/individualAnalysisActi
 import {examInitialize} from "../../../../../actions/individualAnalysisAction/examAction";
 import {createNewModelQueryAndInitialize} from "../../../../../actions/individualAnalysisAction/individualModelAction";
 import RouteName from "../../../../../utils/RouteName";
-import {getVisitInfo, setPage} from "../../../../../actions/groupAnalysisAction/managementAction";
+import {getVisitInfo, setPage, queryDataAccordingToFilter} from "../../../../../actions/groupAnalysisAction/managementAction";
 
 const useStyles = makeStyles({
     root: {
@@ -56,21 +56,27 @@ const PatientListPanel =({queryID})=>{
     const dispatch = useDispatch();
     const history = useHistory();
     const nextID = useSelector(state=>state.metaInfo.nextID);
-    const isDataOutOfDate = useSelector(state=>state.group.management[queryID].visitInfo.isDataOutOfDate);
+    const isDataOutOfDate = useSelector(state=>state.group.management[queryID].isDataOutOfDate);
     const isDataValid = useSelector(state=>state.group.management[queryID].visitInfo.isDataValid);
     const page = useSelector(state=>state.group.management[queryID].visitInfo.page);
     const pageSize = useSelector(state=>state.group.management[queryID].visitInfo.pageSize);
     const filter = useSelector(state=>state.group.management[queryID].filter);
-    const visitCount = useSelector(state=>state.group.management[queryID].visitInfo.visitCount);
+    const visitCount = useSelector(state=>state.group.management[queryID].visitCount);
     const visitInfo = useSelector(state=>state.group.management[queryID].visitInfo.data);
 
     useEffect(()=>{
-        if(isDataOutOfDate&&isDataValid){
+        if(isDataOutOfDate&&Object.keys(filter).length>0){
+            dispatch(queryDataAccordingToFilter(filter, queryID))
+        }
+    },[isDataOutOfDate]);
+
+    useEffect(()=>{
+        if((!isDataValid)&&(!isDataOutOfDate)&&Object.keys(filter).length>0){
             const startIndex = page*pageSize;
             const endIndex = (page+1)*pageSize;
             dispatch(getVisitInfo(startIndex, endIndex, queryID))
         }
-    },[isDataOutOfDate, isDataValid]);
+    },[isDataValid, isDataOutOfDate]);
 
     const handleClickJumpIcon=(localPatientID, hospitalCode, visitType, visitID)=>{
         // 本函数包含如下几个功能

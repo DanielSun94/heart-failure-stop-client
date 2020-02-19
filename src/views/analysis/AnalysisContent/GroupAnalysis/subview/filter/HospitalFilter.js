@@ -31,14 +31,14 @@ const HospitalFilter = ({openDialog, setOpenDialog, addConstraint, editConstrain
                             previousContent}) =>{
     const classes = useStyles();
 
-    // item = ["hospital", [hospitalCode, hospitalName], ...]
+    // item = [isInherit, "hospital", [hospitalCode, hospitalName], ...]
     const [inputLegal, setInput] = useState(false);
     const [hospitalMap, setHospitalMap] = useState({});
 
     useEffect(()=>{
         if(constraintType==='edit'){
             const map = {};
-            for(let i=1; i<previousContent.length; i++){
+            for(let i=2; i<previousContent.length; i++){
                 map[previousContent[i][0]] = previousContent[i][1]
             }
             setInput(map)
@@ -96,14 +96,14 @@ const HospitalFilter = ({openDialog, setOpenDialog, addConstraint, editConstrain
                             const list = [];
                             for(const key in hospitalMap){
                                 if(hospitalMap.hasOwnProperty(key)){
-                                    list.push([key, hospitalMap[key]])
+                                    list.push(hospitalMap[key])
                                 }
                             }
                             if(constraintType==="add"){
-                                addConstraint([ParaName.HOSPITAL, ...list])
+                                addConstraint([false, ParaName.HOSPITAL, ...list])
                             }
                             else if(constraintType==="edit"){
-                                editConstraint(index, [ParaName.HOSPITAL, ...list])
+                                editConstraint(index, [false, ParaName.HOSPITAL, ...list])
                             }
                             setOpenDialog(null)
                         }}

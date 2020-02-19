@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 const ModelFilter  = ({openDialog, setOpenDialog, addConstraint, editConstraint, index, constraintType,
                           previousContent}) =>{
     // modelFilter目前仅支持对风险评估模型的筛选（在modelListConvert函数中实现），如果以后有其它类型模型的需求，则到时候再做
-    // item = ["machineLearning", unifiedModelName, platform, lowThreshold, highThreshold, name]
+    // item = [isInherit, "machineLearning", unifiedModelName, platform, lowThreshold, highThreshold, name]
     const classes = useStyles();
     const allModels = useSelector(state=>state.algorithm.algorithmList);
     const user = useSelector(state=>state.session.user.userName);
@@ -48,21 +48,21 @@ const ModelFilter  = ({openDialog, setOpenDialog, addConstraint, editConstraint,
 
     useEffect(()=>{
         if(constraintType==='edit'){
-            setSelectedModel(previousContent[1]);
-            setLowThreshold(previousContent[3]);
-            setHighThreshold(previousContent[4]);
-            setModelChineseName(previousContent[5]);
-            setPlatform(previousContent[2])
+            setSelectedModel(previousContent[2]);
+            setLowThreshold(previousContent[4]);
+            setHighThreshold(previousContent[5]);
+            setModelChineseName(previousContent[6]);
+            setPlatform(previousContent[3])
         }
     }, []);
 
     const handleConfirm=()=>{
         if(constraintType==="add"){
-            addConstraint([ParaName.MACHINE_LEARNING, selectedModel, platform, lowThreshold, highThreshold,
+            addConstraint([false, ParaName.MACHINE_LEARNING, selectedModel, platform, lowThreshold, highThreshold,
                 modelChineseName])
         }
         else if(constraintType==="edit"){
-            editConstraint(index, [ParaName.MACHINE_LEARNING, selectedModel, platform, lowThreshold, highThreshold,
+            editConstraint(index, [false, ParaName.MACHINE_LEARNING, selectedModel, platform, lowThreshold, highThreshold,
                 modelChineseName])
         }
         setOpenDialog(null)

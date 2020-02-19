@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 const VitalSignFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint, index, constraintType,
                              previousContent}) =>{
-    // item = ["vitalSign", vitalSignType, low_threshold, high_threshold, vitalSignName, unit]
+    // item = [isInherit, "vitalSign", vitalSignType, low_threshold, high_threshold, vitalSignName, unit]
     const classes = useStyles();
     const [vitalSign, setVitalSign] = useState('');
     const [lowThreshold, setLowThreshold] = useState("");
@@ -42,10 +42,10 @@ const VitalSignFilter = ({openDialog, setOpenDialog, addConstraint, editConstrai
 
     useEffect(()=>{
         if(constraintType==='edit'){
-            setVitalSign(previousContent[1]);
-            setLowThreshold(previousContent[2]);
-            setHighThreshold(previousContent[3]);
-            setUnit(previousContent[5])
+            setVitalSign(previousContent[2]);
+            setLowThreshold(previousContent[3]);
+            setHighThreshold(previousContent[4]);
+            setUnit(previousContent[6])
         }
     }, []);
 
@@ -73,11 +73,11 @@ const VitalSignFilter = ({openDialog, setOpenDialog, addConstraint, editConstrai
         }
 
         if(constraintType==="add"){
-            addConstraint([ParaName.VITAL_SIGN, vitalSign, lowThreshold, highThreshold,
+            addConstraint([false, ParaName.VITAL_SIGN, vitalSign, lowThreshold, highThreshold,
                 name, unit])
         }
         else if(constraintType==="edit"){
-            editConstraint(index, [ParaName.VITAL_SIGN, vitalSign, lowThreshold, highThreshold,
+            editConstraint(index, [false, ParaName.VITAL_SIGN, vitalSign, lowThreshold, highThreshold,
                 name, unit])
         }
         setOpenDialog(null)

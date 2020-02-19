@@ -28,6 +28,7 @@ import {unifiedIdAndBasicInfoDelete} from "../../../actions/individualAnalysisAc
 import {orderDelete} from "../../../actions/individualAnalysisAction/orderAction";
 import {examDelete} from "../../../actions/individualAnalysisAction/examAction";
 import {labTestDelete} from "../../../actions/individualAnalysisAction/labtestResultAction";
+import {deleteGroupAnalysisQuery} from "../../../actions/groupAnalysisAction/managementAction";
 import {deleteModelQuery} from "../../../actions/individualAnalysisAction/individualModelAction";
 
 const useStyles = makeStyles((theme) => ({
@@ -398,18 +399,42 @@ export const DoubleClickToEdit =({defaultValue, editQuery})=>{
 };
 
 export const DeleteDialog = ({deleteDialogVisible, setDeleteDialogVisible, selectedQuery})=>{
+    // 删除dialog的重点在于，删除时要连带删除附属查询
     const dispatch = useDispatch();
+    const metaInfoMap = useSelector(state=>state.metaInfo.metaInfoMap);
 
     const handleConfirm =()=>{
+        const queryType = metaInfoMap[selectedQuery].queryType;
         setDeleteDialogVisible(false);
+
         dispatch(deleteQuery(selectedQuery));
-        dispatch(unifiedIdAndBasicInfoDelete(selectedQuery));
-        dispatch(orderDelete(selectedQuery));
-        dispatch(trajectoryDelete(selectedQuery));
-        dispatch(labTestDelete(selectedQuery));
-        dispatch(vitalSignDelete(selectedQuery));
-        dispatch(examDelete(selectedQuery));
-        dispatch(deleteModelQuery(selectedQuery));
+        if(queryType===ParaName.INDIVIDUAL_ANALYSIS) {
+            dispatch(unifiedIdAndBasicInfoDelete(selectedQuery));
+            dispatch(orderDelete(selectedQuery));
+            dispatch(trajectoryDelete(selectedQuery));
+            dispatch(labTestDelete(selectedQuery));
+            dispatch(vitalSignDelete(selectedQuery));
+            dispatch(examDelete(selectedQuery));
+        }
+        else if(queryType===ParaName.GROUP_ANALYSIS){
+            // 寻找关联列表
+            const indexList = [selectedQuery];
+            const sortedIndexList = Object.keys(metaInfoMap).sort();
+            for(const item of sortedIndexList){
+                if(metaInfoMap[item].queryType===ParaName.GROUP_ANALYSIS){
+                    if(parseInt(item)<=parseInt(selectedQuery)){continue}
+                    for(const query of indexList){
+                        if(query===metaInfoMap[item].affiliated){indexList.push(item);}
+                    }
+                }
+            }
+            for(const item of indexList) {
+                dispatch(deleteGroupAnalysisQuery(item))
+            }
+        }
+        else if(queryType===ParaName.INDIVIDUAL_ALGORITHM){
+            dispatch(deleteModelQuery(selectedQuery));
+        }
     };
 
     return (

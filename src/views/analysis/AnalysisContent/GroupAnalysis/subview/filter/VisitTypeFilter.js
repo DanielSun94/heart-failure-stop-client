@@ -27,12 +27,12 @@ const VisitTypeFilter = ({openDialog, setOpenDialog, addConstraint, editConstrai
                              previousContent}) =>{
     const classes = useStyles();
 
-    // item = ["visitType", "住院"/"非住院"]
+    // item = [isInherit, "visitType", "住院"/"非住院"]
     const [visitType, setVisitType] = useState('住院');
 
     useEffect(()=>{
         if(constraintType==='edit'){
-            setVisitType(previousContent[1])
+            setVisitType(previousContent[2])
         }
     },[]);
 
@@ -76,10 +76,10 @@ const VisitTypeFilter = ({openDialog, setOpenDialog, addConstraint, editConstrai
                 <Button variant={'outlined'}
                         onClick={()=> {
                             if(constraintType==="add"){
-                                addConstraint([ParaName.VISIT_TYPE, visitType])
+                                addConstraint([false, ParaName.VISIT_TYPE, visitType])
                             }
                             else if(constraintType==="edit"){
-                                editConstraint(index, [ParaName.VISIT_TYPE, visitType])
+                                editConstraint(index, [false, ParaName.VISIT_TYPE, visitType])
                             }
                             setOpenDialog(null)
                         }}
