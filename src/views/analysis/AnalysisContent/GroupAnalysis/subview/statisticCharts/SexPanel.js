@@ -13,7 +13,6 @@ import {
 import {useHistory} from 'react-router-dom'
 import {
     getSexInfo,
-    getVisitInfo,
     queryDataAccordingToFilter
 } from "../../../../../../actions/groupAnalysisAction/managementAction";
 import {createNewQuery, editQueryName, setSelectedQuery} from "../../../../../../actions/metaInfoAction";

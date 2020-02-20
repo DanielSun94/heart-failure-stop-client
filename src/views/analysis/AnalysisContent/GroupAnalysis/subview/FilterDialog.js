@@ -148,7 +148,7 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
         // 不仅要对本级进行重设，也要对下级进行重设，下级按照排列，必然是子查询index大于父查询
         // 寻找列表
         const indexList = [queryID];
-        const sortedIndexList = Object.keys(metaInfoMap).sort();
+        const sortedIndexList = Object.keys(metaInfoMap).map(item=>parseInt((item))).sort((a,b)=>a-b);
         for(const item of sortedIndexList){
             if(metaInfoMap[item].queryType===ParaName.GROUP_ANALYSIS){
                 if(parseInt(item)<=parseInt(queryID)){continue}
@@ -158,18 +158,18 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
             }
         }
         // 链式传递筛选器
+        const filterMap = {};
         for(const index in indexList){
             if(!indexList.hasOwnProperty(index)){
                 continue
             }
             const intIndex = parseInt(index);
             if(intIndex===0){
-                dispatch(changeManagementQueryFilter(filter, indexList[intIndex]));
-                dispatch(queryDataAccordingToFilter(filter, indexList[intIndex]))
+                filterMap[indexList[intIndex]] = filter;
             }
             else{
                 const previousQueryID = metaInfoMap[indexList[intIndex]].affiliated;
-                const previousFilter = management[previousQueryID].filter;
+                const previousFilter = filterMap[previousQueryID];
                 const currentFilter = management[indexList[intIndex]].filter;
                 // 将上一级的filter完整复制到下一级，并把所有isInherited改为true
                 // 此处为了防止问题，需要进行一次对象复制
@@ -179,7 +179,7 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
                     if(newFilter.hasOwnProperty(key)){
                         const tuple =[...newFilter[key]];
                         tuple[0]=true;
-                        newFilter[key]=tuple
+                        newFilter[key]=tuple;
                         if(parseInt(key)>=nextIndex){nextIndex=parseInt(key)+1}
                     }
                 }
@@ -192,10 +192,14 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
                         }
                     }
                 }
-                dispatch(changeManagementQueryFilter(newFilter, indexList[intIndex]));
+                filterMap[indexList[intIndex]]=newFilter
             }
         }
         setDialogVisible(false);
+        for(const key in filterMap) {
+            dispatch(changeManagementQueryFilter(filterMap[key], key));
+        }
+        dispatch(queryDataAccordingToFilter(filter, queryID))
     };
 
     const filterKeys = Object.keys(filter);
