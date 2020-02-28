@@ -92,7 +92,20 @@ class RouteName{
     static B_QUERY_WITH_FILTER = "/queryWithFilter";
     static B_QUERY_WITH_FATHER_QUERY_AND_NEW_CONDITION = "/queryWithFatherQueryAndNewCondition";
     static B_GET_VISIT_INFO = "/getVisitInfo";
-    static B_GET_SEX_INFO = "/getSexInfo"
+    static B_GET_SEX_INFO = "/getSexInfo";
+    static B_GET_AGE_INFO = "/getAgeInfo";
+    static B_GET_OPERATION_INFO = "/getOperationInfo";
+    static B_GET_DIAGNOSIS_INFO = "/getDiagnosisInfo";
+    static B_GET_MAIN_DIAGNOSIS_INFO = "/getMainDiagnosisInfo";
+    static B_GET_LAB_TEST_INFO = "/getLabTestInfo";
+    static B_GET_MEDICINE_INFO = "/getMedicineInfo";
+
+    // context info
+    static B_CONTEXT_INFO = "/backend/data/contextInfo";
+    static B_DIAGNOSIS_CODE = "/diagnosisCode";
+    static B_OPERATION_CODE = "/operationCode";
+    static B_MEDICINE_CODE = "/medicineCode";
+    static B_LAB_TEST_CODE = "/labTestCode";
 }
 
 export default RouteName;

@@ -9,7 +9,6 @@ import {
     Select,
     TextField,
     Typography,
-    MenuItem
 } from '@material-ui/core';
 import ParaName from "../../../../../../utils/ParaName";
 import {useSelector} from 'react-redux';
@@ -39,22 +38,12 @@ const ModelFilter  = ({openDialog, setOpenDialog, addConstraint, editConstraint,
     const allModels = useSelector(state=>state.algorithm.algorithmList);
     const user = useSelector(state=>state.session.user.userName);
     const modelInfoList = modelListConvert(allModels, user);
-    const [selectedModel, setSelectedModel] = useState("");
-    const [modelChineseName, setModelChineseName] = useState("");
-    const [lowThreshold, setLowThreshold] = useState("");
-    const [highThreshold, setHighThreshold] = useState("");
-    const [platform, setPlatform] = useState("");
+    const [selectedModel, setSelectedModel] = useState(constraintType==='edit'?previousContent[2]:"");
+    const [modelChineseName, setModelChineseName] = useState(constraintType==='edit'?previousContent[6]:"");
+    const [lowThreshold, setLowThreshold] = useState(constraintType==='edit'?previousContent[4]:"");
+    const [highThreshold, setHighThreshold] = useState(constraintType==='edit'?previousContent[5]:"");
+    const [platform, setPlatform] = useState(constraintType==='edit'?previousContent[3]:"");
     const [canConfirm, setConfirm] = useState(false);
-
-    useEffect(()=>{
-        if(constraintType==='edit'){
-            setSelectedModel(previousContent[2]);
-            setLowThreshold(previousContent[4]);
-            setHighThreshold(previousContent[5]);
-            setModelChineseName(previousContent[6]);
-            setPlatform(previousContent[3])
-        }
-    }, []);
 
     const handleConfirm=()=>{
         if(constraintType==="add"){
@@ -106,13 +95,14 @@ const ModelFilter  = ({openDialog, setOpenDialog, addConstraint, editConstraint,
             <DialogContent dividers>
                 <div className={classes.itemContent}>
                     <Typography>模型:</Typography>
-                    <FormControl style={{marginLeft: 20}}>
+                    <FormControl style={{marginLeft: 20, width:300}}>
                         <Select
-                            style={{width:300}}
+                            native
                             onChange={handleChange}
+                            value={modelChineseName}
                         >
                             {modelInfoList.map((item, index)=>
-                                <MenuItem value={index}>{item[1]}</MenuItem>)}
+                                <option key={index} value={index}>{item[1]}</option>)}
                         </Select>
                     </FormControl>
                 </div>

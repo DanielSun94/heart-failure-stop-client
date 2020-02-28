@@ -23,6 +23,12 @@ import {orderSetState} from "../../actions/individualAnalysisAction/orderAction"
 import {metaInfoSetState} from "../../actions/metaInfoAction";
 import {managementSetState} from "../../actions/groupAnalysisAction/managementAction";
 import {fetchModelListPosts} from "../../actions/algorithmManagementAction";
+import {
+  getDiagnosisCodingMap,
+  getLabTestCodingMap,
+  getMedicineCodingMap,
+  getOperationCodingMap
+} from "../../actions/contextInfoAction";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -133,31 +139,35 @@ const MainPage= () => {
 };
 
 const reloadOrResetState = (currentSessionUser, token, dispatch) =>{
-    let url = RouteName.B_STATE_MANAGEMENT + RouteName.B_DOWNLOAD_STATE + '?userID=' + currentSessionUser;
-    let header = {'Authorization': token};
-    fetch(url, {method: ParaName.GET, headers: header})
-        .then(res => res.json())
-        .then(res=>{
-          return res
-        })
-        .then(res=>res.response)
-        .then((res)=>{
-          if(res!=='CacheStateNotFound'){
-            res = JSON.parse(res);
-            const individual = res.individual;
-            dispatch(examSetState(individual.exam));
-            dispatch(patientBasicInfoSetState(individual.unifiedPatientIDAndPatientBasicInfo));
-            dispatch(trajectorySetState(individual.trajectory));
-            dispatch(labTestSetState(individual.labtestResult));
-            dispatch(orderSetState(individual.order));
-            dispatch(vitalSignSetState(individual.vitalSign));
-            dispatch(modelSetState(individual.model));
-            dispatch(managementSetState(res.group.management));
-            const metaInfo = res.metaInfo;
-            dispatch(metaInfoSetState(metaInfo));
-          }
-        })
-
+  let url = RouteName.B_STATE_MANAGEMENT + RouteName.B_DOWNLOAD_STATE + '?userID=' + currentSessionUser;
+  let header = {'Authorization': token};
+  fetch(url, {method: ParaName.GET, headers: header})
+      .then(res => res.json())
+      .then(res=>{
+        return res
+      })
+      .then(res=>res.response)
+      .then((res)=>{
+        if(res!=='CacheStateNotFound'){
+          res = JSON.parse(res);
+          const individual = res.individual;
+          dispatch(examSetState(individual.exam));
+          dispatch(patientBasicInfoSetState(individual.unifiedPatientIDAndPatientBasicInfo));
+          dispatch(trajectorySetState(individual.trajectory));
+          dispatch(labTestSetState(individual.labtestResult));
+          dispatch(orderSetState(individual.order));
+          dispatch(vitalSignSetState(individual.vitalSign));
+          dispatch(modelSetState(individual.model));
+          // 群体分析载入
+          dispatch(managementSetState(res.group.management));
+          const metaInfo = res.metaInfo;
+          dispatch(metaInfoSetState(metaInfo));
+        }
+      });
+  dispatch(getOperationCodingMap());
+  dispatch(getMedicineCodingMap());
+  dispatch(getDiagnosisCodingMap());
+  dispatch(getLabTestCodingMap());
 };
 
 const saveState=(currentSessionUser, token, entireState)=>{

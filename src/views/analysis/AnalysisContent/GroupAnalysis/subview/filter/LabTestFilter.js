@@ -47,6 +47,7 @@ const LabTestFilter = ({openDialog, setOpenDialog, addConstraint, editConstraint
     const classes = useStyles();
 
     const [radio, setRadio] = useState('all');
+    // autocomplete指具体的检查名称
     const [autocompleteValue, setAutocomplete] = useState("");
     const [representativeLabTestList, cantUse1] = useState([]);
     const [labTestList, cantUse2] = useState([]);

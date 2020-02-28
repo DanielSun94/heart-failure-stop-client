@@ -199,7 +199,6 @@ const FilterDialog =({queryID, openDialog, setDialogVisible}) =>{
         for(const key in filterMap) {
             dispatch(changeManagementQueryFilter(filterMap[key], key));
         }
-        dispatch(queryDataAccordingToFilter(filter, queryID))
     };
 
     const filterKeys = Object.keys(filter);
@@ -336,7 +335,7 @@ export const filterContentToString =(content)=>{
         }
         case ParaName.AGE:{
             contentString+= "年龄";
-            if(content[2]!==-1&&content[2]!==-1){
+            if(content[2]!==-1&&content[3]!==-1){
                 contentString+="在"+content[2]+"至"+content[3]+"岁间";
             }
             else if(content[2]!==-1){

@@ -60,7 +60,7 @@ function panelDelete(state, queryID){
 function initialize(state, queryID){
     if(!state[queryID])
         state[queryID] = {
-            localPatientID: "S112395129",
+            localPatientID: "",
             unifiedPatientID: "",
             dataStatus: NO_ACTION,
             patientBasicInfo:{

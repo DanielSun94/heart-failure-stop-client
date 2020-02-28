@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react'
-import {VictoryPie} from 'victory'
 import { makeStyles } from '@material-ui/core/styles'
 import {useSelector, useDispatch} from 'react-redux'
 import ParaName from "../../../../../../utils/ParaName";
@@ -8,8 +7,12 @@ import {
     CardHeader,
     Divider,
     colors,
-    CircularProgress
+    CircularProgress,
+    Typography
 } from '@material-ui/core'
+import {
+    PieChart, Pie, Cell, Tooltip, Legend
+} from 'recharts';
 import {useHistory} from 'react-router-dom'
 import {
     getSexInfo,
@@ -30,7 +33,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const SexPanel =({queryID})=>{
+const SexPanel =({queryID})=>{
     const dispatch = useDispatch();
     const history = useHistory();
     const classes = useStyles();
@@ -50,9 +53,9 @@ export const SexPanel =({queryID})=>{
         }
     },[isDataValid, isDataOutOfDate]);
 
-    const handleClick=(sex)=>{
+    const handleClick=(event)=>{
+        const sex = event.name==="男性"?"male":"female";
         // 点击之后需要完成几个任务，
-        // 4.跳转
 
         // 1.创建新的子查询并初始化
         dispatch(createNewQuery(ParaName.GROUP_ANALYSIS, queryID));
@@ -87,6 +90,13 @@ export const SexPanel =({queryID})=>{
         history.push(RouteName.MAIN_PAGE+RouteName.ANALYSIS+RouteName.GROUP_ANALYSIS+'/'+nextID)
     };
 
+    const data = [
+        { name: '男性', value: male },
+        { name: '女性', value: female },
+    ];
+
+    const COLORS = [colors.indigo[600], colors.red[600]];
+
     return (
         <Card className={classes.root}>
             <CardHeader title="性别分布"/>
@@ -97,31 +107,39 @@ export const SexPanel =({queryID})=>{
                     style={{width: "100%", height: "100%", display: 'flex', alignItems: 'center',justifyContent: 'center'}}>
                     {Object.keys(filter).length!==0&&<CircularProgress/>}
                 </div>}
+                {(male===0&&female===0)&&
+                <div
+                    style={{width: "100%", height: "100%", display: 'flex', alignItems: 'center',justifyContent: 'center'}}>
+                    <Typography>无数据符合条件</Typography>
+                </div>}
                 {(!(isDataOutOfDate||(!isDataValid)))&&(
-                    <VictoryPie
-                        innerRadius={60} labelRadius={80}
-                        colorScale={[colors.indigo[900], colors.red[600]]}
-                        events={[{
-                            target: "data",
-                            eventHandlers: {
-                                onClick: (event, value) => {
-                                    const sexIndex = value.index;
-                                    let sex;
-                                    if(sexIndex===1){sex="female"}
-                                    else {sex="male"}
-                                    handleClick(sex);
-                                }
+                    <PieChart
+                        width={350}
+                        height={350}
+                    >
+                        <Pie
+                            data={data}
+                            innerRadius={60}
+                            outerRadius={90}
+                            fill="#8884d8"
+                            paddingAngle={5}
+                            dataKey="value"
+                            label={true}
+                            onClick={handleClick}
+                        >
+                            {
+                                data.map((entry, index) =>
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
                             }
-                        }]}
-                        data={[
-                            { x: "男性\n"+male+"\n人次", y: male },
-                            { x: "女性\n"+female+"\n人次", y: female },
-                        ]}
-                        style={{labels: {  fontSize: 20, fill: "white",} }}
-                    />
+                        </Pie>
+                        <Legend verticalAlign="top" height={36}/>
+                        <Tooltip />
+                    </PieChart>
                 )
                 }
             </div>
         </Card>
     )
-}
+};
+
+export default SexPanel;
