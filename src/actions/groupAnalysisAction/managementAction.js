@@ -86,7 +86,7 @@ export function getDiagnosisInfo(queryID) {
         formData.append('userName', currentUser);
         formData.append('filter', JSON.stringify(filterList));
 
-        return fetch(url, {method: ParaName.POST, headers: header, body: formData})
+        return fetch(url, {method: ParaName.POST, headers: header, body: formData, timeout: 6000000,})
             .then(res => res.json(),
                 error => {console.log(error); dispatch(diagnosisRequestFailed(queryID))})
             .then(res => dispatch(diagnosisRequestSuccess(res, queryID)))
@@ -115,7 +115,7 @@ export function getMedicine(queryID) {
         formData.append('userName', currentUser);
         formData.append('filter', JSON.stringify(filterList));
 
-        return fetch(url, {method: ParaName.POST, headers: header, body: formData})
+        return fetch(url, {method: ParaName.POST, headers: header, body: formData, timeout: 6000000})
             .then(res => res.json(),
                 error => {console.log(error); dispatch(medicineRequestFailed(queryID))})
             .then(res => dispatch(medicineRequestSuccess(res, queryID)))
@@ -144,7 +144,7 @@ export function getLabTestInfo(queryID) {
         formData.append('userName', currentUser);
         formData.append('filter', JSON.stringify(filterList));
 
-        return fetch(url, {method: ParaName.POST, headers: header, body: formData})
+        return fetch(url, {method: ParaName.POST, headers: header, body: formData, timeout: 6000000})
             .then(res => res.json(),
                 error => {console.log(error); dispatch(labTestInfoRequestFailed(queryID))})
             .then(res => dispatch(labTestInfoRequestSuccess(res, queryID)))
@@ -173,7 +173,7 @@ export function getMainDiagnosisInfo(queryID) {
         formData.append('userName', currentUser);
         formData.append('filter', JSON.stringify(filterList));
 
-        return fetch(url, {method: ParaName.POST, headers: header, body: formData})
+        return fetch(url, {method: ParaName.POST, headers: header, body: formData, timeout: 6000000})
             .then(res => res.json(),
                 error => {console.log(error); dispatch(mainDiagnosisRequestFailed(queryID))})
             .then(res => dispatch(mainDiagnosisRequestSuccess(res, queryID)))
@@ -202,7 +202,7 @@ export function getOperation(queryID) {
         formData.append('userName', currentUser);
         formData.append('filter', JSON.stringify(filterList));
 
-        return fetch(url, {method: ParaName.POST, headers: header, body: formData})
+        return fetch(url, {method: ParaName.POST, headers: header, body: formData, timeout: 6000000})
             .then(res => res.json(),
                 error => {console.log(error); dispatch(operationRequestFailed(queryID))})
             .then(res => dispatch(operationRequestSuccess(res, queryID)))

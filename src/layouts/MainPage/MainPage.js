@@ -77,6 +77,7 @@ const MainPage= () => {
   const entireState = useSelector(state=> state);
   const currentSessionUser = useSelector(state=> state.session.user.userID);
   const token = useSelector(state=> state.session.authenticToken);
+  const diagnosisCodeMap = useSelector(state=>state.context.diagnosisCode.map);
 
   useEffect(()=>{
     // 每次重登陆时更新ModelList
@@ -100,12 +101,11 @@ const MainPage= () => {
 
   // 上传state
   useEffect(()=>{
-    // 为防止saveState先于reload执行，reload之后metaInfo Map的size一定不为0
-    // 如果真的是0，说明上轮把所有查询删光了，那先于reload执行无关紧要
-    if(Object.keys(entireState.metaInfo.metaInfoMap).length>0){
+    // 为防止saveState先于reload执行，用codeMap做判定，当reload执行完毕后，codeMap一定不为空
+    if(diagnosisCodeMap&&Object.keys(diagnosisCodeMap).length>0){
       saveState(currentSessionUser, token, entireState)
     }
-  }, [entireState, currentSessionUser]);
+  }, [entireState, currentSessionUser, diagnosisCodeMap]);
 
   return (
       <div id='mainPage' className={classes.root}>

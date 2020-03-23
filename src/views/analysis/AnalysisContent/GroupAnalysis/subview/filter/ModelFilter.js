@@ -45,6 +45,14 @@ const ModelFilter  = ({openDialog, setOpenDialog, addConstraint, editConstraint,
     const [platform, setPlatform] = useState(constraintType==='edit'?previousContent[3]:"");
     const [canConfirm, setConfirm] = useState(false);
 
+    useEffect(()=>{
+        if(modelInfoList&&modelInfoList.length>0){
+            setModelChineseName(modelInfoList[0][1]);
+            setSelectedModel(modelInfoList[0][0]);
+            setPlatform(modelInfoList[0][2])
+        }
+    }, [modelInfoList]);
+
     const handleConfirm=()=>{
         if(constraintType==="add"){
             addConstraint([false, ParaName.MACHINE_LEARNING, selectedModel, platform, lowThreshold, highThreshold,
