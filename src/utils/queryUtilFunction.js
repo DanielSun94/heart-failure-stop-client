@@ -82,7 +82,6 @@ const filter = (listToFilter, text, textDefaultValue, defaultShowAll, isPinyinCo
 };
 
 const pinyinSort = (listToSort) => {
-
     listToSort.sort(function(a, b){
         const aList = pinyin(a, {style: pinyin.STYLE_FIRST_LETTER});
         let aStr = "";
