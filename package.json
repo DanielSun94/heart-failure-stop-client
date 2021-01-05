@@ -22,7 +22,7 @@
     "@material-ui/styles": "^4.9.0",
     "@nivo/bar": "^0.59.2",
     "@nivo/sankey": "^0.59.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "axios-mock-adapter": "^1.17.0",
     "chart.js": "^2.7.3",
     "clsx": "^1.0.4",
